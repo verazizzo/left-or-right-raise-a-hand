@@ -7,4 +7,5 @@ mne
 matplotlib
 librosa
 
+pyedflib
 scikit-learn

@@ -1,5 +1,6 @@
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
+import os
 
 filter_low = 8
 filter_high = 30
@@ -19,6 +20,7 @@ eeg_preprocessing.load_dataframe(path_in='dataset/dataset.pkl')
 eeg_preprocessing.basic_preprocessing(plot=False,
                                       LOW_FREQUENCY=filter_low, HIGH_FREQUENCY=filter_high,
                                       drop_channels=False,channels=['AF3', 'F7', 'F8', 'AF4'])
+os.makedirs('dataset', exist_ok=True)
 eeg_preprocessing.save_pkl_data(path_out='dataset/dataset_preprocessed.pkl', data=eeg_preprocessing.dataset_post_processing)
 
 
