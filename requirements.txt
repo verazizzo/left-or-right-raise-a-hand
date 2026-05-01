@@ -9,3 +9,5 @@ librosa
 
 pyedflib
 scikit-learn
+
+antropy 
