@@ -1,12 +1,15 @@
 import os
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
+import pickle as pkl
+from src.utils.feature_extractor import FeatureExtractor
 
 filter_low = 8
 filter_high = 30
 sfreq_resample = 256
 raw_path = 'dataset/dataset.pkl'
 preprocessed_path = 'dataset/dataset_preprocessed.pkl'
+features_out_path = 'dataset/features_antropy.csv'
 
 os.makedirs('dataset', exist_ok=True)
 
@@ -39,4 +42,16 @@ if not os.path.exists(preprocessed_path):
 else:
     print(f"Preprocessed data already exists at {preprocessed_path}. Skipping preprocessing.")
 
-# to do ---> features extraction and ML
+#Features extraction
+if not os.path.exists(features_out_path):
+    with open(preprocessed_path, 'rb') as f:
+        dataset_pre = pkl.load(f)
+
+    extractor = FeatureExtractor(tmin=0.0, tmax=3.0)
+
+    extractor.extract_epochs(dataset_pre)
+    df_features = extractor.compute_antropy_features()
+
+    extractor.save_features_csv(path_out=features_out_path)
+else:
+    print(f"Features already exist at {features_out_path}. Skipping feature extraction.")
