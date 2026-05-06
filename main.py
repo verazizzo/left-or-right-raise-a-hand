@@ -1,16 +1,14 @@
 import os
-import shap
-import joblib
 import pandas as pd
+import pickle as pkl
 
-from sklearn.model_selection import LeaveOneGroupOut, GridSearchCV
-from sklearn.svm import SVC
-from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
-import pickle as pkl
 from src.utils.feature_extractor import FeatureExtractor
+from src.training import training
+
 
 filter_low = 8
 filter_high = 30
@@ -67,7 +65,6 @@ else:
 df = pd.read_csv('./dataset/features_antropy.csv')
 
 # df = df.sample(frac=1, random_state=42).reset_index(drop=True)
-
 # df = df.drop('User', axis=1)
 
 # Stiamo rimuovendo il target 1 che dovrebbe essere il cervello a riposo, mentre 2 e 3 indicano rispettivamente braccio destro e sinistro
@@ -79,56 +76,36 @@ df['Session'] = df['Session'].str.replace(r'dataset_mi_emotive\\[a-zA-Z0-9_$]*\\
 df['Session'] = df['Session'].str.replace(r'dataset_mi_emotive\\[a-zA-Z0-9_$]*\\real', '1', regex=True)
 df['Session'] = df['Session'].astype(int)
 
-x = df.drop(columns=['Target_Label', 'User'])
-y = df['Target_Label']
-groups = df['User']
+df_real = df[df['Session'] == 1]
+df_imm = df[df['Session'] == 0]
 
-scaler = StandardScaler()
-x_scaled = scaler.fit_transform(x)
-x_scaled_df = pd.DataFrame(x_scaled, columns=x.columns) # Utile per SHAP con nomi colonne
+#cambiare questa variabile se si vogliono usare le immaginarie per il training invece che le reali
+use_real_for_training = True
+if use_real_for_training:
+    print("Using real sessions for training.")
+    best_svm, scaler = training(df_real)
+else:
+    print("Using imaginary sessions for training.")
+    best_svm, scaler = training(df_imm)
 
-logo = LeaveOneGroupOut()
-svm = SVC(probability=True)
-param_grid = {
-    'kernel': ['linear', 'rbf'],
-    'C': [0.1, 1, 10]
-}
+df_test = df_imm
 
-logo = LeaveOneGroupOut()
+# Separazione della matrice delle features dal vettore dei target
+x_test = df_test.drop(columns=['Target_Label', 'User'])
+y_true = df_test['Target_Label']
 
-grid_search = GridSearchCV(
-    estimator=svm, 
-    param_grid=param_grid, 
-    cv=logo, 
-    scoring='accuracy',
-    n_jobs=-1 
-)
+# 1. Proiezione dei dati di Test nello spazio standardizzato dal Training
+# Cruciale l'uso di .transform() e non .fit_transform()
+x_test_scaled = scaler.transform(x_test)
 
-grid_search.fit(x_scaled, y, groups=groups)
-print(f"Migliori parametri (LOGO): {grid_search.best_params_}")
+# 2. Inferenza del modello sui dati immaginari
+y_pred = best_svm.predict(x_test_scaled)
 
-best_svm = grid_search.best_estimator_
-all_shap_values = []
-test_indices = []
-
-print("\nAvvio calcolo SHAP per ogni soggetto...")
-
-for train_idx, test_idx in logo.split(x_scaled, y, groups=groups):
-    X_train, X_test = x_scaled[train_idx], x_scaled[test_idx]
-    y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
-    
-    best_svm.fit(X_train, y_train)
-    
-    # Nota: su 3000 campioni KernelExplainer è lento. Usiamo una sintesi del training.
-    X_train_summary = shap.kmeans(X_train, 10) # Riassume il training in 10 campioni "rappresentativi"
-    explainer = shap.KernelExplainer(best_svm.predict, X_train_summary)
-    
-    shap_vals = explainer.shap_values(X_test)
-    all_shap_values.append(shap_vals)
-    test_indices.extend(test_idx)
-
-joblib.dump(all_shap_values, 'shap_values_matrix.pkl')
-print("Analisi SHAP completata e salvata.")
-
-# Esempio Visualizzazione SHAP per l'ultimo soggetto testato
-shap.summary_plot(shap_vals, x_scaled_df.iloc[test_idx])
+# 3. Calcolo e restituzione delle metriche di validazione
+accuracy = accuracy_score(y_true, y_pred)
+print(f"\n Metriche di Validazione sul Test Set (Motor Imagery)")
+print(f"Accuracy Globale: {accuracy * 100:.2f}%\n")
+print("Report di Classificazione:")
+print(classification_report(y_true, y_pred))
+print("Matrice di Confusione:")
+print(confusion_matrix(y_true, y_pred))
