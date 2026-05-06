@@ -55,7 +55,7 @@ def training(df):
         all_shap_values.append(shap_vals)
         test_indices.extend(test_idx)
 
-    joblib.dump(all_shap_values, 'shap_values_matrix.pkl')
+    joblib.dump(all_shap_values, 'dataset/shap_values_matrix.pkl')
     print("Analisi SHAP completata e salvata.")
 
     # example SHAP summary plot for the last test set

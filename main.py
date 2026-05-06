@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
 from src.utils.feature_extractor import FeatureExtractor
-from src.training import training
+from src.utils.training import training
 
 
 filter_low = 8
@@ -90,12 +90,10 @@ else:
 
 df_test = df_imm
 
-# Separazione della matrice delle features dal vettore dei target
 x_test = df_test.drop(columns=['Target_Label', 'User'])
 y_true = df_test['Target_Label']
 
 # 1. Proiezione dei dati di Test nello spazio standardizzato dal Training
-# Cruciale l'uso di .transform() e non .fit_transform()
 x_test_scaled = scaler.transform(x_test)
 
 # 2. Inferenza del modello sui dati immaginari
