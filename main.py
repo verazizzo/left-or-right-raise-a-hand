@@ -13,11 +13,11 @@ from src.utils.training import training
 filter_low = 8
 filter_high = 30
 sfreq_resample = 256
-raw_path = 'dataset/dataset.pkl'
-preprocessed_path = 'dataset/dataset_preprocessed.pkl'
-features_out_path = 'dataset/features_antropy.csv'
+raw_path = 'temp/dataset.pkl'
+preprocessed_path = 'temp/dataset_preprocessed.pkl'
+features_out_path = 'temp/features_antropy.csv'
 
-os.makedirs('dataset', exist_ok=True)
+os.makedirs('temp', exist_ok=True)
 
 # Raw Data Loading/Generation
 if not os.path.exists(raw_path):
@@ -62,7 +62,7 @@ if not os.path.exists(features_out_path):
 else:
     print(f"Features already exist at {features_out_path}. Skipping feature extraction.")
 
-df = pd.read_csv('./dataset/features_antropy.csv')
+df = pd.read_csv('./temp/features_antropy.csv')
 
 # df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 # df = df.drop('User', axis=1)
