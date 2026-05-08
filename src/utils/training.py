@@ -77,7 +77,7 @@ def training(df):
         plt.close() 
         
 
-    os.makedirs('dataset', exist_ok=True)
+    os.makedirs('temp', exist_ok=True)
     joblib.dump(all_shap_values, 'temp/shap_values_matrix.pkl')
     print(" SHAP analysis completed and saved to 'temp/shap_values_matrix.pkl'.")
 
