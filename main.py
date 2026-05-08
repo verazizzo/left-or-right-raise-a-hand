@@ -84,8 +84,10 @@ df_imm = df[df['Session'] == 0]
 use_real_for_training = False
 if use_real_for_training:
     print("Using real sessions for training.")
-    best_svm, scaler_svm = train_SVM(df_real)
-    best_xgb, scaler_xgb = train_xgboost(df_real)
+    df_train = df_real
+    best_svm, scaler_svm = train_SVM(df_train)
+    best_xgb, scaler_xgb = train_xgboost(df_train)
+    df_test = df_imm
 else:
     unique_user = df_imm['User'].unique() 
     train_user, test_user = train_test_split(unique_user, test_size=0.2, random_state=42) 
