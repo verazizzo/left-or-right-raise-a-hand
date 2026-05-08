@@ -103,6 +103,7 @@ else:
 
 x_test = df_test.drop(columns=['Target_Label', 'User'])
 y_true = df_test['Target_Label']
+y_true_xgb = y_true.map({2: 0, 3: 1})
 
 x_test_scaled_svm = scaler_svm.transform(x_test)
 x_test_scaled_xgb = scaler_xgb.transform(x_test)
@@ -112,7 +113,7 @@ y_pred_svm = best_svm.predict(x_test_scaled_svm)
 y_pred_xgb = best_xgb.predict(x_test_scaled_xgb)
 
 accuracy_svm = accuracy_score(y_true, y_pred_svm)
-accuracy_xgb = accuracy_score(y_true, y_pred_xgb)
+accuracy_xgb = accuracy_score(y_true_xgb, y_pred_xgb)
 
 print(f"\n Evaluation Metrics:")
 print(f"Accuracy SVM: {accuracy_svm * 100:.2f}%")
@@ -122,6 +123,6 @@ print(classification_report(y_true, y_pred_svm))
 print("Confusion matrix SVM:")
 print(confusion_matrix(y_true, y_pred_svm))
 print("Classification report XGBoost:")
-print(classification_report(y_true, y_pred_xgb))
+print(classification_report(y_true_xgb, y_pred_xgb))
 print("Confusion matrix XGBoost:")
-print(confusion_matrix(y_true, y_pred_xgb))
+print(confusion_matrix(y_true_xgb, y_pred_xgb))
