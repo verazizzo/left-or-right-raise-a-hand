@@ -48,7 +48,7 @@ if not os.path.exists(preprocessed_path):
 else:
     print(f"Preprocessed data already exists at {preprocessed_path}. Skipping preprocessing.")
 
-#Features extraction
+# Features extraction
 if not os.path.exists(features_out_path):
     with open(preprocessed_path, 'rb') as f:
         dataset_pre = pkl.load(f)
@@ -67,7 +67,7 @@ df = pd.read_csv('./temp/features_antropy.csv')
 # df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 # df = df.drop('User', axis=1)
 
-# Stiamo rimuovendo il target 1 che dovrebbe essere il cervello a riposo, mentre 2 e 3 indicano rispettivamente braccio destro e sinistro
+# Assume target 1 is resting state, while 2 and 3 indicate right and left hand motor imagery respectively. We will focus on the motor imagery tasks for training.
 df = df[df['Target_Label'].isin([2,3])].copy()
 
 features = df.columns
@@ -79,8 +79,8 @@ df['Session'] = df['Session'].astype(int)
 df_real = df[df['Session'] == 1]
 df_imm = df[df['Session'] == 0]
 
-#cambiare questa variabile se si vogliono usare le immaginarie per il training invece che le reali
-use_real_for_training = True
+# Change this flag to switch between training on real or imaginary sessions
+use_real_for_training = False
 if use_real_for_training:
     print("Using real sessions for training.")
     best_xgb, scaler = training(df_real)
@@ -90,17 +90,13 @@ else:
 
 df_test = df_imm
 
-cols_to_drop = [c for c in df_test.columns if any(vis in c for vis in ['O1_', 'O2_', 'P7_', 'P8_'])]
-x_test = df_test.drop(columns=['Target_Label', 'User'] + cols_to_drop)
+x_test = df_test.drop(columns=['Target_Label', 'User'])
 y_true = df_test['Target_Label'].map({2: 0, 3: 1})
 
-# 1. Proiezione dei dati di Test nello spazio standardizzato dal Training
 x_test_scaled = scaler.transform(x_test)
 
-# 2. Inferenza del modello sui dati immaginari
 y_pred = best_xgb.predict(x_test_scaled)
 
-# 3. Calcolo e restituzione delle metriche di validazione
 accuracy = accuracy_score(y_true, y_pred)
 print(f"\n Metriche di Validazione sul Test Set (Motor Imagery)")
 print(f"Accuracy Globale: {accuracy * 100:.2f}%\n")
