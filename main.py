@@ -3,11 +3,12 @@ import pandas as pd
 import pickle as pkl
 
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.model_selection import train_test_split
 
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
 from src.utils.feature_extractor import FeatureExtractor
-from src.utils.training import training
+from src.utils.training import train_SVM, train_xgboost
 
 
 filter_low = 8
@@ -80,30 +81,47 @@ df_real = df[df['Session'] == 1]
 df_imm = df[df['Session'] == 0]
 
 #cambiare questa variabile se si vogliono usare le immaginarie per il training invece che le reali
-use_real_for_training = True
+use_real_for_training = False
 if use_real_for_training:
     print("Using real sessions for training.")
-    best_svm, scaler = training(df_real)
+    best_svm, scaler_svm = train_SVM(df_real)
+    best_xgb, scaler_xgb = train_xgboost(df_real)
 else:
-    print("Using imaginary sessions for training.")
-    best_svm, scaler = training(df_imm)
+    unique_user = df_imm['User'].unique() 
+    train_user, test_user = train_test_split(unique_user, test_size=0.2, random_state=42) 
 
-df_test = df_imm
+    df_train = df_imm[df_imm['User'].isin(train_user)] 
+    df_test = df_imm[df_imm['User'].isin(test_user)] 
+
+    print(f"Addestramento su {len(train_user)} utenti ({len(df_train)} epoche)") 
+    print(f"Test su {len(test_user)} utenti ({len(df_test)} epoche)")
+    print("Using imaginary sessions for training.")
+    
+    best_svm, scaler_svm = train_SVM(df_train)
+    best_xgb, scaler_xgb = train_xgboost(df_train)
+
 
 x_test = df_test.drop(columns=['Target_Label', 'User'])
 y_true = df_test['Target_Label']
 
-# 1. Proiezione dei dati di Test nello spazio standardizzato dal Training
-x_test_scaled = scaler.transform(x_test)
+x_test_scaled_svm = scaler_svm.transform(x_test)
+x_test_scaled_xgb = scaler_xgb.transform(x_test)
 
-# 2. Inferenza del modello sui dati immaginari
-y_pred = best_svm.predict(x_test_scaled)
 
-# 3. Calcolo e restituzione delle metriche di validazione
-accuracy = accuracy_score(y_true, y_pred)
-print(f"\n Metriche di Validazione sul Test Set (Motor Imagery)")
-print(f"Accuracy Globale: {accuracy * 100:.2f}%\n")
-print("Report di Classificazione:")
-print(classification_report(y_true, y_pred))
-print("Matrice di Confusione:")
-print(confusion_matrix(y_true, y_pred))
+y_pred_svm = best_svm.predict(x_test_scaled_svm)
+y_pred_xgb = best_xgb.predict(x_test_scaled_xgb)
+
+accuracy_svm = accuracy_score(y_true, y_pred_svm)
+accuracy_xgb = accuracy_score(y_true, y_pred_xgb)
+
+print(f"\n Evaluation Metrics:")
+print(f"Accuracy SVM: {accuracy_svm * 100:.2f}%")
+print(f"Accuracy XGBoost: {accuracy_xgb * 100:.2f}%\n")
+print("Classification report SVM:")
+print(classification_report(y_true, y_pred_svm))
+print("Confusion matrix SVM:")
+print(confusion_matrix(y_true, y_pred_svm))
+print("Classification report XGBoost:")
+print(classification_report(y_true, y_pred_xgb))
+print("Confusion matrix XGBoost:")
+print(confusion_matrix(y_true, y_pred_xgb))
