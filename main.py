@@ -139,7 +139,7 @@ print(confusion_matrix(y_true_xgb, y_pred_xgb))
 # SHAP Analysis
 
 print("\nStarting SHAP analysis for SVM...")
-shap_analysis_svm(best_svm, x_test, y_true, x_test_scaled_svm, scaler_svm.transform(df_train.drop(columns=['Target_Label', 'User'])))
+shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, scaler_svm.transform(df_train.drop(columns=['Target_Label', 'User'])))
 
 print("\nStarting SHAP analysis for XGBoost...")
-shap_analysis_xgboost(best_xgb, x_test, y_true_xgb, x_test_scaled_xgb)
+shap_analysis_xgboost(best_xgb, x_test, x_test_scaled_xgb)

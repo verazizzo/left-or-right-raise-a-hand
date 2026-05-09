@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import os
 
-def shap_analysis_svm(best_svm, x_test, y_true_svm, x_test_scaled_svm, x_train_scaled_svm):
+def shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, x_train_scaled_svm):
 
     save_dir = 'temp/shap_plots/svm'
     os.makedirs(save_dir, exist_ok=True)
@@ -72,7 +72,7 @@ def shap_analysis_svm(best_svm, x_test, y_true_svm, x_test_scaled_svm, x_train_s
     print("Shap analysis for SVM completed! Plots saved in 'temp/shap_plots/svm' directory.")
 
 
-def shap_analysis_xgboost(best_xgb, x_test, y_true_xgb, x_test_scaled_xgb):
+def shap_analysis_xgboost(best_xgb, x_test, x_test_scaled_xgb):
 
     save_dir = 'temp/shap_plots/xgboost'
     os.makedirs(save_dir, exist_ok=True)
