@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
-from src.utils.feature_extractor import FeatureExtractor
+from src.utils.feature_extractor_2 import FeatureExtractor
 from src.utils.training import train_SVM, train_xgboost
 
 
@@ -54,12 +54,12 @@ if not os.path.exists(features_out_path):
     with open(preprocessed_path, 'rb') as f:
         dataset_pre = pkl.load(f)
 
-    extractor = FeatureExtractor(tmin=0.0, tmax=3.0)
+    extractor = FeatureExtractor(tmin=0.0, tmax=15.0)
 
     extractor.extract_epochs(dataset_pre)
-    df_features = extractor.compute_antropy_features()
+    df_features = extractor.compute_all_features() 
 
-    extractor.save_features_csv(path_out=features_out_path)
+    extractor.save_features_csv(df_features, path_out=features_out_path)
 else:
     print(f"Features already exist at {features_out_path}. Skipping feature extraction.")
 
@@ -99,7 +99,7 @@ else:
     print(f"Test su {len(test_user)} utenti ({len(df_test)} epoche)")
     print("Using imaginary sessions for training.")
     
-    best_svm, scaler_svm = train_SVM(df_train)
+    # best_svm, scaler_svm = train_SVM(df_train)
     best_xgb, scaler_xgb = train_xgboost(df_train)
 
 
@@ -107,23 +107,23 @@ x_test = df_test.drop(columns=['Target_Label', 'User'])
 y_true = df_test['Target_Label']
 y_true_xgb = y_true.map({2: 0, 3: 1})
 
-x_test_scaled_svm = scaler_svm.transform(x_test)
+# x_test_scaled_svm = scaler_svm.transform(x_test)
 x_test_scaled_xgb = scaler_xgb.transform(x_test)
 
 
-y_pred_svm = best_svm.predict(x_test_scaled_svm)
+# y_pred_svm = best_svm.predict(x_test_scaled_svm)
 y_pred_xgb = best_xgb.predict(x_test_scaled_xgb)
 
-accuracy_svm = accuracy_score(y_true, y_pred_svm)
+# accuracy_svm = accuracy_score(y_true, y_pred_svm)
 accuracy_xgb = accuracy_score(y_true_xgb, y_pred_xgb)
 
 print(f"\n Evaluation Metrics:")
-print(f"Accuracy SVM: {accuracy_svm * 100:.2f}%")
+# print(f"Accuracy SVM: {accuracy_svm * 100:.2f}%")
 print(f"Accuracy XGBoost: {accuracy_xgb * 100:.2f}%\n")
-print("Classification report SVM:")
-print(classification_report(y_true, y_pred_svm))
-print("Confusion matrix SVM:")
-print(confusion_matrix(y_true, y_pred_svm))
+# print("Classification report SVM:")
+# print(classification_report(y_true, y_pred_svm))
+# print("Confusion matrix SVM:")
+# print(confusion_matrix(y_true, y_pred_svm))
 print("Classification report XGBoost:")
 print(classification_report(y_true_xgb, y_pred_xgb))
 print("Confusion matrix XGBoost:")
