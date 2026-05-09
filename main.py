@@ -7,8 +7,14 @@ from sklearn.model_selection import train_test_split
 
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
-from src.utils.feature_extractor_2 import FeatureExtractor
+from utils.feature_extractor import FeatureExtractor
 from src.utils.training import train_SVM, train_xgboost
+from src.utils.shap_analysis import shap_analysis_xgboost, shap_analysis_svm
+
+import shap
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 
 
 filter_low = 8
@@ -49,7 +55,7 @@ if not os.path.exists(preprocessed_path):
 else:
     print(f"Preprocessed data already exists at {preprocessed_path}. Skipping preprocessing.")
 
-#Features extraction
+# Features extraction
 if not os.path.exists(features_out_path):
     with open(preprocessed_path, 'rb') as f:
         dataset_pre = pkl.load(f)
@@ -68,7 +74,7 @@ df = pd.read_csv('./temp/features_antropy.csv')
 # df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 # df = df.drop('User', axis=1)
 
-# Stiamo rimuovendo il target 1 che dovrebbe essere il cervello a riposo, mentre 2 e 3 indicano rispettivamente braccio destro e sinistro
+# Filtering only for classes 2 and 3 (left or right hand imagination). We assume 1 is rest
 df = df[df['Target_Label'].isin([2,3])].copy()
 
 features = df.columns
@@ -80,7 +86,7 @@ df['Session'] = df['Session'].astype(int)
 df_real = df[df['Session'] == 1]
 df_imm = df[df['Session'] == 0]
 
-#cambiare questa variabile se si vogliono usare le immaginarie per il training invece che le reali
+# Changing flag to use real sessions for training or not
 use_real_for_training = False
 if use_real_for_training:
     print("Using real sessions for training.")
@@ -90,7 +96,7 @@ if use_real_for_training:
     df_test = df_imm
 else:
     unique_user = df_imm['User'].unique() 
-    train_user, test_user = train_test_split(unique_user, test_size=0.2, random_state=42) 
+    train_user, test_user = train_test_split(unique_user, test_size=0.03, random_state=42) 
 
     df_train = df_imm[df_imm['User'].isin(train_user)] 
     df_test = df_imm[df_imm['User'].isin(test_user)] 
@@ -99,7 +105,7 @@ else:
     print(f"Test su {len(test_user)} utenti ({len(df_test)} epoche)")
     print("Using imaginary sessions for training.")
     
-    # best_svm, scaler_svm = train_SVM(df_train)
+    best_svm, scaler_svm = train_SVM(df_train)
     best_xgb, scaler_xgb = train_xgboost(df_train)
 
 
@@ -107,24 +113,33 @@ x_test = df_test.drop(columns=['Target_Label', 'User'])
 y_true = df_test['Target_Label']
 y_true_xgb = y_true.map({2: 0, 3: 1})
 
-# x_test_scaled_svm = scaler_svm.transform(x_test)
+x_test_scaled_svm = scaler_svm.transform(x_test)
 x_test_scaled_xgb = scaler_xgb.transform(x_test)
 
 
-# y_pred_svm = best_svm.predict(x_test_scaled_svm)
+y_pred_svm = best_svm.predict(x_test_scaled_svm)
 y_pred_xgb = best_xgb.predict(x_test_scaled_xgb)
 
-# accuracy_svm = accuracy_score(y_true, y_pred_svm)
+accuracy_svm = accuracy_score(y_true, y_pred_svm)
 accuracy_xgb = accuracy_score(y_true_xgb, y_pred_xgb)
 
 print(f"\n Evaluation Metrics:")
-# print(f"Accuracy SVM: {accuracy_svm * 100:.2f}%")
+print(f"Accuracy SVM: {accuracy_svm * 100:.2f}%")
 print(f"Accuracy XGBoost: {accuracy_xgb * 100:.2f}%\n")
-# print("Classification report SVM:")
-# print(classification_report(y_true, y_pred_svm))
-# print("Confusion matrix SVM:")
-# print(confusion_matrix(y_true, y_pred_svm))
+print("Classification report SVM:")
+print(classification_report(y_true, y_pred_svm))
+print("Confusion matrix SVM:")
+print(confusion_matrix(y_true, y_pred_svm))
 print("Classification report XGBoost:")
 print(classification_report(y_true_xgb, y_pred_xgb))
 print("Confusion matrix XGBoost:")
 print(confusion_matrix(y_true_xgb, y_pred_xgb))
+
+
+# SHAP Analysis
+
+print("\nStarting SHAP analysis for SVM...")
+shap_analysis_svm(best_svm, x_test, y_true, x_test_scaled_svm, scaler_svm.transform(df_train.drop(columns=['Target_Label', 'User'])))
+
+print("\nStarting SHAP analysis for XGBoost...")
+shap_analysis_xgboost(best_xgb, x_test, y_true_xgb, x_test_scaled_xgb)

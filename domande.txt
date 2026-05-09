@@ -5,3 +5,7 @@ df = df[df['Target_Label'].isin([2,3])].copy()
 abbiamo fatto bene a sostituire imm e real con 0 e 1?
 
 chiedere se conviene fare training su reali o imm
+
+migliori iperparamteri 
+best_svm = SVC(kernel='linear', C=0.1, probability=True, random_state=42)
+best_xgb = XGBClassifier(eval_metric='logloss', random_state=42, n_estimators=100, max_depth=7, learning_rate=0.01)
