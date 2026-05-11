@@ -24,7 +24,7 @@ def train_SVM(df):
     os.makedirs(output_dir, exist_ok=True)
 
     logo = LeaveOneGroupOut()
-    svm = SVC(probability=True)
+    svm = SVC(probability=True, random_state=42)
     param_grid = {
         'kernel': ['linear', 'rbf'],
         'C': [0.1, 1, 10]

@@ -8,4 +8,14 @@ chiedere se conviene fare training su reali o imm
 
 migliori iperparamteri 
 best_svm = SVC(kernel='linear', C=0.1, probability=True, random_state=42)
-best_xgb = XGBClassifier(eval_metric='logloss', random_state=42, n_estimators=100, max_depth=7, learning_rate=0.01)
+best_xgb = XGBClassifier(eval_metric='logloss', random_state=42, n_estimators=100, max_depth=7, learning_rate=0.01)c
+
+1. Per la parte di UI/UX, l’obiettivo è progettare un’interfaccia che permetta di visualizzare: i segnali EEG, la previsione del movimento immaginato (braccio destro/sinistro), e le spiegazioni generate dalla XAI sui dati più rilevanti per la predizione?
+2. Dobbiamo considerare la professoressa come utente finale del sistema?
+3. È richiesto definire dei task specifici da far eseguire all’utente (la professoressa?) per valutare usabilità e intuitività dell’interfaccia?
+4. È utile prevedere anche un questionario o una raccolta di feedback qualitativi sull’esperienza utente (da parte della professoressa)?
+
+CANALI IMPORTANTI: FC5 e FC6, F3 e F4
+CANALI DA TOGLIERE (MOVIMENTI OCULARI): AF3, AF4, F7 e F8
+
+FEATURE IMPORTANTI: Alpha, Beta 1 2 3, 

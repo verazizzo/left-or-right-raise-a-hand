@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
-from utils.feature_extractor import FeatureExtractor
+from src.utils.feature_extractor import FeatureExtractor
 from src.utils.training import train_SVM, train_xgboost
 from src.utils.shap_analysis import shap_analysis_xgboost, shap_analysis_svm
 
@@ -48,7 +48,7 @@ if not os.path.exists(preprocessed_path):
         plot=False,
         LOW_FREQUENCY=filter_low, 
         HIGH_FREQUENCY=filter_high,
-        drop_channels=False, 
+        drop_channels=False,  # Change to True to drop channels (SVM accuracy is the same, XGBoost accuracy decreases)
         channels=['AF3', 'F7', 'F8', 'AF4']
     )
     eeg_preprocessing.save_pkl_data(path_out=preprocessed_path, data=eeg_preprocessing.dataset_post_processing)

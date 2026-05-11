@@ -6,6 +6,7 @@ import pandas as pd
 import os
 
 def shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, x_train_scaled_svm):
+    np.random.seed(42)
 
     save_dir = 'temp/shap_plots/svm'
     os.makedirs(save_dir, exist_ok=True)
