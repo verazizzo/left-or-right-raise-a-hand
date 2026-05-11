@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
-from utils.feature_extractor import FeatureExtractor
+from src.utils.feature_extractor import FeatureExtractor
 from src.utils.training import train_SVM, train_xgboost
 from src.utils.shap_analysis import shap_analysis_xgboost, shap_analysis_svm
 
