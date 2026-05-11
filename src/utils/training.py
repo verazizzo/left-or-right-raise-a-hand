@@ -40,6 +40,7 @@ def train_SVM(df):
 
     grid_search.fit(x_scaled, y, groups=groups)
     print(f"Best parameters (LOGO): {grid_search.best_params_}")
+    print(f"Best accuracy on train set: {grid_search.best_score_}")
 
     best_svm = grid_search.best_estimator_
 
@@ -85,6 +86,7 @@ def train_xgboost(df):
 
     grid_search.fit(x_scaled, y, groups=groups)
     print(f"Best parameters (LOGO): {grid_search.best_params_}")
+    print(f"Best accuracy on train set: {grid_search.best_score_}")
 
     best_xgb = grid_search.best_estimator_
 
