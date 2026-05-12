@@ -48,7 +48,7 @@ if not os.path.exists(preprocessed_path):
         plot=False,
         LOW_FREQUENCY=filter_low, 
         HIGH_FREQUENCY=filter_high,
-        drop_channels=False,  # Change to True to drop channels (SVM accuracy is the same, XGBoost accuracy decreases)
+        drop_channels=True,  # Change to True to drop channels (SVM accuracy is the same, XGBoost accuracy decreases)
         channels=['AF3', 'F7', 'F8', 'AF4']
     )
     eeg_preprocessing.save_pkl_data(path_out=preprocessed_path, data=eeg_preprocessing.dataset_post_processing)

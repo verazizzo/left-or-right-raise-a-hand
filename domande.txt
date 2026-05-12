@@ -19,3 +19,15 @@ CANALI IMPORTANTI: FC5 e FC6, F3 e F4
 CANALI DA TOGLIERE (MOVIMENTI OCULARI): AF3, AF4, F7 e F8
 
 FEATURE IMPORTANTI: Alpha, Beta 1 2 3, 
+
+
+
+
+
+
+
+
+
+bad_channels = ['AF3', 'F7', 'F8', 'AF4']
+cols_to_drop = [col for col in df.columns if any(col.startswith(ch + '_') for ch in bad_channels)]
+df = df.drop(columns=cols_to_drop)

@@ -27,7 +27,7 @@ def train_SVM(df):
     svm = SVC(probability=True, random_state=42)
     param_grid = {
         'kernel': ['linear', 'rbf'],
-        'C': [0.1, 1, 10]
+        'C': [0.001, 0.01, 0.1]
     }
 
     grid_search = GridSearchCV(
@@ -39,13 +39,12 @@ def train_SVM(df):
     )
 
     grid_search.fit(x_scaled, y, groups=groups)
-    print(f"Best parameters (LOGO): {grid_search.best_params_}")
-    print(f"Best accuracy on train set: {grid_search.best_score_}")
+    print(f"Best parameters (LOGO): {grid_search.best_params_}")    # Best parameters found: kernel='linear', C=00.1
+    print(f"Accuracy on Validation (LOGO): {grid_search.best_score_}")
 
     best_svm = grid_search.best_estimator_
+    print(f"Accuracy on pure Train set: {best_svm.score(x_scaled, y)}") 
 
-    # Best parameters found: kernel='linear', C=0.1
-  
     return best_svm, scaler
 
 def train_xgboost(df):
@@ -90,6 +89,6 @@ def train_xgboost(df):
 
     best_xgb = grid_search.best_estimator_
 
-    # Best parameters found: n_estimators=100, max_depth=7, learning_rate=0.01
+    # Best parameters found: {'learning_rate': 0.01, 'max_depth': 5, 'n_estimators': 200}
 
     return best_xgb, scaler
