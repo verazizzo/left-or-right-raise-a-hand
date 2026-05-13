@@ -48,7 +48,7 @@ if not os.path.exists(preprocessed_path):
         plot=False,
         LOW_FREQUENCY=filter_low, 
         HIGH_FREQUENCY=filter_high,
-        drop_channels=True,  # Change to True to drop channels (SVM accuracy is the same, XGBoost accuracy decreases)
+        drop_channels=False,  # Change to True to drop channels (SVM accuracy is the same, XGBoost accuracy decreases)
         channels=['AF3', 'F7', 'F8', 'AF4']
     )
     eeg_preprocessing.save_pkl_data(path_out=preprocessed_path, data=eeg_preprocessing.dataset_post_processing)
@@ -85,61 +85,56 @@ df['Session'] = df['Session'].astype(int)
 
 df_real = df[df['Session'] == 1]
 df_imm = df[df['Session'] == 0]
+unique_user = df_imm['User'].unique() 
 
-# Changing flag to use real sessions for training or not
-use_real_for_training = False
-if use_real_for_training:
-    print("Using real sessions for training.")
-    df_train = df_real
-    best_svm, scaler_svm = train_SVM(df_train)
-    best_xgb, scaler_xgb = train_xgboost(df_train)
-    df_test = df_imm
-else:
-    unique_user = df_imm['User'].unique() 
-    train_user, test_user = train_test_split(unique_user, test_size=0.03, random_state=42) 
+train_user, test_user = train_test_split(unique_user, test_size=0.1, random_state=42)
 
-    df_train = df_imm[df_imm['User'].isin(train_user)] 
-    df_test = df_imm[df_imm['User'].isin(test_user)] 
+df_train_real = df_real[df_real['User'].isin(train_user)] 
+df_test_real = df_real[df_real['User'].isin(test_user)] 
 
-    print(f"Addestramento su {len(train_user)} utenti ({len(df_train)} epoche)") 
-    print(f"Test su {len(test_user)} utenti ({len(df_test)} epoche)")
-    print("Using imaginary sessions for training.")
-    
-    best_svm, scaler_svm = train_SVM(df_train)
-    best_xgb, scaler_xgb = train_xgboost(df_train)
+# best_svm = train_SVM(df_train_real)
+# best_xgb = train_xgboost(df_train_real)
+
+df_train_imm = df_imm[df_imm['User'].isin(train_user)] 
+df_test_imm = df_imm[df_imm['User'].isin(test_user)] 
+
+print("Using imaginary sessions for training.")
+
+# best_svm = train_SVM(df_train_imm)
+# best_xgb = train_xgboost(df_train_imm)
 
 
-x_test = df_test.drop(columns=['Target_Label', 'User'])
-y_true = df_test['Target_Label']
-y_true_xgb = y_true.map({2: 0, 3: 1})
+# x_test = df_test.drop(columns=['Target_Label', 'User'])
+# y_true = df_test['Target_Label']
+# y_true_xgb = y_true.map({2: 0, 3: 1})
 
-x_test_scaled_svm = scaler_svm.transform(x_test)
-x_test_scaled_xgb = scaler_xgb.transform(x_test)
-
-
-y_pred_svm = best_svm.predict(x_test_scaled_svm)
-y_pred_xgb = best_xgb.predict(x_test_scaled_xgb)
-
-accuracy_svm = accuracy_score(y_true, y_pred_svm)
-accuracy_xgb = accuracy_score(y_true_xgb, y_pred_xgb)
-
-print(f"\n Evaluation Metrics:")
-print(f"Accuracy SVM: {accuracy_svm * 100:.2f}%")
-print(f"Accuracy XGBoost: {accuracy_xgb * 100:.2f}%\n")
-print("Classification report SVM:")
-print(classification_report(y_true, y_pred_svm))
-print("Confusion matrix SVM:")
-print(confusion_matrix(y_true, y_pred_svm))
-print("Classification report XGBoost:")
-print(classification_report(y_true_xgb, y_pred_xgb))
-print("Confusion matrix XGBoost:")
-print(confusion_matrix(y_true_xgb, y_pred_xgb))
+# x_test_scaled_svm = scaler_svm.transform(x_test)
+# x_test_scaled_xgb = scaler_xgb.transform(x_test)
 
 
-# SHAP Analysis
+# y_pred_svm = best_svm.predict(x_test_scaled_svm)
+# y_pred_xgb = best_xgb.predict(x_test_scaled_xgb)
 
-print("\nStarting SHAP analysis for SVM...")
-shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, scaler_svm.transform(df_train.drop(columns=['Target_Label', 'User'])))
+# accuracy_svm = accuracy_score(y_true, y_pred_svm)
+# accuracy_xgb = accuracy_score(y_true_xgb, y_pred_xgb)
 
-print("\nStarting SHAP analysis for XGBoost...")
-shap_analysis_xgboost(best_xgb, x_test, x_test_scaled_xgb)
+# print(f"\n Evaluation Metrics:")
+# print(f"Accuracy SVM: {accuracy_svm * 100:.2f}%")
+# print(f"Accuracy XGBoost: {accuracy_xgb * 100:.2f}%\n")
+# print("Classification report SVM:")
+# print(classification_report(y_true, y_pred_svm))
+# print("Confusion matrix SVM:")
+# print(confusion_matrix(y_true, y_pred_svm))
+# print("Classification report XGBoost:")
+# print(classification_report(y_true_xgb, y_pred_xgb))
+# print("Confusion matrix XGBoost:")
+# print(confusion_matrix(y_true_xgb, y_pred_xgb))
+
+
+# # SHAP Analysis
+
+# print("\nStarting SHAP analysis for SVM...")
+# shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, scaler_svm.transform(df_train.drop(columns=['Target_Label', 'User'])))
+
+# print("\nStarting SHAP analysis for XGBoost...")
+# shap_analysis_xgboost(best_xgb, x_test, x_test_scaled_xgb)
