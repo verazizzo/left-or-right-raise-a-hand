@@ -5,17 +5,17 @@ import numpy as np
 import pandas as pd
 import os
 
-def shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, x_train_scaled_svm):
+def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_names, user_id):
     np.random.seed(42)
 
-    save_dir = 'temp/shap_plots/svm'
+    save_dir = f'temp/shap_plots/svm/user_{user_id}'
     os.makedirs(save_dir, exist_ok=True)
 
     background_svm = shap.kmeans(x_train_scaled_svm, 10)
 
     explainer_svm = shap.KernelExplainer(best_svm.predict, background_svm)
 
-    shap_vals_svm = explainer_svm.shap_values(x_test_scaled_svm)
+    shap_vals_svm = explainer_svm.shap_values(x_test_scaled_svm, silent=True)
 
     if isinstance(shap_vals_svm, list):
         shap_vals_svm = shap_vals_svm[1]
@@ -24,7 +24,7 @@ def shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, x_train_scaled_svm):
     mean_abs_shap_svm = np.abs(shap_vals_svm).mean(axis=0)
 
     shap_df_svm = pd.DataFrame({
-        'Feature_Name': x_test.columns,
+        'Feature_Name': feature_names,
         'SHAP_Value': mean_abs_shap_svm
     })
 
@@ -43,31 +43,31 @@ def shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, x_train_scaled_svm):
     # Plot 1: Channel Importance (SVM)
     plt.figure(figsize=(10, 6))
     sns.barplot(x=channel_imp_svm.values, y=channel_imp_svm.index, hue=channel_imp_svm.index, palette="viridis", legend=False)
-    plt.title("Shap analysis - Channel Importance (SVM)", fontsize=14)
+    plt.title(f"Channel Importance - SVM (User: {user_id})", fontsize=14)
     plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
     plt.ylabel("EEG Channel")
     plt.tight_layout()
-    plt.savefig('temp/shap_plots/svm/shap_1_channels_svm.png', dpi=300)
+    plt.savefig(f'{save_dir}/shap_1_channels.png', dpi=300)
     plt.close()
 
     # Plot 2: Feature Importance (SVM)
     plt.figure(figsize=(12, 8))
     sns.barplot(x=feature_imp_svm.values, y=feature_imp_svm.index, hue=feature_imp_svm.index, palette="mako", legend=False)
-    plt.title("Shap analysis - Feature Importance (SVM)", fontsize=14)
+    plt.title(f"Shap analysis - Feature Importance (SVM) (User: {user_id})", fontsize=14)
     plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
     plt.ylabel("Feature Type")
     plt.tight_layout()
-    plt.savefig('temp/shap_plots/svm/shap_2_features_svm.png', dpi=300)
+    plt.savefig(f'{save_dir}/shap_2_features.png', dpi=300)
     plt.close()
 
     # Plot 3: Temporal Window Importance (SVM)
     plt.figure(figsize=(8, 4))
     sns.barplot(x=window_imp_svm.values, y=window_imp_svm.index, hue=window_imp_svm.index, palette="rocket", legend=False)
-    plt.title("Shap analysis - Temporal Window Importance (SVM)", fontsize=14)
+    plt.title(f"Shap analysis - Temporal Window Importance (SVM) (User: {user_id})", fontsize=14)
     plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
     plt.ylabel("Temporal Window")
     plt.tight_layout()
-    plt.savefig('temp/shap_plots/svm/shap_3_windows_svm.png', dpi=300)
+    plt.savefig(f'{save_dir}/shap_3_windows.png', dpi=300)
     plt.close()
 
     print("Shap analysis for SVM completed! Plots saved in 'temp/shap_plots/svm' directory.")

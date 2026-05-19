@@ -31,3 +31,13 @@ FEATURE IMPORTANTI: Alpha, Beta 1 2 3,
 bad_channels = ['AF3', 'F7', 'F8', 'AF4']
 cols_to_drop = [col for col in df.columns if any(col.startswith(ch + '_') for ch in bad_channels)]
 df = df.drop(columns=cols_to_drop)
+
+
+
+F1-score medio su tutti gli utenti: 0.4529
+AUC medio su tutti gli utenti: 0.5167
+
+
+TOGLIENDO DELTA E THETA E SUI 3100 CAMPIONI:
+F1-score medio � standard deviation su tutti gli utenti: 0.5115 � 0.1217
+AUC medio � standard deviation su tutti gli utenti: 0.5568 � 0.1291

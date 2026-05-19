@@ -8,8 +8,10 @@ from sklearn.model_selection import train_test_split
 from src.dataset.dataset import Dataset
 from src.preprocessing.preprocessing import Preprocessing
 from src.utils.feature_extractor import FeatureExtractor
-from src.utils.training import train_SVM, train_xgboost
-from src.utils.shap_analysis import shap_analysis_xgboost, shap_analysis_svm
+from src.utils.training_2 import train_SVM
+
+#from src.utils.training_2 import train_SVM, train_xgboost
+#from src.utils.shap_analysis import shap_analysis_xgboost, shap_analysis_svm
 
 import shap
 import matplotlib.pyplot as plt
@@ -62,7 +64,7 @@ if not os.path.exists(features_out_path):
 
     extractor = FeatureExtractor(tmin=0.0, tmax=15.0)
 
-    extractor.extract_epochs(dataset_pre)
+    extractor.extract_epochs(dataset_pre, reject=True)
     df_features = extractor.compute_all_features() 
 
     extractor.save_features_csv(df_features, path_out=features_out_path)
@@ -70,6 +72,15 @@ else:
     print(f"Features already exist at {features_out_path}. Skipping feature extraction.")
 
 df = pd.read_csv('./temp/features_antropy.csv')
+
+print(f"Forma originale: {df.shape}")
+bad_channels = ['AF3', 'F7', 'F8', 'AF4']
+# 2. Trovi tutte le colonne che contengono le parole da eliminare
+colonne_da_cancellare = [col for col in df.columns if 'Delta' in col or 'Theta' in col or any(col.startswith(ch + '_') for ch in bad_channels)]
+   
+# 3. Le elimini dal dataframe in un decimo di secondo
+df = df.drop(columns=colonne_da_cancellare)
+print(f"Forma dopo la pulizia: {df.shape}")
 
 # df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 # df = df.drop('User', axis=1)
@@ -79,6 +90,10 @@ df = df[df['Target_Label'].isin([2,3])].copy()
 
 features = df.columns
 
+df['User'] = df['User'].str.split('\\').str[-1].str.split('/').str[-1]
+
+# print(df.head())
+
 df['Session'] = df['Session'].str.replace(r'dataset_mi_emotive\\[a-zA-Z0-9_$]*\\imm', '0', regex=True)
 df['Session'] = df['Session'].str.replace(r'dataset_mi_emotive\\[a-zA-Z0-9_$]*\\real', '1', regex=True)
 df['Session'] = df['Session'].astype(int)
@@ -86,7 +101,12 @@ df['Session'] = df['Session'].astype(int)
 df_real = df[df['Session'] == 1]
 df_imm = df[df['Session'] == 0]
 
-# Changing flag to use real sessions for training or not
+print(df_imm.head(20))
+
+
+train_SVM(df_real)
+
+"""# Changing flag to use real sessions for training or not
 use_real_for_training = False
 if use_real_for_training:
     print("Using real sessions for training.")
@@ -96,17 +116,17 @@ if use_real_for_training:
     df_test = df_imm
 else:
     unique_user = df_imm['User'].unique() 
-    train_user, test_user = train_test_split(unique_user, test_size=0.03, random_state=42) 
+    #train_user, test_user = train_test_split(unique_user, test_size=0.03, random_state=42) 
 
-    df_train = df_imm[df_imm['User'].isin(train_user)] 
-    df_test = df_imm[df_imm['User'].isin(test_user)] 
+    #df_train = df_imm[df_imm['User'].isin(train_user)] 
+    #df_test = df_imm[df_imm['User'].isin(test_user)] 
 
-    print(f"Addestramento su {len(train_user)} utenti ({len(df_train)} epoche)") 
-    print(f"Test su {len(test_user)} utenti ({len(df_test)} epoche)")
+    #print(f"Addestramento su {len(train_user)} utenti ({len(df_train)} epoche)") 
+    #print(f"Test su {len(test_user)} utenti ({len(df_test)} epoche)")
     print("Using imaginary sessions for training.")
     
-    best_svm, scaler_svm = train_SVM(df_train)
-    best_xgb, scaler_xgb = train_xgboost(df_train)
+    best_svm, scaler_svm = train_SVM(df_imm)
+    best_xgb, scaler_xgb = train_xgboost(df_imm)
 
 
 x_test = df_test.drop(columns=['Target_Label', 'User'])
@@ -142,4 +162,4 @@ print("\nStarting SHAP analysis for SVM...")
 shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, scaler_svm.transform(df_train.drop(columns=['Target_Label', 'User'])))
 
 print("\nStarting SHAP analysis for XGBoost...")
-shap_analysis_xgboost(best_xgb, x_test, x_test_scaled_xgb)
+shap_analysis_xgboost(best_xgb, x_test, x_test_scaled_xgb)"""
