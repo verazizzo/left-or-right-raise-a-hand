@@ -11,10 +11,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
-#from src.utils.shap_analysis import shap_analysis_svm
+from src.utils.shap_analysis import shap_analysis_svm
 
 
-def train_SVM(df):
+def train_SVM(df, is_real):
     x = df.drop(columns=['Target_Label', 'User'])
     # Assicurati di mappare y a 0 e 1, altrimenti roc_auc_score potrebbe dare problemi
     y = df['Target_Label'].map({2: 0, 3: 1}) 
@@ -120,7 +120,7 @@ def train_SVM(df):
 
         # 5. SHAP ANALYSIS (Passiamo i nomi delle feature e l'ID utente
 
-        #shap_analysis_svm(best_svm, x_test_outer_s, x_train_outer_s, feature_names, test_user)
+        shap_analysis_svm(best_svm, x_test_outer_s, x_train_outer_s, feature_names, test_user, is_real)
 
     print(f"F1-score medio ± standard deviation su tutti gli utenti: {np.mean(f1_totale):.4f} ± {np.std(f1_totale):.4f}")
 

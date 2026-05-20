@@ -10,9 +10,6 @@ from src.preprocessing.preprocessing import Preprocessing
 from src.utils.feature_extractor import FeatureExtractor
 from src.utils.training_2 import train_SVM
 
-#from src.utils.training_2 import train_SVM, train_xgboost
-#from src.utils.shap_analysis import shap_analysis_xgboost, shap_analysis_svm
-
 import shap
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -74,11 +71,8 @@ else:
 df = pd.read_csv('./temp/features_antropy.csv')
 
 print(f"Forma originale: {df.shape}")
-bad_channels = ['AF3', 'F7', 'F8', 'AF4']
-# 2. Trovi tutte le colonne che contengono le parole da eliminare
-colonne_da_cancellare = [col for col in df.columns if 'Delta' in col or 'Theta' in col or any(col.startswith(ch + '_') for ch in bad_channels)]
-   
-# 3. Le elimini dal dataframe in un decimo di secondo
+
+colonne_da_cancellare = [col for col in df.columns if 'Delta' in col or 'Theta' in col]
 df = df.drop(columns=colonne_da_cancellare)
 print(f"Forma dopo la pulizia: {df.shape}")
 
@@ -105,62 +99,5 @@ unique_user = df_imm['User'].unique()
 print(df_imm.head(20))
 
 
-train_SVM(df_real)
+train_SVM(df_real, True)
 
-"""# Changing flag to use real sessions for training or not
-use_real_for_training = False
-if use_real_for_training:
-    print("Using real sessions for training.")
-    df_train = df_real
-    best_svm, scaler_svm = train_SVM(df_train)
-    best_xgb, scaler_xgb = train_xgboost(df_train)
-    df_test = df_imm
-else:
-    unique_user = df_imm['User'].unique() 
-    #train_user, test_user = train_test_split(unique_user, test_size=0.03, random_state=42) 
-
-    #df_train = df_imm[df_imm['User'].isin(train_user)] 
-    #df_test = df_imm[df_imm['User'].isin(test_user)] 
-
-    #print(f"Addestramento su {len(train_user)} utenti ({len(df_train)} epoche)") 
-    #print(f"Test su {len(test_user)} utenti ({len(df_test)} epoche)")
-    print("Using imaginary sessions for training.")
-    
-    best_svm, scaler_svm = train_SVM(df_imm)
-    best_xgb, scaler_xgb = train_xgboost(df_imm)
-
-
-# x_test = df_test.drop(columns=['Target_Label', 'User'])
-# y_true = df_test['Target_Label']
-# y_true_xgb = y_true.map({2: 0, 3: 1})
-
-# x_test_scaled_svm = scaler_svm.transform(x_test)
-# x_test_scaled_xgb = scaler_xgb.transform(x_test)
-
-
-# y_pred_svm = best_svm.predict(x_test_scaled_svm)
-# y_pred_xgb = best_xgb.predict(x_test_scaled_xgb)
-
-# accuracy_svm = accuracy_score(y_true, y_pred_svm)
-# accuracy_xgb = accuracy_score(y_true_xgb, y_pred_xgb)
-
-# print(f"\n Evaluation Metrics:")
-# print(f"Accuracy SVM: {accuracy_svm * 100:.2f}%")
-# print(f"Accuracy XGBoost: {accuracy_xgb * 100:.2f}%\n")
-# print("Classification report SVM:")
-# print(classification_report(y_true, y_pred_svm))
-# print("Confusion matrix SVM:")
-# print(confusion_matrix(y_true, y_pred_svm))
-# print("Classification report XGBoost:")
-# print(classification_report(y_true_xgb, y_pred_xgb))
-# print("Confusion matrix XGBoost:")
-# print(confusion_matrix(y_true_xgb, y_pred_xgb))
-
-
-# # SHAP Analysis
-
-# print("\nStarting SHAP analysis for SVM...")
-# shap_analysis_svm(best_svm, x_test, x_test_scaled_svm, scaler_svm.transform(df_train.drop(columns=['Target_Label', 'User'])))
-
-print("\nStarting SHAP analysis for XGBoost...")
-shap_analysis_xgboost(best_xgb, x_test, x_test_scaled_xgb)"""

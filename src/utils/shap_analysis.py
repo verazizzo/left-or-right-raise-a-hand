@@ -5,10 +5,14 @@ import numpy as np
 import pandas as pd
 import os
 
-def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_names, user_id):
+def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_names, user_id, is_real):
     np.random.seed(42)
 
-    save_dir = f'temp/shap_plots/svm/user_{user_id}'
+    if is_real:
+        save_dir = f'temp/shap_plots/svm/real/user_{user_id}'
+    else:        
+        save_dir = f'temp/shap_plots/svm/imm/user_{user_id}'
+
     os.makedirs(save_dir, exist_ok=True)
 
     background_svm = shap.kmeans(x_train_scaled_svm, 10)
