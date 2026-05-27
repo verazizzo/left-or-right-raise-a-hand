@@ -102,7 +102,7 @@ comparison_df = pd.DataFrame({
     'AUC_Std': [results_real['AUC_Std'], results_imm['AUC_Std']]
 })
 
-print("\n=== CONFRONTO FINALE DELLE PERFORMANCE ===")
+print("\n CONFRONTO FINALE DELLE PERFORMANCE ")
 print(comparison_df.to_string(index=False))
 
 # Salvataggio su disco (formato CSV)
