@@ -41,3 +41,16 @@ AUC medio su tutti gli utenti: 0.5167
 TOGLIENDO DELTA E THETA E SUI 3100 CAMPIONI:
 F1-score medio � standard deviation su tutti gli utenti: 0.5115 � 0.1217
 AUC medio � standard deviation su tutti gli utenti: 0.5568 � 0.1291
+
+
+Comando per installare nestJS sul pc:
+npm i -g @nestjs/cli
+
+Per il frontend, bisogna spostarsi nella cartella frontend e fare questo comando la prima volta:
+npm installar
+
+Per eseguire il frontend, ricorda di runnare il container del backend, altrimenti non comunicano:
+docker-compose up --build -d
+Subito dopo usa questo comando per vedere le modifiche in tempo reale senza containerizzazione sul frontend:
+npm run dev
+
