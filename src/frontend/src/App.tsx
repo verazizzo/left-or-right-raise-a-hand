@@ -1,15 +1,15 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Homepage from './pages/Homepage'
+import Homepage from './pages/Homepage';
+import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 
 export default function App() {
   return (
     <div className="app-container">
       <Routes>
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<SignUp />} />
 
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<SignIn />} />
 
         <Route path="/homepage" element={<Homepage />} /> 
        
