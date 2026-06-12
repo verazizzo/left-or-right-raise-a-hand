@@ -91,10 +91,10 @@ unique_user = df_imm['User'].unique()
 print(df_imm.head(20))
 
 
-results_real = train_SVM(df_real, True)
+#results_real = train_SVM(df_real, True)
 results_imm = train_SVM(df_imm, False)
 
-comparison_df = pd.DataFrame({
+"""comparison_df = pd.DataFrame({
     'Task': ['Real Movement', 'Imagined Movement'],
     'F1_Mean': [results_real['F1_Mean'], results_imm['F1_Mean']],
     'F1_Std': [results_real['F1_Std'], results_imm['F1_Std']],
@@ -111,4 +111,4 @@ os.makedirs(results_dir, exist_ok=True)
 csv_path = os.path.join(results_dir, 'svm_performance_comparison.csv')
 
 comparison_df.to_csv(csv_path, index=False)
-print(f"\nRisultati salvati con successo in: {csv_path}")
+print(f"\nRisultati salvati con successo in: {csv_path}")"""

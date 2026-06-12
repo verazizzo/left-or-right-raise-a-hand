@@ -17,6 +17,9 @@ import AppTheme from '../shared-theme/AppTheme';
 import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import { register } from '../api/auth';
 
+import logoImg from '../assets/logo_sfum.svg';
+import titoloImg from '../assets/titolo_sfum.svg';
+
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -155,6 +158,31 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
       <SignUpContainer direction="column" sx={{ justifyContent: 'space-between' }}>
         <Card variant="outlined">
+
+          {/* 🚀 SEZIONE BRANDING: Logo e Titolo SVG */}
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              mb: 1 
+            }}
+          >
+            <img 
+              src={logoImg} 
+              alt="Logo Piattaforma" 
+              style={{ width: '90px', marginBottom: '15px' }} 
+            />
+            
+            <img 
+              src={titoloImg} 
+              alt="Nome Piattaforma" 
+              style={{ height: '30px' }} 
+            />
+          </Box>
+
+
           <Typography
             component="h1"
             variant="h4"

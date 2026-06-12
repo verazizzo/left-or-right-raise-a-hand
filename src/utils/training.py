@@ -1,3 +1,5 @@
+import os
+import pandas as pd
 import numpy as np
 import itertools
 
@@ -6,8 +8,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
-from src.utils.shap_analysis import shap_analysis_svm, shap_analysis_xgboost
+from src.utils.shap_analysis import shap_analysis_svm, shap_analysis_xgboost, esporta_json_dashboard, genera_topoplot_statico_mne
 from xgboost import XGBClassifier
+
+import json
 
 
 
@@ -21,6 +25,9 @@ def train_SVM(df, is_real):
     f1_totale = []
     auc_totale = []
 
+    shap_dfs_totali = []
+    performance_utenti = {}
+
     # Inizializziamo la LOGO. random_state non serve in LeaveOneGroupOut perché è deterministico
     logo = LeaveOneGroupOut()
     
@@ -30,6 +37,8 @@ def train_SVM(df, is_real):
         'degree': [2, 3, 4]
     }
     param_combinations = list(itertools.product(*param_grid.values()))
+
+    user_counter = 1
 
     # Isoliamo un utente per il test fin dall'inizio
     for outer_train_idx, outer_test_idx in logo.split(x, y, groups=groups):
@@ -43,7 +52,9 @@ def train_SVM(df, is_real):
         y_test_outer = y.iloc[outer_test_idx].values
         
         test_user = groups.iloc[outer_test_idx].iloc[0]
-        print(f"\n[{test_user}] Inizio ottimizzazione sui 29 utenti rimanenti...")
+        anon_user = f"user_{user_counter}"
+
+        print(f"\n[{anon_user}] ) [{test_user}] Inizio ottimizzazione sui 29 utenti rimanenti...")
 
         # 2. RICERCA PARAMETRI (Solo sui 29 utenti)
         best_params = None
@@ -104,22 +115,125 @@ def train_SVM(df, is_real):
 
         f1_totale.append(f1)
         auc_totale.append(auc)
+
+        performance_utenti[anon_user] = {
+            "f1_score": float(f1),
+            "auc_score": float(auc)
+        }
         
-        print(f"[{test_user}] F1: {f1:.4f} | AUC: {auc:.4f}")
+        print(f"[{anon_user}] F1: {f1:.4f} | AUC: {auc:.4f}")
         print(f"    -> Train Acc: {train_acc:.4f} (Loss: {train_loss:.4f})")
         print(f"    -> Test  Acc: {test_acc:.4f}  (Loss: {test_loss:.4f})\n")
 
         # 5. SHAP ANALYSIS 
 
-        shap_analysis_svm(best_svm, x_test_outer_s, x_train_outer_s, feature_names, test_user, is_real)
-    
+        df_shap_utente = shap_analysis_svm(best_svm, x_test_outer_s, x_train_outer_s, feature_names, anon_user, is_real)
+        if df_shap_utente is not None:
+            shap_dfs_totali.append(df_shap_utente)
+
+        # INCREMENTIAMO IL CONTATORE A FINE CICLO
+        user_counter += 1
+
     f1_mean = np.mean(f1_totale)
     f1_std = np.std(f1_totale)
     auc_mean = np.mean(auc_totale)
     auc_std = np.std(auc_totale)
 
+    struttura_metriche = {
+        "modello": "SVM",
+        "is_real_session": bool(is_real),
+        "global_metrics": {
+            "f1_mean": f1_mean,
+            "f1_std": f1_std,
+            "auc_mean": auc_mean,
+            "auc_std": auc_std
+        },
+        "per_user_metrics": performance_utenti
+    }
+
+    # Definiamo dove salvarlo (es: temp/shap_plots/svm/real/ o in una cartella dedicata)
+    tipo_task = "real" if is_real else "imm"
+    dir_metriche = f'temp/shap_plots/svm/{tipo_task}'
+    os.makedirs(dir_metriche, exist_ok=True)
+    
+    path_json_metriche = f'{dir_metriche}/performance_metrics.json'
+    with open(path_json_metriche, 'w', encoding='utf-8') as f:
+        json.dump(struttura_metriche, f, indent=4, ensure_ascii=False)
+        
+    print(f"[METRICHE OK] File delle performance salvato in: {path_json_metriche}")
+
+
+
     print(f"F1-score medio ± standard deviation: {f1_mean:.4f} ± {f1_std:.4f}")
     print(f"AUC medio ± standard deviation: {auc_mean:.4f} ± {auc_std:.4f}")
+
+    # PAZIENTE BLOBALE (MEDIE DI TUTTI I UTENTI)
+    if shap_dfs_totali:
+        print(f"\n[INFO] Calcolo della media globale SHAP in corso...")
+        df_unito = pd.concat(shap_dfs_totali)
+        
+        # Raggruppa per feature e calcola la media matematica di tutti i valori
+        df_globale = df_unito.groupby('Feature_Name').mean(numeric_only=True).reset_index()
+        # Ricrea le colonne necessarie
+        df_globale[['Channel', 'FeatureType', 'Window']] = df_globale['Feature_Name'].str.split('_', expand=True)
+
+        tipo_task = "real" if is_real else "imm"
+        # Per XGBoost ricordati di cambiare "svm" in "xgboost" nel path qui sotto
+        dir_globale = f'temp/shap_plots/svm/{tipo_task}/user_GLOBALE' 
+        os.makedirs(dir_globale, exist_ok=True)
+
+        # 1. Esporta i file per la Dashboard fingendo che sia un paziente normale
+        esporta_json_dashboard(df_globale, dir_globale, "GLOBALE", is_real)
+        
+        # 2. Esporta il Topoplot MNE (se SHAP_Value_Dir è presente - ad es. per SVM)
+        if 'SHAP_Value_Dir' in df_globale.columns:
+            genera_topoplot_statico_mne(df_globale['SHAP_Value_Dir'].values, df_globale['Feature_Name'].values, dir_globale, "GLOBALE")
+
+        # 3. CALCOLO E STAMPA DEI GRAFICI A BARRE SEABORN (Canali, Feature, Finestre)
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+
+        # Specifica quale colonna usare per l'importanza (SVM usa SHAP_Value_Abs, XGBoost usa SHAP_Value)
+        col_importanza = 'SHAP_Value_Abs' if 'SHAP_Value_Abs' in df_globale.columns else 'SHAP_Value'
+
+        channel_imp_glob = df_globale.groupby('Channel')[col_importanza].sum().sort_values(ascending=False)
+        feature_imp_glob = df_globale.groupby('FeatureType')[col_importanza].sum().sort_values(ascending=False)
+        window_imp_glob = df_globale.groupby('Window')[col_importanza].sum().sort_values(ascending=False)
+
+        # Plot 1: Channel Importance GLOBALE
+        plt.figure(figsize=(10, 6))
+        sns.barplot(x=channel_imp_glob.values, y=channel_imp_glob.index, hue=channel_imp_glob.index, palette="viridis", legend=False)
+        plt.title(f"Channel Importance GLOBALE (Tutti gli Utenti)", fontsize=14)
+        plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
+        plt.ylabel("EEG Channel")
+        plt.tight_layout()
+        plt.savefig(f'{dir_globale}/shap_1_channels.png', dpi=300)
+        plt.close()
+
+        # Plot 2: Feature Importance GLOBALE
+        plt.figure(figsize=(12, 8))
+        sns.barplot(x=feature_imp_glob.values, y=feature_imp_glob.index, hue=feature_imp_glob.index, palette="mako", legend=False)
+        plt.title(f"Feature Importance GLOBALE (Tutti gli Utenti)", fontsize=14)
+        plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
+        plt.ylabel("Feature Type")
+        plt.tight_layout()
+        plt.savefig(f'{dir_globale}/shap_2_features.png', dpi=300)
+        plt.close()
+
+        # Plot 3: Temporal Window Importance GLOBALE
+        plt.figure(figsize=(8, 4))
+        sns.barplot(x=window_imp_glob.values, y=window_imp_glob.index, hue=window_imp_glob.index, palette="rocket", legend=False)
+        plt.title(f"Temporal Window Importance GLOBALE (Tutti gli Utenti)", fontsize=14)
+        plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
+        plt.ylabel("Temporal Window")
+        plt.tight_layout()
+        plt.savefig(f'{dir_globale}/shap_3_windows.png', dpi=300)
+        plt.close()
+
+        print(f"[OK] Paziente GLOBALE salvato (Grafici e Dati) in {dir_globale}")
+
+
+
 
     results = {
         'F1_Mean': f1_mean,

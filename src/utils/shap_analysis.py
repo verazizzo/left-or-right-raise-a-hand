@@ -1,3 +1,5 @@
+import json
+import mne
 import shap
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -5,20 +7,98 @@ import numpy as np
 import pandas as pd
 import os
 
+
+
+def genera_topoplot_statico_mne(mean_directional_shap, feature_names, save_dir, user_id):
+    """ Disegna e salva fisicamente la foto PNG del topoplot scientifico RdBu_r usando MNE Python """
+    emotiv_channels = ['AF3', 'F7', 'F3', 'FC5', 'T7', 'P7', 'O1', 'O2', 'P8', 'T8', 'FC6', 'F4', 'F8', 'AF4']
+    channel_importance = {ch: 0.0 for ch in emotiv_channels}
+    
+    # Aggreghiamo i valori SHAP direzionali per ciascuno dei 14 canali Emotiv
+    for feat_name, peso in zip(feature_names, mean_directional_shap):
+        for ch in emotiv_channels:
+            if feat_name.startswith(ch + '_'):
+                channel_importance[ch] += peso
+                break
+                
+    data_to_plot = np.array([channel_importance[ch] for ch in emotiv_channels])
+    
+    # Configurazione del montaggio standard 10-20 di MNE Python
+    info = mne.create_info(ch_names=emotiv_channels, sfreq=128, ch_types='eeg')
+    montage = mne.channels.make_standard_montage('standard_1020')
+    info.set_montage(montage)
+    
+    fig, ax = plt.subplots(figsize=(7, 7))
+    limite = np.max(np.abs(data_to_plot))
+    if limite == 0: limite = 1 
+    
+    # Generazione della mappa topografica 2D
+    im, _ = mne.viz.plot_topomap(
+        data_to_plot, info, axes=ax, show=False, cmap='RdBu_r',          
+        vlim=(-limite, limite), contours=0, extrapolate='box', names=emotiv_channels
+    )
+    plt.title(f"Mappa SHAP MNE - Utente: {user_id}", fontsize=14)
+    
+    # Barra laterale dei colori (Colorbar)
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.2)
+    plt.colorbar(im, cax=cax, label="Riposo (Blu) <--- SHAP ---> Movimento (Rosso)")
+    
+    plot_path = f"{save_dir}/topoplot_{user_id}.png"
+    plt.savefig(plot_path, bbox_inches='tight', dpi=300)
+    plt.close(fig)
+    print(f"[FOTO OK] Topoplot statico MNE salvato correttamente in: {plot_path}")
+
+
+def esporta_json_dashboard(shap_df, save_dir, user_id, is_real):
+    """ Salva la struttura JSON formattata per popolare i grafici React della Dashboard """
+    channel_imp_abs = shap_df.groupby('Channel')['SHAP_Value_Abs'].sum()
+    channel_imp_dir = shap_df.groupby('Channel')['SHAP_Value_Dir'].sum()
+    feature_imp_abs = shap_df.groupby('FeatureType')['SHAP_Value_Abs'].sum()
+    window_imp_abs = shap_df.groupby('Window')['SHAP_Value_Abs'].sum()
+
+    struttura_json = {
+        "user_id": str(user_id),
+        "is_real_session": bool(is_real),
+        "channels": [
+            {
+                "id": ch,
+                "shap_absolute": float(channel_imp_abs.get(ch, 0)),
+                "shap_directional": float(channel_imp_dir.get(ch, 0)),
+            } for ch in channel_imp_abs.index if ch != "Session"
+        ],
+        "features": [
+            {
+                "id": f_type,
+                "shap_absolute": float(feature_imp_abs.get(f_type, 0)),
+            } for f_type in feature_imp_abs.index
+        ],
+        "windows": [
+            {
+                "id": win,
+                "shap_absolute": float(window_imp_abs.get(win, 0)),
+            } for win in window_imp_abs.index
+        ]
+    }
+
+    json_path = f'{save_dir}/{user_id}.json'
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(struttura_json, f, indent=4, ensure_ascii=False)
+    print(f"[JSON OK] Dati per la Dashboard React salvati in: {json_path}")
+
 def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_names, user_id, is_real):
     np.random.seed(42)
 
     if is_real:
-        save_dir = f'temp/shap_plots/svm/real/user_{user_id}'
+        save_dir = f'temp/shap_plots/svm/real/{user_id}'
     else:        
-        save_dir = f'temp/shap_plots/svm/imm/user_{user_id}'
+        save_dir = f'temp/shap_plots/svm/imm/{user_id}'
 
     os.makedirs(save_dir, exist_ok=True)
 
     background_svm = shap.kmeans(x_train_scaled_svm, 10)
-
     explainer_svm = shap.KernelExplainer(best_svm.predict, background_svm)
-
     shap_vals_svm = explainer_svm.shap_values(x_test_scaled_svm, silent=True)
 
     if isinstance(shap_vals_svm, list):
@@ -26,10 +106,12 @@ def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_n
 
     # Calculate mean absolute SHAP values for each feature across all test samples
     mean_abs_shap_svm = np.abs(shap_vals_svm).mean(axis=0)
+    mean_directional_shap_svm = shap_vals_svm.mean(axis=0)
 
     shap_df_svm = pd.DataFrame({
         'Feature_Name': feature_names,
-        'SHAP_Value': mean_abs_shap_svm
+        'SHAP_Value_Abs': mean_abs_shap_svm,       
+        'SHAP_Value_Dir': mean_directional_shap_svm
     })
 
     try:
@@ -37,10 +119,16 @@ def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_n
     except ValueError:
         print("\nWARNING: Some features do not follow the 'Channel_Feature_Window' format.")
 
+    # 1. Esporta il JSON per Next.js
+    esporta_json_dashboard(shap_df_svm, save_dir, user_id, is_real)
+
+    # 2. STAMPA LA FOTO DEL TOPOPLOT CON MNE PYTHON (Aggiunta inserita)
+    genera_topoplot_statico_mne(mean_directional_shap_svm, feature_names, save_dir, user_id)
+
     # Gropuing by categories to get overall importance
-    channel_imp_svm = shap_df_svm.groupby('Channel')['SHAP_Value'].sum().sort_values(ascending=False)
-    feature_imp_svm = shap_df_svm.groupby('FeatureType')['SHAP_Value'].sum().sort_values(ascending=False)
-    window_imp_svm = shap_df_svm.groupby('Window')['SHAP_Value'].sum().sort_values(ascending=False)
+    channel_imp_svm = shap_df_svm.groupby('Channel')['SHAP_Value_Abs'].sum().sort_values(ascending=False)
+    feature_imp_svm = shap_df_svm.groupby('FeatureType')['SHAP_Value_Abs'].sum().sort_values(ascending=False)
+    window_imp_svm = shap_df_svm.groupby('Window')['SHAP_Value_Abs'].sum().sort_values(ascending=False)
 
     # Plot 1: Channel Importance (SVM)
     plt.figure(figsize=(10, 6))
@@ -49,7 +137,7 @@ def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_n
     plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
     plt.ylabel("EEG Channel")
     plt.tight_layout()
-    plt.savefig(f'{save_dir}/shap_1_channels.png', dpi=300)
+    plt.savefig(f'{save_dir}/channels_{user_id}.png', dpi=300)
     plt.close()
 
     # Plot 2: Feature Importance (SVM)
@@ -59,7 +147,7 @@ def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_n
     plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
     plt.ylabel("Feature Type")
     plt.tight_layout()
-    plt.savefig(f'{save_dir}/shap_2_features.png', dpi=300)
+    plt.savefig(f'{save_dir}/features_{user_id}.png', dpi=300)
     plt.close()
 
     # Plot 3: Temporal Window Importance (SVM)
@@ -69,10 +157,12 @@ def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_n
     plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
     plt.ylabel("Temporal Window")
     plt.tight_layout()
-    plt.savefig(f'{save_dir}/shap_3_windows.png', dpi=300)
+    plt.savefig(f'{save_dir}/windows_{user_id}.png', dpi=300)
     plt.close()
 
     print("Shap analysis for SVM completed! Plots saved in 'temp/shap_plots/svm' directory.")
+
+    return shap_df_svm
 
 
 def shap_analysis_xgboost(best_xgb, x_test_s, feature_names, user_id, is_real):
