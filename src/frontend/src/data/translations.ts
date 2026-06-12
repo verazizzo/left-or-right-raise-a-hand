@@ -29,7 +29,8 @@ export const translations = {
     viewModeWeb: "Web App (Desktop)",
     viewModeMobile: "Mobile App (Smartphone)",
     // FRASI HOME
-    welcomeTitle: "Bentornato al tuo Centro Analisi EEG",
+    welcomeTitle1: "Benevenuto ",
+    welcomeTitle2: " al tuo Centro Analisi EEG",
     welcomeSubtitle: "Monitoraggio, intelligenza artificiale e analisi SHAP a portata di mano.",
     btnNewAnalysis: "Avvia Nuova Analisi",
     // FRASI CLIENTS
@@ -107,7 +108,8 @@ export const translations = {
     viewModeWeb: "Web App (Desktop)",
     viewModeMobile: "Mobile App (Smartphone)",
     // FRASI HOME
-    welcomeTitle: "Welcome back to your EEG Analysis Hub",
+    welcomeTitle1: "Welcome ",
+    welcomeTitle2: " to your EEG Analysis Hub",
     welcomeSubtitle: "Monitoring, AI insights, and SHAP analysis at your fingertips.",
     btnNewAnalysis: "Start New Analysis",
     // FRASI CLIENTS
@@ -185,7 +187,8 @@ export const translations = {
     viewModeWeb: "Web App (Escritorio)",
     viewModeMobile: "Mobile App (Móvil)",
     // FRASI HOME 
-    welcomeTitle: "Bienvenido a tu Centro de Análisis EEG",
+    welcomeTitle1: "Bienvenido ",
+    welcomeTitle2: " a tu Centro de Análisis EEG",
     welcomeSubtitle: "Monitoreo, conocimientos de IA y análisis SHAP al alcance de tu mano.",
     btnNewAnalysis: "Iniciar Nuevo Análisis",
     // FRASI CLIENTS 

@@ -106,9 +106,9 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                         onChange={handleLanguageChange}
                         size="small"
                       >
-                        <MenuItem value="it">🇮🇹 Italiano</MenuItem>
-                        <MenuItem value="en">🇬🇧 English</MenuItem>
-                        <MenuItem value="es">🇪🇸 Español</MenuItem>
+                        <MenuItem value="it">ɪᴛ - Italiano</MenuItem>
+                        <MenuItem value="en">ᴇɴ - English</MenuItem>
+                        <MenuItem value="es">ᴇs - Español</MenuItem>
                       </Select>
                     </FormControl>
                   </CardContent>

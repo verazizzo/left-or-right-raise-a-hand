@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-charts/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
@@ -19,6 +21,11 @@ import {
   treeViewCustomizations,
 } from '../theme/customizations';
 
+import SfondoNeuroni from '../assets/neurone_sfum.png';
+
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
 const xThemeComponents = {
   ...chartsCustomizations,
   ...dataGridCustomizations,
@@ -26,15 +33,30 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-import SfondoNeuroni from '../assets/neurone_sfum.png';
-
-import { useSettings } from '../context/SettingsContext';
-import { translations } from '../data/translations';
-
+interface UserData {
+  name: string;
+}
 
 export default function Home(props: { disableCustomTheme?: boolean }) {
+  const [user, setUser] = useState<UserData | null>(null);
   const { language } = useSettings();
   const t = translations[language];
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user_profile');
+    const token = localStorage.getItem('access_token');
+
+    if (!savedUser || !token) {
+      localStorage.clear();
+      navigate('/login');
+      return;
+    }
+
+    setUser(JSON.parse(savedUser));
+  }, [navigate]);
+
+  if (!user) return null;
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
@@ -69,7 +91,9 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
             
             {/* Qui il tuo contenuto di Benvenuto */}
             <Box sx={{ width: '40%', pt: 10, pl: 5 }}>
-               <Typography variant="h2" sx={{ fontWeight: 800 }}>{t.welcomeTitle}</Typography>
+               <Typography variant="h2" sx={{ fontWeight: 800 }}>{t.welcomeTitle1} {user.name} {t.welcomeTitle2}</Typography>
+               <Typography variant="h2" sx={{ fontWeight: 800 }}></Typography>
+               <Typography variant="h2" sx={{ fontWeight: 800 }}></Typography>
                <Typography variant="h5">{t.welcomeSubtitle}</Typography>
             </Box>
 
