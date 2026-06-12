@@ -264,8 +264,94 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                 })}
               </g>
             </Box>
+          </Box>
+
+          {/* =======================================================
+              NUOVA BARRA LATERALE (LEGENDA SHAP) - LAYOUT AGGIORNATO
+          ======================================================= */}
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', // Mette scritte e barra in verticale
+              alignItems: 'center', // Centra la barra rispetto alle scritte
+              height: '100%', 
+              maxHeight: 380, // Stessa altezza massima del cervello
+              p: 1,
+              ml: 5
+            }}
+          >
+            
+            {/* ETICHETTA DESCRITTIVA SOPRA LA BARRA */}
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                color: 'text.secondary', 
+                fontWeight: 600, 
+                mb: 0, // Spazio sotto la scritta
+                textAlign: 'center',
+                letterSpacing: 0.5
+              }}
+            >
+              {t.labelsopra}
+            </Typography>
+
+            {/* CONTENITORE INTERNO (ORIZZONTALE) PER BARRA E NUMERI */}
+            {/* flexGrow: 1 permette alla barra di occupare lo spazio centrale */}
+            <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, width: '100%', justifyContent: 'center' }}>
+                
+                {/* 1. Sfumatura Colori (Rosso -> Bianco -> Blu) - BARRA ACCORCIATA */}
+                <Box 
+                sx={{ 
+                    width: 24, 
+                    // Altezza ridotta per lasciare spazio alle scritte sopra e sotto
+                    height: '95%', 
+                    background: 'linear-gradient(to bottom, rgb(178, 24, 43) 0%, #ffffff 50%, rgb(33, 102, 172) 100%)',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    borderRadius: 1
+                }} 
+                />
+                
+                {/* 2. Valori Numerici - ALLINEATI CON L'ALTEZZA DELLA BARRA */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '95%', ml: 1.5, py: 0.5 }}>
+                
+                {/* TOP: Positivo */}
+                <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                    +{maxVal.toFixed(3)}
+                </Typography>
+
+                {/* MIDDLE: Zero */}
+                <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                    
+                </Typography>
+
+                {/* BOTTOM: Negativo */}
+                <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                    -{maxVal.toFixed(3)}
+                </Typography>
+
+                </Box>
+            </Box>
+
+            {/* ETICHETTA DESCRITTIVA SOTTO LA BARRA */}
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                color: 'text.secondary', 
+                fontWeight: 600, 
+                mt: 0, // Spazio sopra la scritta
+                textAlign: 'center',
+                letterSpacing: 0.5
+              }}
+            >
+              {t.labelsotto}
+            </Typography>
 
           </Box>
+
+
+
+
         </Box>
       </CardContent>
     </Card>

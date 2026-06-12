@@ -7,6 +7,9 @@ import { FormControl, InputLabel, Select, MenuItem, CircularProgress, Typography
 import type { SelectChangeEvent } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+
 import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
 import SideMenu from '../components/SideMenu';
@@ -59,7 +62,10 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
 
   // Caricamento dati Utente A
   useEffect(() => {
-    if (!userAId) return;
+    if (!userAId) {
+      setUserAData(null); // <--- QUESTA È LA RIGA MAGICA CHE SVUOTA I GRAFICI A!
+      return;
+    }
     const load = async () => {
       setLoadingA(true);
       try {
@@ -73,7 +79,10 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
 
   // Caricamento dati Utente B
   useEffect(() => {
-    if (!userBId) return;
+    if (!userBId) {
+      setUserBData(null); // <--- QUESTA È LA RIGA MAGICA CHE SVUOTA I GRAFICI B!
+      return;
+    }
     const load = async () => {
       setLoadingB(true);
       try {
@@ -111,40 +120,68 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
 
             {/* SEZIONE SELEZIONE: Due menu a tendina affiancati */}
             <Grid container spacing={4} sx={{ justifyContent: 'center' }}>
-              <Grid size={{ xs: 12, md: 5 }}>
-                <FormControl fullWidth>
-                  <Select
-                    value={userAId}
-                    onChange={(e: SelectChangeEvent) => setUserAId(e.target.value)}
-                    displayEmpty
-                  >
-                    <MenuItem value="" disabled sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                      {t.selezioneA}
-                    </MenuItem>
-
-                    {usersList.map((u) => <MenuItem key={u.id} value={u.id}>{u.name}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, md: 5 }}>
-                <FormControl fullWidth>
-                  <Select
-                    value={userBId}
-                    onChange={(e: SelectChangeEvent) => setUserBId(e.target.value)}
-                    displayEmpty
-                  >
-                    <MenuItem value="" disabled sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                      {t.selezioneB}
-                    </MenuItem>
-                    
-                    {usersList.map((u) => <MenuItem key={u.id} value={u.id}>{u.name}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
+              {/* AUTOCOMPLETE PAZIENTE A */}
+            <Grid size={{ xs: 12, md: 5 }}>
+              <Autocomplete
+                sx={{ 
+                  minWidth: 300, 
+                  mt: 4,
+                  '& .MuiAutocomplete-endAdornment .MuiIconButton-root': {
+                    border: 'none !important',
+                    backgroundColor: 'transparent !important',
+                    boxShadow: 'none !important',
+                  }
+                }}
+                options={usersList}
+                getOptionLabel={(option) => option.name}
+                // Corretto: Usa userAId
+                value={usersList.find((user) => user.id === userAId) || null} 
+                onChange={(_event, newValue) => {
+                  setUserAId(newValue ? newValue.id : ''); // Corretto: Imposta l'Id di A
+                }}
+                renderInput={(params) => (
+                  <TextField 
+                    {...params} 
+                    placeholder={`${t.selectUser} A`} // Aggiunta "A" per distinguerli
+                    variant="outlined" 
+                    fullWidth
+                  />
+                )}
+              />
             </Grid>
 
-            <Divider sx={{ my: 4 }} />
+            {/* AUTOCOMPLETE PAZIENTE B */}
+            <Grid size={{ xs: 12, md: 5 }}>
+              <Autocomplete
+                sx={{ 
+                  minWidth: 300, 
+                  mt: 4,
+                  '& .MuiAutocomplete-endAdornment .MuiIconButton-root': {
+                    border: 'none !important',
+                    backgroundColor: 'transparent !important',
+                    boxShadow: 'none !important',
+                  }
+                }}
+                options={usersList}
+                getOptionLabel={(option) => option.name}
+                // Corretto: Usa userBId
+                value={usersList.find((user) => user.id === userBId) || null}
+                onChange={(_event, newValue) => {
+                  setUserBId(newValue ? newValue.id : ''); // Corretto: Imposta l'Id di B
+                }}
+                renderInput={(params) => (
+                  <TextField 
+                    {...params} 
+                    placeholder={`${t.selectUser} B`} // Aggiunta "B" per distinguerli
+                    variant="outlined" 
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+
+          <Divider sx={{ my: 4 }} />
 
             {/* SEZIONE RISULTATI: Due colonne con i grafici */}
             <Grid container spacing={4}>

@@ -78,6 +78,9 @@ export const translations = {
     // FRASI TOPOPLOT E SHAPBARCHART
     valore: "Valore SHAP",
     labelShapBar: "Impatto Medio sul Modello (Valore SHAP)",
+    labelsopra: "Braccio Destro",
+    labelsotto: "Braccio Sinistro"
+    
     
   },
   en: {
@@ -157,6 +160,8 @@ export const translations = {
     // FRASI TOPOPLOT E SHAPBARCHART
     valore: "SHAP Value",
     labelShapBar: "Average Model Impact (SHAP Value)",
+    labelsopra: "Right Arm",
+    labelsotto: "Left Arm"
     
   },
   es: {
@@ -236,6 +241,10 @@ export const translations = {
     // FRASI TOPOPLOT E SHAPBARCHART
     valore: "Valor SHAP",
     labelShapBar: "Impacto Promedio en el Modelo (Valor SHAP)",
+    labelsopra: "Brazo Derecho",
+    labelsotto: "Brazo Izquierdo"
+    
+    
     
   },
 

@@ -11,6 +11,9 @@ import { FormControl, InputLabel, Select, MenuItem, CircularProgress, Typography
 import type {SelectChangeEvent} from '@mui/material';
 import Grid from '@mui/material/Grid';
 
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+
 
 import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
@@ -56,8 +59,8 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
   }, [t.utenteElenco]);
 
   // Gestisce il cambio utente
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedUser(event.target.value as string);
+  const handleChange = (newUserId: string) => {
+  setSelectedUser(newUserId);
   };
 
   // Carica il JSON
@@ -83,10 +86,6 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
     loadUserData();
   }, [selectedUser]);
 
-  // Ordina i dati per importanza SHAP
-  const getSortedData = (dataArray: any[]) => {
-    return [...dataArray].sort((a, b) => b.shap_absolute - a.shap_absolute);
-  };
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
@@ -116,25 +115,37 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
           >
             <Header />
 
-            {/* SEZIONE 1: MENU A TENDINA */}
-            <FormControl sx={{ minWidth: 300, mt: 4 }}>
-              <Select
-                labelId="user-select-label"
-                id="user-select"
-                value={selectedUser}
-                onChange={handleChange}
-                displayEmpty
-              >
-                <MenuItem value="" disabled sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                  {t.selectUser}
-                </MenuItem>
-                {usersList.map((user) => (
-                  <MenuItem key={user.id} value={user.id}>
-                    {user.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {/* SEZIONE 1: MENU A TENDINA CON RICERCA (AUTOCOMPLETE) */}
+            <Autocomplete
+              sx={{ 
+                minWidth: 300, 
+                mt: 4,
+                // Questa è la regola definitiva che dice: "Qualsiasi bottone (freccia o X) 
+                // dentro la parte destra di questo Autocomplete NON deve avere bordi o sfondi"
+                '& .MuiAutocomplete-endAdornment .MuiIconButton-root': {
+                  border: 'none !important',
+                  backgroundColor: 'transparent !important',
+                  boxShadow: 'none !important',
+                }
+              }}
+              options={usersList}
+              getOptionLabel={(option) => option.name}
+              value={usersList.find((user) => user.id === selectedUser) || null}
+              
+              // Ho tolto "disableClearable" così ti riappare la X per cancellare la selezione
+              
+              onChange={(_event, newValue) => {
+                handleChange(newValue ? newValue.id : ''); 
+              }}
+              renderInput={(params) => (
+                <TextField 
+                  {...params} 
+                  placeholder={t.selectUser} 
+                  variant="outlined" 
+                />
+              )}
+            />
+
 
             {/* SEZIONE 2: LOADER O MESSAGGIO VUOTO */}
             {loading && <CircularProgress sx={{ mt: 4 }} />}
