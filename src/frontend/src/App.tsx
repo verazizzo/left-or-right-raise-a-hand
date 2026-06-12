@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Patients from './pages/Patients';
 import Comparison from './pages/Comparison';
 import Settings from './pages/Setting';
+import Profile from './pages/Profile';
 
 // 1. IMPORTA IL PROVIDER DELLE IMPOSTAZIONI
 import { SettingsProvider } from './context/SettingsContext';
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/patients" element={<Patients />} /> 
           <Route path="/comparison" element={<Comparison />} /> 
           <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
 
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
