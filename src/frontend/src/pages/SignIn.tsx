@@ -135,7 +135,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       localStorage.setItem('access_token', data.token);
       localStorage.setItem('user_profile', JSON.stringify({
         name: data.user.name,
-        surname: data.user.surname
+        surname: data.user.surname,
+        email: data.user.email
       }));
       
       navigate('/homepage');

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
@@ -14,6 +15,12 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
 import OptionsMenu from './OptionsMenu';
+
+interface UserData {
+  name: string;
+  surname: string;
+  email: string;
+}
 
 const drawerWidth = 240;
 const closedDrawerWidth = 65;
@@ -63,6 +70,20 @@ export default function SideMenu() {
     const savedState = localStorage.getItem('sidebar_open');
     return savedState === null ? true : savedState === 'true';
   });
+
+  const [user, setUser] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user_profile');
+
+    if (!savedUser) {
+      return;
+    }
+
+    setUser(JSON.parse(savedUser));
+  }, []);
+
+  if (!user) return null;
 
   const toggleDrawer = () => {
     setOpen((prevOpen) => {
@@ -140,25 +161,37 @@ export default function SideMenu() {
           minHeight: 64, // <-- BLOCCHIAMO L'ALTEZZA: immobile sia aperto che chiuso!
         }}
       >
-        <Avatar
-          sizes="small"
-          alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
-          sx={{ width: 36, height: 36 }}
-        />
-        {open && (
+        {open ? (
           <>
-            <Box sx={{ mr: 'auto' }}>
-              <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-                Riley Carter
+            <Avatar
+              sizes="small"
+              alt={`${user.name} ${user.surname}`}
+              src="/static/images/avatar/7.jpg"
+              sx={{ width: 36, height: 36, bgcolor: 'primary.main', color: 'primary.contrastText' }}
+            />
+            <Box sx={{ mr: 'auto', minWidth: 0 }}>
+              <Typography variant="body2" noWrap sx={{ fontWeight: 500, lineHeight: '16px' }}>
+                {user.name} {user.surname}
               </Typography>
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                riley@email.com
+              <Typography variant="caption" noWrap sx={{ color: 'text.secondary', display: 'block' }}>
+                {user.email}
               </Typography>
             </Box>
             <OptionsMenu />
           </>
-        )}
+          ) : (
+            // VISUALIZZAZIONE SIDEBAR CHIUSA (OptionsMenu che usa l'Avatar come bottone)
+            <OptionsMenu 
+              customTrigger={
+                <Avatar
+                  sizes="small"
+                  alt={`${user.name} ${user.surname}`}
+                  src="/static/images/avatar/7.jpg"
+                  sx={{ width: 36, height: 36, bgcolor: 'primary.main', color: 'primary.contrastText' }}
+                />
+              } 
+            />
+          )}
       </Stack>
     </Drawer>
   );

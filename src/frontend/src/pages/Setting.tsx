@@ -34,6 +34,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from '../theme/customizations';
+import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -159,7 +160,7 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                     </Box>
 
                     {/* Modalità Daltonismo */}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
                       <Box>
                         <Typography variant="subtitle2">{t.colorBlind}</Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -171,6 +172,16 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                         onChange={(e) => setColorBlindMode(e.target.checked)} 
                         color="primary"
                       />
+                    </Box>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pr: 1.4 }}>
+                      <Box>
+                        <Typography variant="subtitle2">{t.darkLight}</Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {t.darkLightDesc}
+                        </Typography>
+                      </Box>
+                        <ColorModeIconDropdown />
                     </Box>
                   </CardContent>
                 </Card>

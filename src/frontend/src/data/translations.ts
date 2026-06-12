@@ -22,6 +22,8 @@ export const translations = {
     textLarge: "Grande",
     colorBlind: "Modalità Daltonismo (Colorblind)",
     colorBlindDesc: "Usa pattern e colori sicuri per i grafici SHAP e Topoplot.",
+    darkLight: "Tema",
+    darkLightDesc: "Scegli tra la modalità chiara o scura per l'interfaccia.",
     sysVersion: "Versione Dashboard",
     sysDb: "Stato Database",
     connected: "Connesso",
@@ -79,8 +81,11 @@ export const translations = {
     valore: "Valore SHAP",
     labelShapBar: "Impatto Medio sul Modello (Valore SHAP)",
     labelsopra: "Braccio Destro",
-    labelsotto: "Braccio Sinistro"
-    
+    labelsotto: "Braccio Sinistro",
+    // FRASI OPTIONS.TSX
+    profilo: "Profilo",
+    impostazioni: "Impostazioni profilo",
+    esci: "Esci"
     
   },
   en: {
@@ -104,6 +109,8 @@ export const translations = {
     textLarge: "Large",
     colorBlind: "Colorblind Mode",
     colorBlindDesc: "Use safe colors and patterns for SHAP charts and Topoplot.",
+    darkLight: "Theme",
+    darkLightDesc: "Choose between light and dark mode for the interface.",
     sysVersion: "Dashboard Version",
     sysDb: "Database Status",
     connected: "Connected",
@@ -161,7 +168,11 @@ export const translations = {
     valore: "SHAP Value",
     labelShapBar: "Average Model Impact (SHAP Value)",
     labelsopra: "Right Arm",
-    labelsotto: "Left Arm"
+    labelsotto: "Left Arm",
+    // FRASI OPTIONS.TSX
+    profilo: "Profile",
+    impostazioni: "Profile settings",
+    esci: "Log out"
     
   },
   es: {
@@ -185,6 +196,8 @@ export const translations = {
     textLarge: "Grande",
     colorBlind: "Modo Colorblind",
     colorBlindDesc: "Usa colores y patrones seguros para los gráficos SHAP y Topoplot.",
+    darkLight: "Tema",
+    darkLightDesc: "Elige entre el modo claro y oscuro para la interfaz.",
     sysVersion: "Versión del Dashboard",
     sysDb: "Estado de la Base de Datos",
     connected: "Conectado",
@@ -242,9 +255,11 @@ export const translations = {
     valore: "Valor SHAP",
     labelShapBar: "Impacto Promedio en el Modelo (Valor SHAP)",
     labelsopra: "Brazo Derecho",
-    labelsotto: "Brazo Izquierdo"
-    
-    
+    labelsotto: "Brazo Izquierdo",
+    // FRASI OPTIONS.TSX
+    profilo: "Perfil",
+    impostazioni: "Perfil configuración",
+    esci: "Cerrar sesión"
     
   },
 
