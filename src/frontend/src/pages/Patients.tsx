@@ -30,6 +30,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from '../theme/customizations';
+import { useNavigate } from 'react-router-dom';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -41,6 +42,7 @@ const xThemeComponents = {
 
 
 export default function Patients(props: { disableCustomTheme?: boolean }) {
+  const navigate = useNavigate();
   // Stati
   const [selectedUser, setSelectedUser] = useState<string>('');
   const [userData, setUserData] = useState<any>(null);
@@ -57,6 +59,17 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
       name: `${t.utenteElenco} ${i + 1}`,
     }));
   }, [t.utenteElenco]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      localStorage.clear();
+      navigate('/login');
+      return;
+    }
+
+  }, [navigate]);
 
   // Gestisce il cambio utente
   const handleChange = (newUserId: string) => {

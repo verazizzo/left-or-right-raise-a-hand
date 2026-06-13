@@ -25,6 +25,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from '../theme/customizations';
+import { useNavigate } from 'react-router-dom';
 
 
 const xThemeComponents = {
@@ -37,17 +38,18 @@ const xThemeComponents = {
 
 
 export default function Comparison(props: { disableCustomTheme?: boolean }) {
-    const { language } = useSettings();
-    const t = translations[language];
+  const navigate = useNavigate();
+  const { language } = useSettings();
+  const t = translations[language];
 
-    // Generiamo una lista di 30 utenti
-    // Usiamo useMemo per calcolare la lista solo quando cambia t.utenteElenco
-    const usersList = React.useMemo(() => {
-      return Array.from({ length: 30 }, (_, i) => ({
-        id: `user_${i + 1}`,
-        name: `${t.utenteElenco} ${i + 1}`,
-      }));
-    }, [t.utenteElenco]);
+  // Generiamo una lista di 30 utenti
+  // Usiamo useMemo per calcolare la lista solo quando cambia t.utenteElenco
+  const usersList = React.useMemo(() => {
+    return Array.from({ length: 30 }, (_, i) => ({
+      id: `user_${i + 1}`,
+      name: `${t.utenteElenco} ${i + 1}`,
+    }));
+  }, [t.utenteElenco]);
 
 
   // --- STATI PER UTENTE A (SINISTRA) ---
@@ -59,6 +61,17 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
   const [userBId, setUserBId] = useState<string>('');
   const [userBData, setUserBData] = useState<any>(null);
   const [loadingB, setLoadingB] = useState<boolean>(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      localStorage.clear();
+      navigate('/login');
+      return;
+    }
+
+  }, [navigate]);
 
   // Caricamento dati Utente A
   useEffect(() => {

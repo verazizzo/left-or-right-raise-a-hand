@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { alpha } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -35,6 +35,7 @@ import {
   treeViewCustomizations,
 } from '../theme/customizations';
 import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
+import { useNavigate } from 'react-router-dom';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -52,6 +53,17 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
 
   // Stato fittizio rimasto per il daltonismo (può essere implementato nel context in futuro)
   const [colorBlindMode, setColorBlindMode] = React.useState<boolean>(false);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      localStorage.clear();
+      navigate('/login');
+      return;
+    }
+
+  }, [navigate]);
 
   const handleLanguageChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value as 'it' | 'en' | 'es');

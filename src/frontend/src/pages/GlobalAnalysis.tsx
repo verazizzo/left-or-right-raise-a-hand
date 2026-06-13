@@ -18,6 +18,8 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from '../theme/customizations';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -27,6 +29,19 @@ const xThemeComponents = {
 };
 
 export default function GlobalAnalysis(props: { disableCustomTheme?: boolean }) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      localStorage.clear();
+      navigate('/login');
+      return;
+    }
+
+  }, [navigate]);
+
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />

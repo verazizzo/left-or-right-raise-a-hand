@@ -71,6 +71,40 @@ export class AuthService {
         };
     }
 
+    // Modifiche dati dell'utente loggato
+    async modifyUser(name: string, surname: string, user_id: string) {
+        const new_name = name;
+        const new_surname = surname;
+
+        const { error: updateError } = await this.supabase
+        .from('user_profiles')
+        .update({'name': new_name, 'surname': new_surname})
+        .eq('id', user_id)
+
+        if (updateError) throw new BadRequestException(updateError.message);
+
+        return {
+            message: "Profilo aggiornato correttamente"
+        };
+    }
+    
+    // Visualizzazione dati utente
+    async getProfile(user_id: string) {
+        const { data: profileData, error: dbError } = await this.supabase
+        .from('user_profiles')
+        .select('name, surname, email') 
+        .eq('id', user_id)
+        .single();
+
+        if (dbError) throw new BadRequestException(dbError.message);
+
+        return {
+            name: profileData.name,
+            surname: profileData.surname,
+            email: profileData.email
+        };
+    }
+
     // Rimozione dell'account dal database
     async deleteUser(id: string) {
         const { error: authError } = await this.supabaseAdmin.auth.admin.deleteUser(id);
