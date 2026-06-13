@@ -93,7 +93,7 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
             fontSize: fontSize === 'small' ? '0.85rem' : fontSize === 'large' ? '1.15rem' : '1rem'
           })}
         >
-          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 }, maxWidth: 1000, margin: '0 auto' }}>
+          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 }}}>
             <Header />
 
             {/* TESTO TRADOTTO DINAMICAMENTE */}

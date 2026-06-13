@@ -26,6 +26,8 @@ import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
 
 import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
 import { useNavigate } from 'react-router-dom';
 
 import { modifyUser, getProfile, remove } from '../api/auth';
@@ -33,6 +35,7 @@ import { modifyUser, getProfile, remove } from '../api/auth';
 export default function Profile(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
   const { language } = useSettings();
+  const t = translations[language];
   
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -150,11 +153,11 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
             minHeight: '100vh',
           })}
         >
-          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 }, maxWidth: 1000, margin: '0 auto' }}>
+          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 }}}>
             <Header />
 
             <Typography variant="h4" sx={{ fontWeight: 700, mb: 2, mt: 4 }}>
-              Impostazioni Profilo
+              {t.impostazioniProfilo}
             </Typography>
 
             <Grid container spacing={4}>
@@ -164,44 +167,58 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                 <Card variant="outlined" sx={{ height: '100%' }}>
                   <CardContent>
                     <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
-                      Informazioni Personali
+                      {t.infoPersonali}
                     </Typography>
                     <Divider sx={{ mb: 3 }} />
                     
                     <Stack spacing={3}>
-                      {isEditing ? (
-                        // --- MODALITÀ MODIFICA ---
-                        <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
-                          <TextField
-                            fullWidth
-                            label="Nome"
-                            variant="outlined"
-                            value={editFirstName}
-                            onChange={(e) => setEditFirstName(e.target.value)}
-                            disabled={isLoading}
-                          />
-                          <TextField
-                            fullWidth
-                            label="Cognome"
-                            variant="outlined"
-                            value={editLastName}
-                            onChange={(e) => setEditLastName(e.target.value)}
-                            disabled={isLoading}
-                          />
+                      {/* IMPALCATURA FISSA: I titoletti non spariscono mai */}
+                      <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', sm: 'row' } }}>
+                        
+                        {/* BLOCCO NOME */}
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                            {t.nome}
+                          </Typography>
+                          {isEditing ? (
+                            <TextField
+                              fullWidth
+                              variant="outlined"
+                              size="small" // Rende la barra compatta
+                              value={editFirstName}
+                              onChange={(e) => setEditFirstName(e.target.value)}
+                              disabled={isLoading}
+                              // Nessuna label animata!
+                            />
+                          ) : (
+                            <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem', height: '40px', display: 'flex', alignItems: 'center' }}>
+                              {firstName}
+                            </Typography>
+                          )}
                         </Box>
-                      ) : (
-                        // --- MODALITÀ VISUALIZZAZIONE ---
-                        <Box sx={{ display: 'flex', gap: 4, flexDirection: { xs: 'column', sm: 'row' } }}>
-                          <Box>
-                            <Typography variant="caption" color="text.secondary">Nome</Typography>
-                            <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem' }}>{firstName}</Typography>
-                          </Box>
-                          <Box>
-                            <Typography variant="caption" color="text.secondary">Cognome</Typography>
-                            <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem' }}>{lastName}</Typography>
-                          </Box>
+
+                        {/* BLOCCO COGNOME */}
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                            {t.cognome}
+                          </Typography>
+                          {isEditing ? (
+                            <TextField
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                              value={editLastName}
+                              onChange={(e) => setEditLastName(e.target.value)}
+                              disabled={isLoading}
+                            />
+                          ) : (
+                            <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem', height: '40px', display: 'flex', alignItems: 'center' }}>
+                              {lastName}
+                            </Typography>
+                          )}
                         </Box>
-                      )}
+
+                      </Box>
 
                       {/* BOTTONI DINAMICI */}
                       <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 1 }}>
@@ -213,7 +230,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                               onClick={handleCancelClick}
                               disabled={isLoading}
                             >
-                              Annulla
+                              {t.annulla}
                             </Button>
                             <Button 
                               variant="contained" 
@@ -221,12 +238,12 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                               onClick={handleSaveProfile}
                               disabled={isLoading || !editFirstName.trim() || !editLastName.trim()}
                             >
-                              {isLoading ? 'Salvataggio...' : 'Salva Modifiche'}
+                              {isLoading ? 'Salvataggio...' : t.salva}
                             </Button>
                           </>
                         ) : (
                           <Button variant="contained" color="primary" onClick={handleEditClick}>
-                            Modifica
+                            {t.modifica}
                           </Button>
                         )}
                       </Box>
@@ -235,44 +252,62 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                 </Card>
               </Grid>
 
-              {/* SEZIONE 2: SICUREZZA (Cambio Password) */}
+              {/* === SEZIONE 2: SICUREZZA (Cambio Password) === */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <Card variant="outlined" sx={{ height: '100%' }}>
                   <CardContent>
                     <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
-                      Sicurezza e Password
+                      {t.sicPass}
                     </Typography>
                     <Divider sx={{ mb: 3 }} />
                     
-                    <Stack spacing={3}>
-                      <TextField
-                        fullWidth
-                        label="Password Attuale"
-                        type="password"
-                        variant="outlined"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Nuova Password"
-                        type="password"
-                        variant="outlined"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Conferma Nuova Password"
-                        type="password"
-                        variant="outlined"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                      />
+                    {/* Stessa logica: label statica sopra e TextField pulito sotto */}
+                    <Stack spacing={2.5}>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                          {t.passAttuale}
+                        </Typography>
+                        <TextField
+                          fullWidth
+                          type="password"
+                          variant="outlined"
+                          size="small"
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
+                        />
+                      </Box>
+                      
+                      <Box>
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                          {t.nuovaPass}
+                        </Typography>
+                        <TextField
+                          fullWidth
+                          type="password"
+                          variant="outlined"
+                          size="small"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                          {t.confermaPass}
+                        </Typography>
+                        <TextField
+                          fullWidth
+                          type="password"
+                          variant="outlined"
+                          size="small"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                      </Box>
 
                       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
                         <Button variant="contained" color="primary" onClick={handleChangePassword}>
-                          Aggiorna Password
+                          {t.aggPass}
                         </Button>
                       </Box>
                     </Stack>
@@ -280,24 +315,23 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                 </Card>
               </Grid>
 
-              {/* SEZIONE 3: ZONA PERICOLOSA (Eliminazione Account) */}
+              {/* === SEZIONE 3: ZONA PERICOLOSA (Eliminazione Account) === */}
               <Grid size={{ xs: 12 }}>
                 <Card variant="outlined" sx={{ borderColor: 'error.main', backgroundColor: 'error.lighter' }}>
                   <CardContent>
                     
-                    {/* TITOLO CON ICONA */}
                     <Typography 
                       variant="h6" 
                       sx={{ 
                         display: 'flex', 
                         alignItems: 'center', 
-                        gap: 1, // Spazio tra icona e testo
+                        gap: 1,
                         fontWeight: 600, 
                         color: 'error.main' 
                       }} 
                       gutterBottom
                     >
-                      <WarningIcon /> Elimina Account
+                      <WarningIcon /> {t.eliminaAccount}
                     </Typography>
                     
                     <Divider sx={{ mb: 3, borderColor: 'error.light' }} />
@@ -305,11 +339,10 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between', gap: 2 }}>
                       <Box>
                         <Typography variant="body2" color="text.secondary">
-                          L'eliminazione dell'account è permanente. Tutti i tuoi dati verranno rimossi definitivamente e non potranno essere recuperati!
+                          {t.eliminaAccountDescr}
                         </Typography>
                       </Box>
                       
-                      {/* TASTO SISTEMATO: Usa 'contained' e 'error' per una perfetta compatibilità Dark Mode */}
                       <Button 
                         variant="contained" 
                         color="error" 
@@ -317,10 +350,10 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                         sx={{ 
                           whiteSpace: 'nowrap', 
                           fontWeight: 'bold',
-                          boxShadow: 'none', // Rimuove l'ombra se preferisci un look più piatto e moderno
+                          boxShadow: 'none',
                         }}
                       >
-                        Elimina definitivamente
+                        {t.eliminaButton}
                       </Button>
                       
                     </Box>
@@ -344,11 +377,11 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
           id="alert-dialog-title" 
           sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'error.main', fontWeight: 'bold' }}
         >
-          <WarningIcon /> Conferma Eliminazione Account
+          <WarningIcon /> {t.confermaElim}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Sei sicuro di voler eliminare definitivamente il tuo account? Questa azione è <strong>irreversibile</strong> e tutti i tuoi dati, i grafici e le impostazioni verranno rimossi per sempre.
+            {t.confermaElimDescr1} <strong>{t.confermaElimDescr2}</strong> {t.confermaElimDescr3}
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
@@ -358,7 +391,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
             disabled={isLoading}
             variant="outlined"
           >
-            Annulla
+            {t.annulla}
           </Button>
           <Button 
             onClick={handleDeleteAccount} 
@@ -367,7 +400,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
             disabled={isLoading}
             autoFocus
           >
-            {isLoading ? 'Eliminazione in corso...' : 'Sì, elimina account'}
+            {isLoading ? 'Eliminazione in corso...' : t.siElimina}
           </Button>
         </DialogActions>
       </Dialog>

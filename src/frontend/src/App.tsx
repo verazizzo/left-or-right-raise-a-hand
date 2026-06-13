@@ -8,6 +8,8 @@ import Patients from './pages/Patients';
 import Comparison from './pages/Comparison';
 import Settings from './pages/Setting';
 import Profile from './pages/Profile';
+import Help from './pages/Help';
+
 
 // 1. IMPORTA IL PROVIDER DELLE IMPOSTAZIONI
 import { SettingsProvider } from './context/SettingsContext';
@@ -28,6 +30,7 @@ export default function App() {
           <Route path="/patients" element={<Patients />} /> 
           <Route path="/comparison" element={<Comparison />} /> 
           <Route path="/settings" element={<Settings />} />
+          <Route path="/help" element={<Help />} />
           <Route path="/profile" element={<Profile />} />
 
           <Route path="*" element={<Navigate to="/login" replace />} />

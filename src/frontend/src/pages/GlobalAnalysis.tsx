@@ -1,25 +1,31 @@
-import type {} from '@mui/x-date-pickers/themeAugmentation';
-import type {} from '@mui/x-charts/themeAugmentation';
-import type {} from '@mui/x-data-grid-pro/themeAugmentation';
-import type {} from '@mui/x-tree-view/themeAugmentation';
+import React from 'react';
 import { alpha } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
+// Importiamo i componenti classici del layout
 import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
-import MainGrid from '../components/MainGrid';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
+
+// Importiamo il nuovo componente dei grafici unificato
 import Metrics from '../components/Metrics';
+
+// Importiamo il JSON globale di SHAP
+import shapGlobale from '../data/shap_GLOBALE.json';
+
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
 import {
   chartsCustomizations,
   dataGridCustomizations,
   datePickersCustomizations,
   treeViewCustomizations,
 } from '../theme/customizations';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -29,18 +35,16 @@ const xThemeComponents = {
 };
 
 export default function GlobalAnalysis(props: { disableCustomTheme?: boolean }) {
-  const navigate = useNavigate();
+  const { language } = useSettings();
+  const t = translations[language];
 
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-
-    if (!token) {
-      localStorage.clear();
-      navigate('/login');
-      return;
-    }
-
-  }, [navigate]);
+  // Prepariamo l'oggetto per il componente Metrics.
+  // Uniamo i dati del JSON e inseriamo a mano 'user_id: "global"' 
+  // così il componente capisce in automatico che deve mostrare la logica globale!
+  const globalData = {
+    ...shapGlobale,
+    user_id: 'global'
+  };
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
@@ -48,7 +52,7 @@ export default function GlobalAnalysis(props: { disableCustomTheme?: boolean }) 
       <Box sx={{ display: 'flex' }}>
         <SideMenu />
         <AppNavbar />
-        {/* Main content */}
+        
         <Box
           component="main"
           sx={(theme) => ({
@@ -57,19 +61,28 @@ export default function GlobalAnalysis(props: { disableCustomTheme?: boolean }) 
               ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
               : alpha(theme.palette.background.default, 1),
             overflow: 'auto',
+            minHeight: '100vh',
           })}
         >
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: 'center',
-              mx: 3,
-              pb: 5,
-              mt: { xs: 8, md: 0 },
-            }}
-          >
+          {/* Lo Stack occupa tutto lo spazio fluido, senza limiti di larghezza */}
+          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 } }}>
             <Header />
-            <Metrics />
+
+            <Box sx={{ mt: 4, mb: 2 }}>
+              <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                {t.titoloPopo}
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                {t.titoloPopoDesc}   
+              </Typography>
+            </Box>
+
+            {/* Invochiamo Metrics passandogli i dati globali.
+                NOTA: Qui NON mettiamo "stacked={true}". 
+                Essendo una pagina a schermo intero molto larga, lasciando il valore di default (false)
+                i grafici a barre SHAP si affiancheranno splendidamente su due colonne! */}
+            <Metrics userData={globalData} />
+
           </Stack>
         </Box>
       </Box>

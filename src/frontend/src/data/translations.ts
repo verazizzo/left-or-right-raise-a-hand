@@ -9,7 +9,7 @@ export const translations = {
     menuComparison: "Confronto",
     menuSettings: "Impostazioni",
     menuAbout: "Chi Siamo",
-    menuFeedback: "Feedback",
+    menuAiuto: "Aiuto",
     // FRASI SETTINGS
     settingsTitle: "Impostazioni",
     general: "Generali",
@@ -35,14 +35,21 @@ export const translations = {
     welcomeTitle2: " al tuo Centro Analisi EEG",
     welcomeSubtitle: "Monitoraggio, intelligenza artificiale e analisi SHAP a portata di mano.",
     btnNewAnalysis: "Avvia Nuova Analisi",
-    // FRASI CLIENTS
+    //FRASI POPOLAZIONE
+    titoloPopo: "Spiegabilità IA - Analisi Popolazione",
+    titoloPopoDesc: "Panoramica dei risultati complessivi ottenuti dall'analisi dell'intera popolazione di pazienti.",
+    // FRASI PATIENTS
+    titoloPaziente: "Spiegabilità IA - Analisi Utente",
+    titoloPazienteDesc: "Panoramica dei risultati complessivi ottenuti dall'analisi del singolo utente.",
     selectUser: "Seleziona Utente",
     selectUserPlaceholder: "Seleziona un utente dal menu per visualizzare l'analisi.",
     utenteElenco: "Utente",
+    apriElenco: "Apri Elenco",
+    cancellaSelezione: "Cancella Selezione",
     // FRASI METRICSUSER.TSX
     overviewUtente: "Metriche - Analisi per ",
     performance: "Performance Individuale",
-    explAi : "Spiegazione AI - Analisi per ",
+    explAi : "Grafici SHAP - Analisi per ",
     titoloFinTemp: "Importanza Finestre Temporali",
     descrFinTemp: "Le finestre temporali più importanti per estrarre più informazioni.",
     titoloFeat: "Importanza delle Feature",
@@ -56,10 +63,11 @@ export const translations = {
     titolof1desc: "Misurata su 30 utenti",
     titoloAuc: "AUC Score Medio",
     titoloAucdesc: "Misurata su 30 utenti",
-    explAiGlobale: "Spiegazione AI - Analisi Popolazione",
+    explAiGlobale: "Grafici SHAP - Analisi Popolazione",
     topoglobale: "Topoplot - Analisi Popolazione",
     //FRASI COMPARISON.TSX
-    confrontoTitle: "Confronto Pazienti",
+    confrontoTitle: "Spiegabilità IA - Confronto Utenti",
+    confrontoTitleDesc: "Panoramica dei risultati complessivi degli utenti confrontati.",
     selezioneA: "Seleziona Paziente A",
     selezioneB: "Seleziona Paziente B",
     confrontoSubtitleA: "Seleziona il primo paziente per visualizzare i dati.",
@@ -85,7 +93,32 @@ export const translations = {
     // FRASI OPTIONS.TSX
     profilo: "Profilo",
     impostazioni: "Impostazioni profilo",
-    esci: "Esci"
+    esci: "Esci",
+    // FRASI PROFILE.TSX
+    impostazioniProfilo: "Impostazioni Profilo",
+    infoPersonali: "Informazioni Personali",
+    nome: "Nome",
+    cognome: "Cognome",
+    email: "Email",
+    modifica: "Modifica",
+    salva: "Salva Modifiche",
+    annulla: "Annulla Modifiche",
+    sicPass: "Sicurezza e Password",
+    passAttuale: "Password Attuale",
+    nuovaPass: "Nuova Password",
+    confermaPass: "Conferma Nuova Password",
+    aggPass: "Aggiorna Password",
+    eliminaAccount: "Elimina Account",
+    eliminaAccountDescr: "L'eliminazione dell'account è permanente. Tutti i tuoi dati verranno rimossi definitivamente e non potranno essere recuperati!",
+    eliminaButton: "Elimina definitivamente",
+    confermaElim: "Conferma Eliminazione Account",
+    confermaElimDescr1: "Sei sicuro di voler eliminare definitivamente il tuo account? Questa azione è ",
+    confermaElimDescr2: " irreversibile ",
+    confermaElimDescr3: "e tutti i tuoi dati verranno rimossi per sempre.",
+    siElimina: "Sì, elimina account"
+
+
+
     
   },
   en: {
@@ -96,7 +129,7 @@ export const translations = {
     menuComparison: "Comparison",
     menuSettings: "Settings",
     menuAbout: "About",
-    menuFeedback: "Feedback",
+    menuAiuto: "Help",
     // FRASI SETTINGS
     settingsTitle: "Settings",
     general: "General",
@@ -122,14 +155,21 @@ export const translations = {
     welcomeTitle2: " to your EEG Analysis Hub",
     welcomeSubtitle: "Monitoring, AI insights, and SHAP analysis at your fingertips.",
     btnNewAnalysis: "Start New Analysis",
-    // FRASI CLIENTS
+    //FRASI POPOLAZIONE
+    titoloPopo: "AI Explanation - Population Analysis",
+    titoloPopoDesc: "Overview of the overall results obtained from the analysis of the entire patient population.",
+    // FRASI PATIENTS
+    titoloPaziente: "AI Explanation - User Analysis",
+    titoloPazienteDesc: "Overview of the overall results obtained from the analysis of the selected patient.",
     selectUser: "Select User",
     selectUserPlaceholder: "Select a user from the menu to view analysis.",
     utenteElenco: "User",
+    apriElenco: "Open List",
+    cancellaSelezione: "Clear Selection",
     // FRASI METRICSUSER.TSX
     overviewUtente: "Metrics - Analysis for ",
     performance: "Individual Performance",
-    explAi : "AI Explanation - Analysis for ",
+    explAi : "SHAP Charts - Analysis for ",
     titoloFinTemp: "Temporal Window Importance",
     descrFinTemp: "The most important temporal windows to extract more information.",
     titoloFeat: "Feature Importance",
@@ -143,10 +183,11 @@ export const translations = {
     titolof1desc: "Measured across 30 users",
     titoloAuc: "Average AUC Score",
     titoloAucdesc: "Measured across 30 users",
-    explAiGlobale: "AI Explanation - Population Analysis",
+    explAiGlobale: "SHAP Charts - Population Analysis",
     topoglobale: "Topoplot - Population Analysis",
     //FRASI COMPARISON.TSX
-    confrontoTitle: "Patient Comparison",
+    confrontoTitle: "Explainable AI - User Comparison",
+    confrontoTitleDesc: "Overview of the overall results of the compared users.",
     selezioneA: "Select Patient A",
     selezioneB: "Select Patient B",
     confrontoSubtitleA: "Select the first patient to view data.",
@@ -172,7 +213,30 @@ export const translations = {
     // FRASI OPTIONS.TSX
     profilo: "Profile",
     impostazioni: "Profile settings",
-    esci: "Log out"
+    esci: "Log out",
+    // FRASI PROFILE.TSX
+    impostazioniProfilo: "Profile Settings",
+    infoPersonali: "Personal Information",
+    nome: "Name",
+    cognome: "Surname",
+    email: "Email",
+    modifica: "Modify",
+    salva: "Save Changes",
+    annulla: "Cancel Changes",
+    sicPass: "Security & Password",
+    passAttuale: "Current Password",
+    nuovaPass: "New Password",
+    confermaPass: "Confirm New Password",
+    aggPass: "Update Password",
+    eliminaAccount: "Delete Account",
+    eliminaAccountDescr: "Deleting the account is permanent. All your data will be permanently removed and cannot be recovered!",
+    eliminaButton: "Delete Permanently",
+    confermaElim: "Confirm Account Deletion",
+    confermaElimDescr1: "Are you sure you want to permanently delete your account? This action is ",
+    confermaElimDescr2: " irreversible ",
+    confermaElimDescr3: "and all your data will be permanently removed.",
+    siElimina: "Yes, delete account"
+
     
   },
   es: {
@@ -183,7 +247,7 @@ export const translations = {
     menuComparison: "Comparación",
     menuSettings: "Configuración",
     menuAbout: "Acerca de",
-    menuFeedback: "Retroalimentación",
+    menuAiuto: "Ayuda",
     // FRASI SETTINGS
     settingsTitle: "Configuración",
     general: "General",
@@ -209,14 +273,21 @@ export const translations = {
     welcomeTitle2: " a tu Centro de Análisis EEG",
     welcomeSubtitle: "Monitoreo, conocimientos de IA y análisis SHAP al alcance de tu mano.",
     btnNewAnalysis: "Iniciar Nuevo Análisis",
-    // FRASI CLIENTS 
+    //FRASI POPOLAZIONE
+    titoloPopo: "Explicación IA - Análisis de Población",
+    titoloPopoDesc: "Vista panorámica de los resultados de análisis de la población entera de pacientes.",
+    // FRASI PATIENTS
+    titoloPaziente: "Explicación IA - Análisis del Usario",
+    titoloPazienteDesc: "Resumen de los resultados generales obtenidos del análisis de cada paciente.", 
     selectUser: "Seleccionar Usuario",
     selectUserPlaceholder: "Selecciona un usuario del menú para ver el análisis.",
     utenteElenco: "Usuario",
+    apriElenco: "Abrir Lista",
+    cancellaSelezione: "Cancelar Selección",
     // FRASI METRICSUSER.TSX
     overviewUtente: "Metricas - Análisis para ",
     performance: "Performance Individual",
-    explAi : "Explicación AI - Análisis para ",
+    explAi : "Gráficos SHAP - Análisis para ",
     titoloFinTemp: "Importancia de Ventanas Temporales",
     descrFinTemp: "Las ventanas temporales más importantes para extraer más información.",
     titoloFeat: "Importancia de las Características",
@@ -230,10 +301,11 @@ export const translations = {
     titolof1desc: "Medido en 30 usuarios",
     titoloAuc: "AUC Score Promedio",
     titoloAucdesc: "Medido en 30 usuarios",
-    explAiGlobale: "Explicación AI - Análisis de Población",
+    explAiGlobale: "Gráficos SHAP - Análisis de Población",
     topoglobale: "Topoplot - Análisis de Población",
     //FRASI COMPARISON.TSX
-    confrontoTitle: "Comparación de Pacientes",
+    confrontoTitle: "Explicabilidad IA - Comparación de Usuarios",
+    confrontoTitleDesc: "Resumen de los resultados generales obtenidos de los usuarios comparados.",
     selezioneA: "Seleccionar Paciente A",
     selezioneB: "Seleccionar Paciente B",
     confrontoSubtitleA: "Selecciona el primer paciente para ver los datos.",
@@ -259,7 +331,29 @@ export const translations = {
     // FRASI OPTIONS.TSX
     profilo: "Perfil",
     impostazioni: "Perfil configuración",
-    esci: "Cerrar sesión"
+    esci: "Cerrar sesión",
+    // FRASI PROFILE.TSX
+    impostazioniProfilo: "Perfil Configuración",
+    infoPersonali: "Información Personal",
+    nome: "Nombre",
+    cognome: "Apellido",
+    email: "Correo electrónico",
+    modifica: "Editar",
+    salva: "Guardar cambios",
+    annulla: "Cancelar cambios",
+    sicPass: "Seguridad y Contraseña",
+    passAttuale: "Contraseña actual",
+    nuovaPass: "Nueva contraseña",
+    confermaPass: "Confirmar nueva contraseña",
+    aggPass: "Actualizar contraseña",
+    eliminaAccount: "Eliminar cuenta",
+    eliminaAccountDescr: "La eliminación de la cuenta es permanente. ¡Todos tus datos serán eliminados definitivamente y no podrán ser recuperados!",
+    eliminaButton: "Eliminar definitivamente",
+    confermaElim: "Confirmar eliminación de cuenta",
+    confermaElimDescr1: "¿Estás seguro de que deseas eliminar definitivamente tu cuenta? Esta acción es ",
+    confermaElimDescr2: " irreversible ",
+    confermaElimDescr3: "y todos tus datos serán eliminados para siempre.",
+    siElimina: "Sí, eliminar cuenta"
     
   },
 

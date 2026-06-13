@@ -1,77 +1,46 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Copyright from '../internals/components/Copyright';
-import ChartUserByCountry from './ChartUserByCountry';
-import CustomizedTreeView from './CustomizedTreeView';
-import CustomizedDataGrid from './CustomizedDataGrid';
-import HighlightedCard from './HighlightedCard';
 import StatCard from './StatCard';
 import type { StatCardProps } from './StatCard';
 import ShapBarChart from './ShapBarChart';
 import Topoplot from './Topoplot';
 
 import performanceMetrics from '../data/performance_metrics.json';
-import shapGlobale from '../data/shap_GLOBALE.json';
+import { descrizioniCanali, descrizioniFeatures, descrizioniWindows } from '../data/shapDescriptions';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 
-import { descrizioniCanali, descrizioniFeatures, descrizioniWindows } from '../data/shapDescriptions';
+// Definiamo le props per il componente unificato
+interface MetricsProps {
+  userData: any; // Il JSON dell'utente (o quello globale)
+  stacked?: boolean; // Opzione per grafici impilati o affiancati (default: false)
+}
 
-export default function Metrics() {
-  // 1. Inizializziamo Lingua e Dizionario
+export default function Metrics({ userData, stacked = false }: MetricsProps) {
+  if (!userData) return null;
+
   const { language } = useSettings();
   const t = translations[language];
 
-  // =====================================================================
-  // 2. PREPARAZIONE DEI DATI PER LE CARDS (Performance Globali)
-  // =====================================================================
-  const userNames = Object.keys(performanceMetrics.per_user_metrics);
-  const numeroUtenti = userNames.length;
-
-  const f1Scores = userNames.map(user => 
-    Number(performanceMetrics.per_user_metrics[user as keyof typeof performanceMetrics.per_user_metrics].f1_score.toFixed(3))
-  );
-  const aucScores = userNames.map(user => 
-    Number(performanceMetrics.per_user_metrics[user as keyof typeof performanceMetrics.per_user_metrics].auc_score.toFixed(3))
-  );
-
-  const f1Mean = performanceMetrics.global_metrics.f1_mean;
-  const f1Std = performanceMetrics.global_metrics.f1_std;
-  const aucMean = performanceMetrics.global_metrics.auc_mean;
-  const aucStd = performanceMetrics.global_metrics.auc_std;
-
-  // Costruiamo l'array delle Card integrando i testi tradotti
-  const statCardsData: StatCardProps[] = [
-    {
-      title: t.titolof1,
-      value: f1Mean.toFixed(3),
-      interval: t.titolof1desc,
-      trend: f1Mean >= 0.5 ? 'up' : 'down',
-      data: f1Scores,
-      xAxisLabels: userNames,
-      chipText: '± ' + (f1Std.toFixed(3)),
-    },
-    {
-      title: t.titoloAuc,
-      value: aucMean.toFixed(3),
-      interval: t.titoloAucdesc,
-      trend: aucMean >= 0.5 ? 'up' : 'down',
-      data: aucScores,
-      xAxisLabels: userNames,
-      chipText: '± ' + (aucStd.toFixed(3)),
-    }
-  ];
+  // 1. CAPIAMO SE È IL GLOBALE O UN UTENTE SPECIFICO
+  const isGlobal = userData.user_id === 'global' || userData.user_id === 'globale';
+  
+  let displayName = '';
+  if (!isGlobal) {
+    const userNumber = userData.user_id.replace('user_', '');
+    displayName = `${t.utenteElenco} ${userNumber}`;
+  }
 
   // =====================================================================
-  // 3. PREPARAZIONE DATI SHAP (La Magia per il Bar Chart)
+  // 2. PREPARAZIONE DATI SHAP (Identica per entrambi)
   // =====================================================================
 
-  // A. Feature (Prendiamo le prime 10 dal Globale)
-  const topShapFeatures = [...shapGlobale.features]
+  // A. Feature
+  const topShapFeatures = [...userData.features]
     .sort((a: any, b: any) => b.shap_absolute - a.shap_absolute)
     .slice(0, 10); 
 
@@ -82,7 +51,7 @@ export default function Metrics() {
   );
 
   // B. Finestre Temporali (Windows)
-  const topShapWindows = [...shapGlobale.windows]
+  const topShapWindows = [...userData.windows]
     .sort((a: any, b: any) => b.shap_absolute - a.shap_absolute); 
 
   const shapWindowLabels = topShapWindows.map(w => w.id);
@@ -92,13 +61,72 @@ export default function Metrics() {
   );
 
   // C. Topoplot
-  const topoplotData = shapGlobale.channels.map((ch: any) => ({
+  const topoplotData = userData.channels.map((ch: any) => ({
     id: ch.id,
     shap_absolute: ch.shap_absolute,
     shap_directional: ch.shap_directional,
     description: descrizioniCanali[ch.id]?.[language] || "Descrizione non disponibile"
   }));
 
+  // =====================================================================
+  // 3. PREPARAZIONE DATI PERFORMANCE (StatCards Dinamiche)
+  // =====================================================================
+  let statCardsData: StatCardProps[] = [];
+
+  if (isGlobal) {
+    // --- LOGICA GLOBALE (Con grafici a linea) ---
+    const userNames = Object.keys(performanceMetrics.per_user_metrics);
+    const f1Scores = userNames.map(user => Number(performanceMetrics.per_user_metrics[user as keyof typeof performanceMetrics.per_user_metrics].f1_score.toFixed(3)));
+    const aucScores = userNames.map(user => Number(performanceMetrics.per_user_metrics[user as keyof typeof performanceMetrics.per_user_metrics].auc_score.toFixed(3)));
+    
+    const { f1_mean, f1_std, auc_mean, auc_std } = performanceMetrics.global_metrics;
+
+    statCardsData = [
+      {
+        title: t.titolof1 || "F1 Score",
+        value: f1_mean.toFixed(3),
+        interval: t.titolof1desc || "Andamento Globale",
+        trend: f1_mean >= 0.5 ? 'up' : 'down',
+        data: f1Scores, // <--- Grafico visibile
+        xAxisLabels: userNames,
+        chipText: '± ' + f1_std.toFixed(3),
+      },
+      {
+        title: t.titoloAuc || "AUC Score",
+        value: auc_mean.toFixed(3),
+        interval: t.titoloAucdesc || "Andamento Globale",
+        trend: auc_mean >= 0.5 ? 'up' : 'down',
+        data: aucScores, // <--- Grafico visibile
+        xAxisLabels: userNames,
+        chipText: '± ' + auc_std.toFixed(3),
+      }
+    ];
+  } else {
+    // --- LOGICA SINGOLO UTENTE (Senza grafici a linea) ---
+    const userPerf = performanceMetrics.per_user_metrics[userData.user_id as keyof typeof performanceMetrics.per_user_metrics];
+    if (userPerf) {
+      statCardsData = [
+        {
+          title: `F1 Score`,
+          value: userPerf.f1_score.toFixed(3),
+          interval: t.performance || "Performance",
+          trend: userPerf.f1_score >= performanceMetrics.global_metrics.f1_mean ? 'up' : 'down',
+          data: [], // <--- Grafico invisibile
+          xAxisLabels: [],
+          chipText: 'Vs Global: ' + performanceMetrics.global_metrics.f1_mean.toFixed(2),
+        },
+        {
+          title: `AUC Score`,
+          value: userPerf.auc_score.toFixed(3),
+          interval: t.performance || "Performance",
+          trend: userPerf.auc_score >= performanceMetrics.global_metrics.auc_mean ? 'up' : 'down',
+          data: [], // <--- Grafico invisibile
+          xAxisLabels: [],
+          chipText: 'Vs Global: ' + performanceMetrics.global_metrics.auc_mean.toFixed(2),
+        }
+      ];
+    }
+  }
 
   // =====================================================================
   // RENDER DELLA PAGINA
@@ -107,32 +135,30 @@ export default function Metrics() {
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       
       {/* SEZIONE 1: CARDS */}
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        {t.titoloGlobale || 'Overview'}
-      </Typography>
-      <Grid
-        container
-        spacing={2}
-        columns={12}
-        sx={{ mb: (theme) => theme.spacing(2) }}
-      >
-        {statCardsData.map((card, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
-            <StatCard {...card} />
+      {statCardsData.length > 0 && (
+        <>
+          <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+            {isGlobal ? t.titoloGlobale : `${t.overviewUtente} ${displayName}`}
+          </Typography>
+          <Grid container spacing={2} columns={12} sx={{ mb: (theme) => theme.spacing(2) }}>
+            {statCardsData.map((card, index) => (
+              <Grid key={index} size={{ xs: 12, sm: 6, lg: stacked ? 6 : 3 }}>
+                <StatCard {...card} />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-
-      </Grid>
+        </>
+      )}
 
       {/* SEZIONE 2: EXPLAINABLE AI (SHAP) */}
       <Typography component="h2" variant="h6" sx={{ mb: 2, mt: 4 }}>
-        {t.explAiGlobale}
+        {isGlobal ? t.explAiGlobale : `${t.explAi} ${displayName}`}
       </Typography>
       <Grid container spacing={2} columns={12} sx={{ mb: 4 }}>
 
         {/* GRAFICO 1: FINESTRE TEMPORALI */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Box sx={{height: '100%' }}>
+        <Grid size={{ xs: 12, md: stacked ? 12 : 6 }}>
+          <Box sx={{ height: '100%' }}>
             <ShapBarChart 
               title={t.titoloFinTemp}
               subtitle={t.descrFinTemp}
@@ -144,11 +170,11 @@ export default function Metrics() {
         </Grid>
 
         {/* GRAFICO 2: FEATURE */}
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: stacked ? 12 : 6 }}>
           <Box sx={{ height: '100%' }}>
             <ShapBarChart 
               title={t.titoloFeat}
-              subtitle={t.descrFeat }
+              subtitle={t.descrFeat}
               labels={shapLabels}
               values={shapValues}
               descriptions={shapDescriptions}
@@ -159,15 +185,15 @@ export default function Metrics() {
 
       {/* SEZIONE 3: TOPOPLOT */}
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        {t.topoglobale}
+        {isGlobal ? t.topoglobale : `${t.topo} ${displayName}`}
       </Typography>
       <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: stacked ? 12 : 6 }}>
             <Topoplot 
               title={t.titoloTopoplot}
               subtitle={t.descrTopoplot}
               channelsData={topoplotData} 
-              userId="globale" // <-- Aggiunto un ID fittizio per evitare conflitti SVG!
+              userId={userData.user_id} // Gestito in automatico!
             />
         </Grid>
       </Grid>

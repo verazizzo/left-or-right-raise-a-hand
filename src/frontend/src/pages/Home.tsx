@@ -11,7 +11,6 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
-import MainGrid from '../components/MainGrid';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
 import {
@@ -56,12 +55,14 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
     setUser(JSON.parse(savedUser));
   }, [navigate]);
 
-  if (!user) return null;
+  // HO RIMOSSO: if (!user) return null; <--- Era questo che causava lo sfarfallio!
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
+        
+        {/* Adesso la barra nasce SUBITO, niente più sfarfallii! */}
         <SideMenu />
         <AppNavbar />
 
@@ -73,12 +74,12 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
             left: 0,
             width: '100%',
             height: '100%',
-            zIndex: 0, // Sotto tutto il resto
+            zIndex: 0, 
             backgroundImage: `url(${SfondoNeuroni})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            opacity: 1.0 // Opacità globale dell'immagine
+            opacity: 1.0 
           }}
         />
 
@@ -89,13 +90,18 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
           <Stack spacing={2} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 } }}>
             <Header />
             
-            {/* Qui il tuo contenuto di Benvenuto */}
-            <Box sx={{ width: '40%', pt: 10, pl: 5 }}>
-               <Typography variant="h2" sx={{ fontWeight: 800 }}>{t.welcomeTitle1} {user.name} {t.welcomeTitle2}</Typography>
-               <Typography variant="h2" sx={{ fontWeight: 800 }}></Typography>
-               <Typography variant="h2" sx={{ fontWeight: 800 }}></Typography>
-               <Typography variant="h5">{t.welcomeSubtitle}</Typography>
-            </Box>
+            {/* Il testo di Benvenuto viene mostrato SOLO se "user" è caricato,
+                grazie al trucchetto {user && (...)} */}
+            {user && (
+              <Box sx={{ width: '40%', pt: 10, pl: 5 }}>
+                <Typography variant="h2" sx={{ fontWeight: 800 }}>
+                  {t.welcomeTitle1} {user.name} {t.welcomeTitle2}
+                </Typography>
+                <Typography variant="h5" sx={{ mt: 2 }}>
+                  {t.welcomeSubtitle}
+                </Typography>
+              </Box>
+            )}
 
           </Stack>
         </Box>
@@ -103,4 +109,3 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
     </AppTheme>
   );
 }
-

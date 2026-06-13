@@ -11,6 +11,10 @@ import { FormControl, InputLabel, Select, MenuItem, CircularProgress, Typography
 import type {SelectChangeEvent} from '@mui/material';
 import Grid from '@mui/material/Grid';
 
+import Tooltip from '@mui/material/Tooltip';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
@@ -19,7 +23,7 @@ import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
-import UserMetrics from '../components/MetricsUser';
+import Metrics from '../components/Metrics';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
@@ -128,6 +132,15 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
           >
             <Header />
 
+            <Box sx={{ mt: 4, mb: 2, width: '100%', textAlign: 'left' }}>
+              <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                {t.titoloPaziente}
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                {t.titoloPazienteDesc}   
+              </Typography>
+            </Box>
+
             {/* SEZIONE 1: MENU A TENDINA CON RICERCA (AUTOCOMPLETE) */}
             <Autocomplete
               sx={{ 
@@ -157,6 +170,24 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
                   variant="outlined" 
                 />
               )}
+
+              // 1. Disattiviamo i noiosi tooltip nativi del browser
+              clearText=""
+              openText=""
+              closeText=""
+
+              // 2. Avvolgiamo le icone nei nostri Tooltip di Material UI
+              clearIcon={
+                <Tooltip title={t.cancellaSelezione} arrow placement="top">
+                  <CloseIcon fontSize="small" />
+                </Tooltip>
+              }
+              popupIcon={
+                <Tooltip title={t.apriElenco} arrow placement="top">
+                  <ArrowDropDownIcon />
+                </Tooltip>
+              }
+
             />
 
 
@@ -171,7 +202,7 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
 
             {/* SEZIONE 3: GRAFICI (Mostrati solo se i dati ci sono) */}
             {!loading && userData && (
-                <UserMetrics userData={userData} />
+                <Metrics userData={userData} />
             )}
 
           </Stack>

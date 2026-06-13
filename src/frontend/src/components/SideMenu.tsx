@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -15,6 +16,11 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
 import OptionsMenu from './OptionsMenu';
+
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
+
 
 interface UserData {
   name: string;
@@ -66,6 +72,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function SideMenu() {
+  const { language } = useSettings();
+  const t = translations[language];
+
   const [open, setOpen] = React.useState(() => {
     const savedState = localStorage.getItem('sidebar_open');
     return savedState === null ? true : savedState === 'true';
@@ -148,50 +157,71 @@ export default function SideMenu() {
         <MenuContent open={open} />
       </Box>
       
-      {/* SEZIONE 3: FOOTER UTENTE (Bloccato verticalmente) */}
+      {/* SEZIONE 3: FOOTER UTENTE (Bloccato verticalmente e orizzontalmente) */}
       <Stack
         direction="row"
         sx={{
-          p: 1.5, // <-- Fissato il padding costante per evitare micro-salti
-          gap: 1,
+          p: 1.5, 
           alignItems: 'center',
-          justifyContent: open ? 'flex-start' : 'center',
+          // Rimosso il justifyContent dinamico: ora resta sempre allineato a sinistra!
           borderTop: '1px solid',
           borderColor: 'divider',
-          minHeight: 64, // <-- BLOCCHIAMO L'ALTEZZA: immobile sia aperto che chiuso!
+          minHeight: 64,
+          overflow: 'hidden', // Evita che il testo "sbordi" mentre la barra si stringe
         }}
       >
-        {open ? (
-          <>
+        {/* AVATAR FISSO: Questo blocco non si restringe mai (flexShrink: 0) */}
+        <Box sx={{ flexShrink: 0, display: 'flex' }}>
+          {open ? (
             <Avatar
               sizes="small"
               alt={`${user.name} ${user.surname}`}
               src="/static/images/avatar/7.jpg"
               sx={{ width: 36, height: 36, bgcolor: 'primary.main', color: 'primary.contrastText' }}
             />
-            <Box sx={{ mr: 'auto', minWidth: 0 }}>
-              <Typography variant="body2" noWrap sx={{ fontWeight: 500, lineHeight: '16px' }}>
-                {user.name} {user.surname}
-              </Typography>
-              <Typography variant="caption" noWrap sx={{ color: 'text.secondary', display: 'block' }}>
-                {user.email}
-              </Typography>
-            </Box>
-            <OptionsMenu />
-          </>
           ) : (
-            // VISUALIZZAZIONE SIDEBAR CHIUSA (OptionsMenu che usa l'Avatar come bottone)
             <OptionsMenu 
               customTrigger={
-                <Avatar
-                  sizes="small"
-                  alt={`${user.name} ${user.surname}`}
-                  src="/static/images/avatar/7.jpg"
-                  sx={{ width: 36, height: 36, bgcolor: 'primary.main', color: 'primary.contrastText' }}
-                />
+                <Tooltip title={t.profilo} placement="right" arrow>
+                  <Avatar
+                    sizes="small"
+                    alt={`${user.name} ${user.surname}`}
+                    src="/static/images/avatar/7.jpg"
+                    sx={{ width: 36, height: 36, bgcolor: 'primary.main', color: 'primary.contrastText' }}
+                  />
+                </Tooltip>
               } 
             />
           )}
+        </Box>
+
+        {/* CONTENITORE TESTO E 3 PUNTINI: Sfuma fluidamente quando si chiude */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexGrow: 1,
+            minWidth: 0,
+            ml: 1.5, // Spazio fisso dall'avatar
+            opacity: open ? 1 : 0, // Effetto dissolvenza
+            visibility: open ? 'visible' : 'hidden', // Evita click accidentali a barra chiusa
+            transition: 'opacity 0.2s ease', // Animazione fluida
+          }}
+        >
+          {/* Testo */}
+          <Box sx={{ mr: 'auto', minWidth: 0 }}>
+            <Typography variant="body2" noWrap sx={{ fontWeight: 500, lineHeight: '16px' }}>
+              {user.name} {user.surname}
+            </Typography>
+            <Typography variant="caption" noWrap sx={{ color: 'text.secondary', display: 'block' }}>
+              {user.email}
+            </Typography>
+          </Box>
+          
+          {/* Menu 3 puntini */}
+          <OptionsMenu />
+        </Box>
+        
       </Stack>
     </Drawer>
   );

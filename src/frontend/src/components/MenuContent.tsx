@@ -53,7 +53,7 @@ export default function MenuContent({ open = true }: MenuContentProps) {
   const secondaryListItems = useMemo(() => [
     { text: t.menuSettings , icon: <SettingsRoundedIcon />, path: '/settings' },
     { text: t.menuAbout , icon: <InfoRoundedIcon />, path: '/about' },
-    { text: t.menuFeedback , icon: <HelpRoundedIcon />, path: '/feedback' },
+    { text: t.menuAiuto , icon: <HelpRoundedIcon />, path: '/help' },
   ], [t]);
 
   return (
