@@ -1,14 +1,23 @@
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import MenuButton from './MenuButton';
+
 import MenuContent from './MenuContent';
-import CardAlert from './CardAlert';
+import OptionsMenu from './OptionsMenu'; // Importiamo i tre puntini
+
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
+interface UserData {
+  name: string;
+  surname: string;
+  email: string;
+}
 
 interface SideMenuMobileProps {
   open: boolean | undefined;
@@ -16,11 +25,25 @@ interface SideMenuMobileProps {
 }
 
 export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobileProps) {
+  const { language } = useSettings();
+  const t = translations[language];
+
+  const [user, setUser] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user_profile');
+    if (!savedUser) {
+      return;
+    }
+    setUser(JSON.parse(savedUser));
+  }, []);
+
   return (
     <Drawer
       anchor="right"
       open={open}
       onClose={toggleDrawer(false)}
+
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
         [`& .${drawerClasses.paper}`]: {
@@ -33,38 +56,63 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
         sx={{
           maxWidth: '70dvw',
           height: '100%',
+          width: '260px', // Diamo una larghezza fissa standard per farlo stare comodo su mobile
         }}
       >
-        <Stack direction="row" sx={{ p: 2, pb: 0, gap: 1 }}>
-          <Stack
-            direction="row"
-            sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}
-          >
+        {/* HEADER UTENTE + I TRE PUNTINI (Esattamente come il desktop!) */}
+        <Stack 
+          direction="row" 
+          sx={{ 
+            p: 2, 
+            alignItems: 'center', 
+            minHeight: 64,
+            overflow: 'hidden'
+          }}
+        >
+          {/* Avatar fisso */}
+          <Box sx={{ flexShrink: 0, display: 'flex' }}>
             <Avatar
               sizes="small"
-              alt="Riley Carter"
+              alt={user ? `${user.name} ${user.surname}` : "User"}
               src="/static/images/avatar/7.jpg"
-              sx={{ width: 24, height: 24 }}
+              sx={{ width: 36, height: 36, bgcolor: 'primary.main' }}
             />
-            <Typography component="p" variant="h6">
-              Riley Carter
-            </Typography>
-          </Stack>
-          <MenuButton showBadge>
-            <NotificationsRoundedIcon />
-          </MenuButton>
+          </Box>
+
+          {/* Nome, Email e Pulsante tre puntini */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              flexGrow: 1,
+              minWidth: 0,
+              ml: 1.5,
+            }}
+          >
+            <Box sx={{ mr: 'auto', minWidth: 0, overflow: 'hidden' }}>
+              <Typography variant="body2" noWrap sx={{ fontWeight: 500, lineHeight: '16px' }}>
+                {user ? `${user.name} ${user.surname}` : "..."}
+              </Typography>
+              <Typography variant="caption" noWrap sx={{ color: 'text.secondary', display: 'block' }}>
+                {user ? user.email : "..."}
+              </Typography>
+            </Box>
+            
+            {/* Contenitore Tre Puntini: "flexShrink: 0" gli impedisce di essere schiacciato dal testo */}
+            <Box sx={{ flexShrink: 0, ml: 1 }}>
+              <OptionsMenu />
+            </Box>
+          </Box>
         </Stack>
+        
         <Divider />
-        <Stack sx={{ flexGrow: 1 }}>
+        
+        {/* MENU INTERNO */}
+        <Stack sx={{ flexGrow: 1, overflowY: 'auto' }}>
           <MenuContent />
-          <Divider />
         </Stack>
-        <CardAlert />
-        <Stack sx={{ p: 2 }}>
-          <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
-            Logout
-          </Button>
-        </Stack>
+        
+        {/* IL VECCHIO PULSANTE DI LOGOUT IN BASSO È STATO COMPLETAMENTE ELIMINATO */}
       </Stack>
     </Drawer>
   );

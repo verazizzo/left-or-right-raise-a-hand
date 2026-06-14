@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Tipi di font supportati
+// Tipi di font e impostazioni supportate
 export type FontSizeOption = 'small' | 'medium' | 'large';
 export type LanguageOption = 'it' | 'en' | 'es';
 export type ViewModeOption = 'web' | 'mobile';
 
-// Struttura dei dati del Context
+// Struttura dei dati del Context (TypeScript ora sa che esistono tutte queste variabili)
 interface SettingsContextType {
   language: LanguageOption;
   fontSize: FontSizeOption;
@@ -13,6 +13,8 @@ interface SettingsContextType {
   setLanguage: (lang: LanguageOption) => void;
   setFontSize: (size: FontSizeOption) => void;
   setViewMode: (mode: ViewModeOption) => void;
+  forceMobile: boolean;
+  toggleForceMobile: () => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -31,7 +33,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     return (localStorage.getItem('app_view_mode') as ViewModeOption) || 'web';
   });
 
-  const setLanguage = (lang: 'it' | 'en') => {
+  const [forceMobile, setForceMobile] = useState<boolean>(() => {
+    const saved = localStorage.getItem('force_mobile');
+    return saved === 'true';
+  });
+
+  const setLanguage = (lang: LanguageOption) => {
     setLang(lang);
     localStorage.setItem('app_lang', lang);
   };
@@ -44,6 +51,14 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const setViewMode = (mode: ViewModeOption) => {
     setViewModeState(mode);
     localStorage.setItem('app_view_mode', mode);
+  };
+
+  const toggleForceMobile = () => {
+    setForceMobile(prev => {
+      const newVal = !prev;
+      localStorage.setItem('force_mobile', newVal.toString());
+      return newVal;
+    });
   };
 
   // --- LA MAGIA PER IL FONT SIZE ---
@@ -62,7 +77,18 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   // ---------------------------------
 
   return (
-    <SettingsContext.Provider value={{ language, fontSize, viewMode, setLanguage, setFontSize, setViewMode }}>
+    <SettingsContext.Provider 
+      value={{ 
+        language, 
+        fontSize, 
+        viewMode, 
+        forceMobile, 
+        setLanguage, 
+        setFontSize, 
+        setViewMode,
+        toggleForceMobile
+      }}
+    >
       {children}
     </SettingsContext.Provider>
   );

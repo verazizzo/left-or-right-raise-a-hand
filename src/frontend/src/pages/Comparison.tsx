@@ -150,7 +150,7 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
             overflow: 'auto',
           })}
         >
-          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 } }}>
+          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 1, md: 0 } }}>
             <Header />
 
             <Box sx={{ mt: 4, mb: 2, width: '100%', textAlign: 'left' }}>

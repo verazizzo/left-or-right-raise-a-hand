@@ -13,7 +13,7 @@ export default function Header() {
     <Stack
       direction="row"
       sx={{
-        display: { xs: 'none', md: 'flex' },
+        display: 'flex',
         width: '100%',
         alignItems: { xs: 'flex-start', md: 'center' },
         justifyContent: 'space-between',

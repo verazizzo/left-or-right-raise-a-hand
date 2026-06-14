@@ -65,7 +65,7 @@ export default function GlobalAnalysis(props: { disableCustomTheme?: boolean }) 
           })}
         >
           {/* Lo Stack occupa tutto lo spazio fluido, senza limiti di larghezza */}
-          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 } }}>
+          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 1, md: 0 } }}>
             <Header />
 
             <Box sx={{ mt: 4, mb: 2 }}>

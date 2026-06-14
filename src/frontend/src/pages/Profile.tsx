@@ -153,7 +153,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
             minHeight: '100vh',
           })}
         >
-          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 }}}>
+          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 1, md: 0 }}}>
             <Header />
 
             <Typography variant="h4" sx={{ fontWeight: 700, mb: 2, mt: 4 }}>

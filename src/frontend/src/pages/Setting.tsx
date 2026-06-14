@@ -46,7 +46,7 @@ const xThemeComponents = {
 
 export default function Settings(props: { disableCustomTheme?: boolean }) {
   // COLLEGIAMO GLI STATI GLOBALI DEL CONTEXT
-  const { language, setLanguage, fontSize, setFontSize, viewMode, setViewMode } = useSettings();
+  const { language, setLanguage, fontSize, setFontSize, forceMobile, toggleForceMobile } = useSettings();
   
   // Selettore del dizionario corrente
   const t = translations[language];
@@ -93,7 +93,7 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
             fontSize: fontSize === 'small' ? '0.85rem' : fontSize === 'large' ? '1.15rem' : '1rem'
           })}
         >
-          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 8, md: 0 }}}>
+          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 1, md: 0 }}}>
             <Header />
 
             {/* TESTO TRADOTTO DINAMICAMENTE */}
@@ -152,22 +152,12 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                         <FormLabel component="legend" sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>
                           {t.viewModeTitle}
                         </FormLabel>
-                        <RadioGroup
-                          row
-                          value={viewMode}
-                          onChange={(e) => setViewMode(e.target.value as 'web' | 'mobile')}
-                        >
-                          <FormControlLabel 
-                            value="web" 
-                            control={<Radio color="primary" />} 
-                            label={t.viewModeWeb} 
-                          />
-                          <FormControlLabel 
-                            value="mobile" 
-                            control={<Radio color="primary" />} 
-                            label={t.viewModeMobile} 
-                          />
-                        </RadioGroup>
+                        {/* L'INTERRUTTORE MAGICO */}
+                        <Switch 
+                          checked={forceMobile} 
+                          onChange={toggleForceMobile} 
+                          color="primary"
+                        />
                       </FormControl>
                     </Box>
 

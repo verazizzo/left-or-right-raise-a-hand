@@ -27,7 +27,7 @@ export const translations = {
     sysVersion: "Versione Dashboard",
     sysDb: "Stato Database",
     connected: "Connesso",
-    viewModeTitle: "Modalità Visualizzazione",
+    viewModeTitle: "Modalità Visualizzazione Mobile",
     viewModeWeb: "Web App (Desktop)",
     viewModeMobile: "Mobile App (Smartphone)",
     // FRASI HOME

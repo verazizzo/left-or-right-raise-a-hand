@@ -127,7 +127,7 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
               alignItems: 'center',
               mx: 3,
               pb: 5,
-              mt: { xs: 8, md: 0 },
+              mt: { xs: 1, md: 0 },
             }}
           >
             <Header />
