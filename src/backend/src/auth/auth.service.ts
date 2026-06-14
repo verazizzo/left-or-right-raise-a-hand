@@ -18,7 +18,10 @@ export class AuthService {
             email: user.email,
             password: user.password,
             options: {
-                emailRedirectTo: 'http://localhost:5173/login', 
+                emailRedirectTo: 'http://localhost:5173/login',
+                data: {
+                    name: user.name,
+                }
             }
         });
 
