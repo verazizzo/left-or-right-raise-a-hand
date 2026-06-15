@@ -26,6 +26,11 @@ import Header from '../components/Header';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
 
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 
@@ -52,6 +57,16 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+  };
+
 
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem('user_profile') || '{}');
@@ -309,11 +324,27 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                         </Typography>
                         <TextField
                           fullWidth
-                          type="password"
+                          type={showPassword ? 'text' : 'password'}
                           variant="outlined"
                           size="small"
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
+                          slotProps={{
+                            input: {
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                    edge="end"
+                                  >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            },
+                          }}
                         />
                       </Box>
 
@@ -323,11 +354,27 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                         </Typography>
                         <TextField
                           fullWidth
-                          type="password"
+                          type={showPassword ? 'text' : 'password'}
                           variant="outlined"
                           size="small"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
+                          slotProps={{
+                            input: {
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                    edge="end"
+                                  >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            },
+                          }}
                         />
                       </Box>
 

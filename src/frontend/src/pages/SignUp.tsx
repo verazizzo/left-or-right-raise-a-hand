@@ -16,6 +16,10 @@ import { styled } from '@mui/material/styles';
 import AppTheme from '../shared-theme/AppTheme';
 import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import { register } from '../api/auth';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import logoImg from '../assets/logo_sfum.svg';
 import titoloImg from '../assets/titolo_sfum.svg';
@@ -69,63 +73,154 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     surname: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
   const [globalError, setGlobalError] = useState('');
   const [success, setSuccess] = useState(false);
 
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+  const [showPassword, setShowPassword] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = React.useState('');
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
   const [surnameError, setSurnameError] = React.useState(false);
   const [surnameErrorMessage, setSurnameErrorMessage] = React.useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+
+    switch (name) {
+      case 'name':
+        if (value.trim().length > 0) {
+          setNameError(false);
+          setNameErrorMessage('');
+        }
+        break;
+
+      case 'surname':
+        if (value.trim().length > 0) {
+          setSurnameError(false);
+          setSurnameErrorMessage('');
+        }
+        break;
+
+      case 'email':
+        if (!value || !/\S+@\S+\.\S+/.test(value)) {
+          setEmailError(true);
+          setEmailErrorMessage('Inserire un indirizzo email valido.');
+        } else {
+          setEmailError(false);
+          setEmailErrorMessage('');
+        }
+        break;
+
+      case 'password':
+        if (!value || value.length < 6) {
+          setPasswordError(true);
+          setPasswordErrorMessage('La password deve contenere almeno 6 caratteri.');
+        } else {
+          setPasswordError(false);
+          setPasswordErrorMessage('');
+        }
+        if (formData.confirmPassword && value !== formData.confirmPassword) {
+          setConfirmPasswordError(true);
+          setConfirmPasswordErrorMessage('Le password non coincidono.');
+        } else if (formData.confirmPassword && value === formData.confirmPassword) {
+          setConfirmPasswordError(false);
+          setConfirmPasswordErrorMessage('');
+        }
+        break;
+
+      case 'confirmPassword':
+        if (value !== formData.password) {
+          setConfirmPasswordError(true);
+          setConfirmPasswordErrorMessage('Le password non coincidono.');
+        } else {
+          setConfirmPasswordError(false);
+          setConfirmPasswordErrorMessage('');
+        }
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
   };
 
   const validateInputs = () => {
     let isValid = true;
 
-    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    if (!formData.password || formData.password.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
-    if (!formData.name || formData.name.length < 1) {
+    if (!formData.name.trim()) {
       setNameError(true);
-      setNameErrorMessage('Name is required.');
+      setNameErrorMessage('Il nome è obbligatorio.');
       isValid = false;
     } else {
       setNameError(false);
       setNameErrorMessage('');
     }
 
-    if (!formData.surname || formData.surname.length < 1) {
+    if (!formData.surname.trim()) {
       setSurnameError(true);
-      setSurnameErrorMessage('Surname is required.');
+      setSurnameErrorMessage('Il cognome è obbligatorio.');
       isValid = false;
     } else {
       setSurnameError(false);
       setSurnameErrorMessage('');
+    }
+
+    if (!formData.email.trim()) {
+      setEmailError(true);
+      setEmailErrorMessage('L\'indirizzo email è obbligatorio.');
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      setEmailError(true);
+      setEmailErrorMessage('Inserire un indirizzo email valido.');
+      isValid = false;
+    } else {
+      setEmailError(false);
+      setEmailErrorMessage('');
+    }
+
+    if (!formData.password) {
+      setPasswordError(true);
+      setPasswordErrorMessage('La password è obbligatoria.');
+      isValid = false;
+    } else if (formData.password.length < 6) {
+      setPasswordError(true);
+      setPasswordErrorMessage('La password deve contenere almeno 6 caratteri.');
+      isValid = false;
+    } else {
+      setPasswordError(false);
+      setPasswordErrorMessage('');
+    }
+
+    if (!formData.confirmPassword) {
+      setConfirmPasswordError(true);
+      setConfirmPasswordErrorMessage('È necessario confermare la password.');
+      isValid = false;
+    } else if (formData.password !== formData.confirmPassword) {
+      setConfirmPasswordError(true);
+      setConfirmPasswordErrorMessage('Le password non coincidono.');
+      isValid = false;
+    } else {
+      setConfirmPasswordError(false);
+      setConfirmPasswordErrorMessage('');
     }
 
     return isValid;
@@ -159,7 +254,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       <SignUpContainer direction="column" sx={{ justifyContent: 'space-between' }}>
         <Card variant="outlined">
 
-          {/* 🚀 SEZIONE BRANDING: Logo e Titolo SVG */}
+          {/* SEZIONE BRANDING: Logo e Titolo SVG */}
           <Box 
             sx={{ 
               display: 'flex', 
@@ -273,7 +368,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   fullWidth
                   name="password"
                   placeholder="••••••"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="new-password"
                   variant="outlined"
@@ -282,6 +377,56 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   error={passwordError}
                   helperText={passwordErrorMessage}
                   color={passwordError ? 'error' : 'primary'}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="confirmPassword">Conferma Password</FormLabel>
+                <TextField
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  placeholder="••••••"
+                  type={showPassword ? 'text' : 'password'}
+                  id="confirmPassword"
+                  autoComplete="new-password"
+                  variant="outlined"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  error={confirmPasswordError}
+                  helperText={confirmPasswordErrorMessage}
+                  color={confirmPasswordError ? 'error' : 'primary'}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                 />
               </FormControl>
               <Button
