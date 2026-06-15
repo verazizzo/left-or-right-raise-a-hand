@@ -24,8 +24,18 @@ export default function ShapBarChart({
   descriptions,
 }: ShapBarChartProps) {
 
-  const { language } = useSettings();
+  const { language, forceMobile } = useSettings();
   const t = translations[language];
+
+  // --- 1. IL SENSORE DEL MOUSE (Tornato alla divisione a metà) ---
+  const [isRightHalf, setIsRightHalf] = React.useState(false);
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left; 
+    
+    setIsRightHalf(x > rect.width / 2);
+  };
 
   const bluePalette = [
     '#082F6A', '#0D47A1', '#1565C0', '#1976D2', '#1E88E5', 
@@ -39,7 +49,7 @@ export default function ShapBarChart({
     : bluePalette.slice(0, labels.length);
 
   return (
-    <Card variant="outlined" sx={{ width: '100%', height: '100%' }}>
+    <Card variant="outlined" sx={{ width: '100%', height: '100%' }} onMouseMove={handleMouseMove}>
       <CardContent>
         
         <Stack sx={{ mb: 2 }}>
@@ -116,13 +126,30 @@ export default function ShapBarChart({
               display: 'none !important',
             },
 
-            // 3. FORMATTIAMO LA COLONNA DESTRA (L'unica superstite)
+            // --- 3. IL MOVIMENTO DINAMICO DEL TOOLTIP ---
+            '& .MuiChartsTooltip-root': {
+              // Se forceMobile è VERO: scatta a sinistra appena superi la metà
+              // Se forceMobile è FALSO (PC): rimane sempre a destra
+              marginLeft: forceMobile 
+                ? (isRightHalf ? '-170px !important' : '10px !important') 
+                : '10px !important',
+              
+              // ANIMAZIONE RIMOSSA: ora il cambio è brutale e istantaneo
+            },
+
+            // 2. DIMENSIONI DINAMICHE: Si rimpicciolisce solo quando serve!
             '& .MuiChartsTooltip-valueCell': {
-              whiteSpace: 'pre-wrap !important', // Fa funzionare gli \n per andare a capo
-              maxWidth: '300px !important',      // Limita la larghezza della finestra
-              padding: '12px !important',        // Diamo un po' di respiro al testo
-              lineHeight: '1.4 !important',      // Distanziamo le righe
-              textAlign: 'left !important',      // Testo allineato a sinistra (non al centro)
+              whiteSpace: 'pre-wrap !important', 
+              
+              // Se siamo nel telefono limite a 160px, altrimenti liberi a 300px
+              maxWidth: forceMobile ? '160px !important' : '300px !important', 
+              
+              // Riduciamo margini e font solo sul telefono per compattarlo
+              padding: forceMobile ? '6px 8px !important' : '12px !important', 
+              fontSize: forceMobile ? '0.70rem !important' : '0.875rem !important',
+              
+              lineHeight: '1.4 !important', 
+              textAlign: 'left !important',
             },
           }}
         />

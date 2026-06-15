@@ -21,7 +21,7 @@ export type TopoplotProps = {
 };
 
 export default function Topoplot({ title, subtitle, channelsData, userId }: any) {
-  const { language } = useSettings();
+  const { language, forceMobile } = useSettings();
   const t = translations[language];
 
   const datiSicuri = channelsData || [];
@@ -197,7 +197,8 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                             borderColor: 'divider',
                             p: 0,
                             borderRadius: 1.5,
-                            maxWidth: 300,
+                            // 2. LA TUA INTUIZIONE: Limitiamo la larghezza dinamicamente
+                            maxWidth: forceMobile ? 160 : 300,
                           }
                         },
                         arrow: {
@@ -215,8 +216,8 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                           {/* Intestazione del Tooltip (Usa 'background.default' che è il grigio di sfondo dei pannelli) */}
                           <Box 
                             sx={{ 
-                              px: 1.5, 
-                              py: 0.6, 
+                              px: forceMobile ? 1 : 1.5, 
+                              py: forceMobile ? 0.4 : 0.6,
                               borderBottom: '1px solid', 
                               borderColor: 'divider', 
                               bgcolor: 'background.paper', 
@@ -224,17 +225,17 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                               borderTopRightRadius: '6px' 
                             }}
                           >
-                            <Typography variant="body2" sx={{ fontWeight: 400 }}>
+                            <Typography variant="body2" sx={{ fontWeight: forceMobile ? '0.65rem' : 400 }}>
                               {ch.id}
                             </Typography>
                           </Box>
                           
                           {/* Corpo del Tooltip */}
-                          <Box sx={{ p: 1.5 }}>
-                            <Typography variant="body2" sx={{ mb: 1, fontWeight: 400 }}>
+                          <Box sx={{ p: forceMobile ? 1 : 1.5 }}>
+                            <Typography variant="body2" sx={{mb: forceMobile ? 0.5 : 1, fontWeight: 400, fontSize: forceMobile ? '0.65rem' : '0.875rem' }}>
                               {t.valore}: {displayValue?.toFixed(4)}
                             </Typography>
-                            <Typography variant="body2" >
+                            <Typography variant="body2" sx={{ fontSize: forceMobile ? '0.65rem' : '0.875rem', lineHeight: 1.2 }}>
                               {ch.description}
                             </Typography>
                           </Box>
@@ -243,16 +244,16 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                     >
                       {/* Trigger del tooltip con hitbox espansa */}
                       <g style={{ cursor: 'pointer', outline: 'none' }}>
-                        <circle cx={coords.cx} cy={coords.cy} r="25" fill="transparent" />
-                        <circle cx={coords.cx} cy={coords.cy} r="6" fill="#0f172a" stroke="#ffffff" strokeWidth="2" />
+                        <circle cx={coords.cx} cy={coords.cy} r={forceMobile ? "35" : "25"} fill="transparent" />
+                        <circle cx={coords.cx} cy={coords.cy} r={forceMobile ? "9" : "6"} fill="#0f172a" stroke="#ffffff" strokeWidth={forceMobile ? "3" : "2"} />
                         
                         <text
                           x={coords.cx}
-                          y={coords.cy - 14} 
+                          y={coords.cy - (forceMobile ? 17 : 14)} 
                           textAnchor="middle"
                           fill="#000000" 
                           fontWeight="900"
-                          fontSize="14px"
+                          fontSize={forceMobile ? "18px" : "14px"}
                           fontFamily="sans-serif"
                           style={{ userSelect: 'none', pointerEvents: 'none' }} 
                         >
