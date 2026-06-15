@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import UpdatePassword from './pages/UpdatePassword';
 import About from './pages/About';
 import GlobalAnalysis from './pages/GlobalAnalysis';
 import Home from './pages/Home';
@@ -24,6 +25,7 @@ export default function App() {
         <Routes>
           <Route path="/register" element={<SignUp />} />
           <Route path="/login" element={<SignIn />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/homepage" element={<Home />} />
           <Route path="/about" element={<About />} /> 
           <Route path="/global-analysis" element={<GlobalAnalysis />} /> 

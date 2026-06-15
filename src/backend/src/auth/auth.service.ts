@@ -108,6 +108,54 @@ export class AuthService {
         };
     }
 
+    // Richiesta email per il reset della password
+    async sendPasswordResetEmail(email: string) {
+        const { error } = await this.supabase.auth.resetPasswordForEmail(email);
+
+        if (error) throw new BadRequestException(error.message);
+
+        return { 
+            message: 'Se l\'email esiste, riceverai un codice a 6 cifre.' 
+        };
+    }
+
+    // Verifica del codice e cambio della password
+    async resetPasswordWithOtp(email: string, otp: string, new_password: string) {
+        const { data, error: verifyError } = await this.supabase.auth.verifyOtp({
+            email: email,
+            token: otp,
+            type: 'recovery',
+        });
+
+        if (verifyError) throw new BadRequestException('Il codice inserito non è valido o è scaduto.');
+
+        const { error: updateError } = await this.supabaseAdmin.auth.admin.updateUserById(
+            data.user!.id, 
+            { password: new_password }
+        );
+
+        if (updateError) throw new BadRequestException(updateError.message);
+
+        await this.supabase.auth.signOut();
+
+        return { 
+            message: 'Password aggiornata con successo!' 
+        };
+    }
+
+    // Aggiornamento della password quando l'utente è loggato
+    async updatePassword(user_id: string, new_password: string) {
+        const { error } = await this.supabaseAdmin.auth.admin.updateUserById(user_id, {
+            password: new_password
+        });
+
+        if (error) throw new BadRequestException(error.message);
+
+        return { 
+            message: 'Password aggiornata con successo!' 
+        };
+    }
+
     // Rimozione dell'account dal database
     async deleteUser(id: string) {
         const { error: authError } = await this.supabaseAdmin.auth.admin.deleteUser(id);

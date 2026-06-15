@@ -47,7 +47,7 @@ Comando per installare nestJS sul pc:
 npm i -g @nestjs/cli
 
 Per il frontend, bisogna spostarsi nella cartella frontend e fare questo comando la prima volta:
-npm installar
+npm install
 
 Per eseguire il frontend, ricorda di runnare il container del backend, altrimenti non comunicano:
 docker-compose up --build -d

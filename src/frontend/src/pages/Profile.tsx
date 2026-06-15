@@ -10,6 +10,7 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 
 // Importazione elementi per la finestra di pop-up
 import Dialog from '@mui/material/Dialog';
@@ -30,7 +31,7 @@ import { translations } from '../data/translations';
 
 import { useNavigate } from 'react-router-dom';
 
-import { modifyUser, getProfile, remove } from '../api/auth';
+import { modifyUser, getProfile, remove, changePassword } from '../api/auth';
 
 export default function Profile(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
@@ -47,9 +48,10 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   // Stati per il cambio password
-  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
 
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem('user_profile') || '{}');
@@ -107,12 +109,39 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
     }
   };
 
-  const handleChangePassword = () => {
-    if (newPassword !== confirmPassword) {
-      alert('Le password non coincidono!');
+  const handleChangePassword = async () => {
+    // 1. Puliamo eventuali messaggi precedenti ad ogni nuovo tentativo
+    setPasswordError('');
+    setPasswordSuccess('');
+
+    // 2. Controlli di validazione
+    if (!newPassword || newPassword.length < 6) {
+      setPasswordError('La nuova password deve contenere almeno 6 caratteri.');
       return;
     }
-    console.log('Password cambiata con successo!');
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Le password non coincidono!');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // 3. Chiamata API (usando la tua logica originale che richiede solo la nuova)
+      await changePassword(newPassword);
+      
+      // 4. Se va a buon fine, mostriamo il banner verde e svuotiamo i campi
+      setPasswordSuccess('Password aggiornata con successo!');
+      setNewPassword('');
+      setConfirmPassword('');
+
+    } catch (error: any) {
+      console.error('Errore durante il cambio password:', error);
+      // Mostriamo il banner rosso con l'errore del backend (o uno generico)
+      setPasswordError(error.response?.data?.message || 'Si è verificato un errore durante l\'aggiornamento.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDeleteAccount = async () => {
@@ -260,23 +289,20 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                       {t.sicPass}
                     </Typography>
                     <Divider sx={{ mb: 3 }} />
+
+                    {passwordError && (
+                      <Alert severity="error" sx={{ mb: 3, width: '100%' }}>
+                        {passwordError}
+                      </Alert>
+                    )}
+                    {passwordSuccess && (
+                      <Alert severity="success" sx={{ mb: 3, width: '100%' }}>
+                        {passwordSuccess}
+                      </Alert>
+                    )}
                     
                     {/* Stessa logica: label statica sopra e TextField pulito sotto */}
                     <Stack spacing={2.5}>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                          {t.passAttuale}
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          type="password"
-                          variant="outlined"
-                          size="small"
-                          value={currentPassword}
-                          onChange={(e) => setCurrentPassword(e.target.value)}
-                        />
-                      </Box>
-                      
                       <Box>
                         <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                           {t.nuovaPass}

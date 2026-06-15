@@ -29,6 +29,22 @@ export class AuthController {
         return await this.authService.getProfile(req.user.id);
     }
 
+    @Post('forgot-password')
+    async forgotPassword(@Body('email') email: string) {
+        return await this.authService.sendPasswordResetEmail(email);
+    }
+
+    @Post('reset-password-otp')
+    async resetPasswordWithOtp(@Body('email') email: string, @Body('otp') otp: string, @Body('new_password') new_password: string) {
+        return await this.authService.resetPasswordWithOtp(email, otp, new_password);
+    }
+
+    @Put('change-password')
+    @UseGuards(AuthGuard('jwt'))
+    async changePassword(@Req() req: any, @Body('new_password') new_password: string) {
+        return await this.authService.updatePassword(req.user.id, new_password);
+    }
+
     @Delete('remove')
     @UseGuards(AuthGuard('jwt'))
     async deleteuser(@Req() req: any) {
