@@ -183,49 +183,7 @@ export default function Help(props: { disableCustomTheme?: boolean }) {
               </CardContent>
             </Card>
 
-            <Divider sx={{ my: 2 }} />
-
-            {/* SEZIONE 2: SUPPORTO TECNICO */}
-            <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-              Hai ancora bisogno di assistenza?
-            </Typography>
-            <Grid container spacing={3}>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card variant="outlined" sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', p: 3, textAlign: 'center' }}>
-                  <SupportAgentIcon sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
-                    Contatta l'Amministratore
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                    Se hai riscontrato un bug critico, problemi di accesso ai dati o hai bisogno di aggiungere nuovi pazienti al database.
-                  </Typography>
-                  <Button variant="contained" color="primary">
-                    Apri un Ticket
-                  </Button>
-                </Card>
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card variant="outlined" sx={{ height: '100%', p: 3, bgcolor: 'background.default' }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 700, textTransform: 'uppercase', color: 'text.secondary', mb: 2 }}>
-                    Informazioni di Sistema
-                  </Typography>
-                  <Stack spacing={1}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" color="text.secondary">Versione Dashboard:</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600 }}>v1.4.2</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" color="text.secondary">Stato Database:</Typography>
-                      <Typography variant="body2" color="success.main" sx={{ fontWeight: 600 }}>Connesso</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" color="text.secondary">Task Analizzato:</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600 }}>Motor Imagery (Destro/Sinistro)</Typography>
-                    </Box>
-                  </Stack>
-                </Card>
-              </Grid>
-            </Grid>
+          
 
           </Stack>
         </Box>

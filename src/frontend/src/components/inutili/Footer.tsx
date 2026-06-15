@@ -12,22 +12,6 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/X';
 import SitemarkIcon from './SitemarkIcon';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-      {'Copyright © '}
-      <Link
-        href="https://mui.com/"
-        sx={{
-          color: 'text.secondary',
-        }}
-      >
-        Sitemark
-      </Link>
-      {new Date().getFullYear()}
-    </Typography>
-  );
-}
 
 export default function Footer() {
   return (
@@ -259,7 +243,6 @@ export default function Footer() {
           >
             Terms of Service
           </Link>
-          <Copyright />
         </div>
         <Stack
           direction="row"

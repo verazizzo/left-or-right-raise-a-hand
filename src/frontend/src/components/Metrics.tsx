@@ -2,7 +2,6 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Copyright from '../internals/components/Copyright';
 import StatCard from './StatCard';
 import type { StatCardProps } from './StatCard';
 import ShapBarChart from './ShapBarChart';
@@ -197,8 +196,6 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
             />
         </Grid>
       </Grid>
-      
-      <Copyright sx={{ my: 4 }} />
     </Box>
   );
 }

@@ -52,7 +52,6 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
   const t = translations[language];
 
   // Stato fittizio rimasto per il daltonismo (può essere implementato nel context in futuro)
-  const [colorBlindMode, setColorBlindMode] = React.useState<boolean>(false);
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -161,21 +160,6 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                       </FormControl>
                     </Box>
 
-                    {/* Modalità Daltonismo */}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-                      <Box>
-                        <Typography variant="subtitle2">{t.colorBlind}</Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {t.colorBlindDesc}
-                        </Typography>
-                      </Box>
-                      <Switch 
-                        checked={colorBlindMode} 
-                        onChange={(e) => setColorBlindMode(e.target.checked)} 
-                        color="primary"
-                      />
-                    </Box>
-
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pr: 1.4 }}>
                       <Box>
                         <Typography variant="subtitle2">{t.darkLight}</Typography>
@@ -199,11 +183,11 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                     <Divider sx={{ mb: 2 }} />
                     <Stack direction="row" spacing={4}>
                       <Box>
-                        <Typography variant="caption" color="text.secondary">{t.sysVersion}</Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>v1.2.0-beta</Typography>
+                        <Typography variant="caption" color="text.secondary">{t.AImodel}</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>SVM</Typography>
                       </Box>
                       <Box>
-                        <Typography variant="caption" color="text.secondary">Motore SHAP</Typography>
+                        <Typography variant="caption" color="text.secondary">{t.shap}</Typography>
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>TreeExplainer (Python 3.10)</Typography>
                       </Box>
                       <Box>
