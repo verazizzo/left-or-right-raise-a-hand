@@ -3,20 +3,28 @@ import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
 
 // 1. IMPORTA TUTTE LE VERSIONI DEI LOGHI
-import iconaChiara from '../assets/logo_sfum.svg'; 
-import iconaScura from '../assets/logo_sfum_dark.svg'; // Inserisci il nome del tuo file scuro
+import iconaChiara from '../assets/logo_sfum_3sfum.svg'; 
+import iconaScura from '../assets/logo_sfum_3sfum.svg'; 
 
-import testoChiaro from '../assets/titolo_sfum.svg'; 
-import testoScuro from '../assets/titolo_sfum_dark.svg'; // Inserisci il nome del tuo file scuro
+import testoChiaro from '../assets/titolo_sfum_3sfum.svg'; 
+import testoScuro from '../assets/titolo_sfum_3sfum.svg'; 
 
-export default function DashboardLogo({ disableLink = false }: { disableLink?: boolean }) {
+// Aggiunta la prop "redirectTo" con valore di default "/homepage"
+export default function DashboardLogo({ 
+  disableLink = false, 
+  redirectTo = "/homepage" 
+}: { 
+  disableLink?: boolean;
+  redirectTo?: string;
+}) {
   
   const componentType = disableLink ? 'div' : Link;
 
   return (
     <Box
       component={componentType}
-      to={disableLink ? undefined : "/homepage"}
+      // Se è disabilitato to è undefined, altrimenti usa la rotta personalizzata!
+      to={disableLink ? undefined : redirectTo}
       sx={(theme) => ({
         display: 'flex',
         alignItems: 'center',
@@ -30,11 +38,9 @@ export default function DashboardLogo({ disableLink = false }: { disableLink?: b
         },
 
         // === LA MAGIA DELLO SWAP IMMAGINI ===
-        // Di base, nascondiamo le immagini con la classe "img-dark"
         '& .img-dark': {
           display: 'none',
         },
-        // Quando entra il tema scuro, invertiamo: nascondiamo le chiare e mostriamo le scure
         ...theme.applyStyles('dark', {
           '& .img-light': {
             display: 'none',

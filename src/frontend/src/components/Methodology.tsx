@@ -44,14 +44,6 @@ export default function Methodology() {
     // Il maxWidth ora è "100%" per prendersi tutto lo spazio che il padre gli concede
     <Box sx={{ width: '100%', maxWidth: '100%', mx: 'auto', p: { xs: 2, sm: 4 } }}>
       
-      {/* 1. TITOLO PRINCIPALE */}
-      <Typography 
-        component="h1" 
-        variant="h4" 
-        sx={{ mb: 6, fontWeight: 700, color: 'text.primary', textAlign: 'left' }}
-      >
-        {t.aboutTitle}
-      </Typography>
 
       {/* 2. SEZIONE CENTRALE: FOTO E TESTO */}
       <Box 

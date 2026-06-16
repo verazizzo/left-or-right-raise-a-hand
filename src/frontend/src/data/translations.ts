@@ -28,7 +28,7 @@ export const translations = {
     // FRASI MENU
     menuHome: "Home",
     menuPopulation: "Popolazione",
-    menuPatients: "Pazienti",
+    menuPatients: "Utenti",
     menuComparison: "Confronto",
     menuSettings: "Impostazioni",
     menuAbout: "Chi Siamo",
@@ -100,14 +100,14 @@ export const translations = {
     aboutSubtitle: "Un ponte tra Mente e Macchina",
     aboutContent: "Questa interfaccia nasce con l'obiettivo di rendere trasparenti e interpretabili i modelli di Machine Learning applicati ai segnali cerebrali (EEG). Tradizionalmente, gli algoritmi operano come delle \"scatole nere\", fornendo un risultato senza spiegare il ragionamento sottostante.",
     aboutContentContinua: "Attraverso l'utilizzo della eXplainable AI (XAI) e dell\'algoritmo SHAP, la piattaforma permette a ricercatori e clinici di visualizzare in tempo reale quali aree della corteccia cerebrale e quali ritmi neurali hanno contribuito al riconoscimento di un'intenzione motoria.",
-    aboutSubtitle1: "Acquisizione Segnale", 
-    aboutContent1: "Registrazione EEG a 14 canali (sistema 10-20). I soggetti hanno eseguito task di Motor Imagery in un ambiente controllato.",
-    aboutSubtitle2: "Estrazione Feature", 
-    aboutContent2: "Segmentazione del segnale in tre finestre temporali. Estratte feature avanzate come entropia spettrale e power band.",
-    aboutSubtitle3: "Addestramento Modelli", 
-    aboutContent3: "Validazione tramite Leave-One-Group-Out (LOGO). Addestrati e ottimizzati algoritmi avanzati come SVM e XGBoost.",
-    aboutSubtitle4: "Spiegazione AI", 
-    aboutContent4: "Applicazione di SHAP per identificare le feature più influenti. Visualizzazione tramite grafici temporali e topoplot.",
+    aboutSubtitle1: "Acquisizione del Segnale", 
+    aboutContent1: "L'acquisizione dei dati ha coinvolto un gruppo di 30 utenti, i cui tracciati cerebrali sono stati registrati utilizzando un avanzato caschetto Emotiv a 14 canali. Per ciascun partecipante sono state raccolte in media circa 50 epoche, suddivise accuratamente in tre specifici stati mentali: una fase di riposo, l'immaginazione motoria del braccio destro e l'immaginazione motoria del braccio sinistro.",
+    aboutSubtitle2: "Elaborazione dei Dati", 
+    aboutContent2: "I dati grezzi sono stati sottoposti a un'attenta fase di pulizia per rimuovere artefatti e rumore di fondo dalle singole epoche. Successivamente, il segnale è stato ritagliato in tre distinte finestre temporali per catturare l'evoluzione dinamica dell'attività cerebrale. Da questi segmenti sono state estratte 18 features fondamentali, tra cui l'entropia spettrale, la potenza delle bande di frequenza (come alfa e beta) e altre misure statistiche avanzate.",
+    aboutSubtitle3: "Addestramento del Modello", 
+    aboutContent3: "Per addestrare l'Intelligenza Artificiale è stato adottato un rigoroso approccio LOGO (Leave-One-Group-Out), una tecnica di validazione che testa il modello su un utente completamente nuovo per valutarne la reale capacità di generalizzazione. Nello specifico, è stato addestrato un classificatore SVM (Support Vector Machine), effettuando una ricerca approfondita per trovare gli iperparametri ottimali personalizzati per ciascun singolo utente.",
+    aboutSubtitle4: "Explainable AI (SHAP)", 
+    aboutContent4: "Per comprendere a fondo le motivazioni dietro le predizioni ottenute è stata condotta l'analisi SHAP. Questo potente strumento permette di scomporre le decisioni del modello per capire con assoluta trasparenza quale specifica finestra temporale, quale canale EEG e quale singola feature abbiano pesato di più nel riconoscere l'intenzione di movimento dell'utente.",
     // FRASI TOPOPLOT E SHAPBARCHART
     valore: "Valore SHAP",
     labelShapBar: "Impatto Medio sul Modello (Valore SHAP)",
@@ -135,12 +135,40 @@ export const translations = {
     confermaElimDescr1: "Sei sicuro di voler eliminare definitivamente il tuo account? Questa azione è ",
     confermaElimDescr2: " irreversibile ",
     confermaElimDescr3: "e tutti i tuoi dati verranno rimossi per sempre.",
-    siElimina: "Sì, elimina account"
-
-
-
+    siElimina: "Sì, elimina account",
+    //FRASI HELP
+    helpTitle: "Centro di Supporto",
+    helpDesc: "Guida all'interpretazione dei dati EEG per la classificazione dell'Immaginazione Motoria.",
     
+    helpDomanda1: "Cosa fare nelle pagine Popolazione, Paziente e Confronto?",
+    helpRisposta1_1: "La dashboard è divisa in tre sezioni di analisi principali, strutturate per offrire una visione dal macro al micro:",
+    helpRisposta1_2_titolo: "Popolazione: ",
+    helpRisposta1_2_desc: "Questa è la visione globale. Permette di analizzare l'andamento e le performance generali dell'algoritmo calcolate come media su tutti i pazienti del dataset. È ideale per valutare la stabilità generale del modello.",
+    helpRisposta1_3_titolo: "Paziente: ",
+    helpRisposta1_3_desc: "Questa è la visione individuale. Permette di selezionare un singolo utente e analizzarne nel dettaglio le performance. I dati mostrati sono calcolati analizzando tutte le epoche relative esclusivamente a quel paziente specifico.",
+    helpRisposta1_4_titolo: "Confronto: ",
+    helpRisposta1_4_desc: "Questa è la visione analitica incrociata. Ti permette di affiancare due pazienti diversi per comparare direttamente la loro attività cerebrale e capire le differenze nei loro dati SHAP e nelle performance individuali.",
+
+    helpDomanda2: "Come si leggono i dati di F1 e AUC?",
+    helpRisposta2_1: "Le metriche di F1-Score e AUC indicano l'accuratezza e l'affidabilità dell'algoritmo nel classificare correttamente il movimento immaginato. La loro interpretazione dipende dalla pagina corrente:",
+    helpRisposta2_2_titolo: "Nella pagina Paziente: ",
+    helpRisposta2_2_desc: "I valori mostrati rappresentano la media calcolata tra tutte le epoche registrate per quel singolo paziente, indicando quanto il modello sia affidabile sul soggetto selezionato.",
+    helpRisposta2_3_titolo: "Nella pagina Popolazione: ",
+    helpRisposta2_3_desc: "I valori rappresentano la media complessiva calcolata su tutti i pazienti del dataset e sono visibili nel grafico interattivo. Permettono di valutare l'affidabilità generale dell'intero sistema.",
+
+    helpDomanda3: "Come leggere i valori SHAP dei grafici a barre?",
+    helpRisposta3_1: "I grafici a barre SHAP mostrano l'importanza di ciascuna finestra temporale e di ciascuna feature nell'aiutare il modello a prendere una decisione.",
+    helpRisposta3_2: "La lunghezza della barra rappresenta il peso o l'impatto di quella specifica voce. Essendo disposti in ordine decrescente, gli elementi posizionati in alto nel grafico sono quelli che hanno fornito l'informazione più determinante per distinguere se il paziente stava immaginando il braccio destro o sinistro.",
+
+    helpDomanda4: "Come si leggono i Topoplot e le classi predette?",
+    helpRisposta4: "Il Topoplot permette di visualizzare graficamente, tramite la disposizione dei 14 canali, quali aree del cervello stiano influenzando maggiormente la decisione del modello.",
+    helpRisposta4_1_titolo: "I colori: ",
+    helpRisposta4_1_desc: "Il colore indica la direzione verso cui il sensore sta spingendo la predizione, basandosi sul segno positivo o negativo del valore SHAP.",
+    helpRisposta4_2_titolo: "L'intensità: ",
+    helpRisposta4_2_desc: "L'intensità della macchia di colore indica l'importanza assoluta di quel sensore. Più il colore è marcato, maggiore è l'influenza matematica che quella precisa zona cerebrale ha avuto sul risultato finale dell'algoritmo.",
   },
+
+
   en: {
     //FRASI SIGN IN - SIGN UP
     accedi: "Log in",
@@ -168,7 +196,7 @@ export const translations = {
     // FRASI MENU
     menuHome: "Home",
     menuPopulation: "Population",
-    menuPatients: "Patients",
+    menuPatients: "Users",
     menuComparison: "Comparison",
     menuSettings: "Settings",
     menuAbout: "About",
@@ -241,13 +269,13 @@ export const translations = {
     aboutContent: "This interface was created with the goal of making transparent and interpretable the Machine Learning models applied to brain signals (EEG). Traditionally, algorithms operate as \"black boxes\", providing a result without explaining the underlying reasoning.",
     aboutContentContinua: "Through the use of eXplainable AI (XAI) and the SHAP algorithm, the platform allows researchers and clinicians to visualize in real-time which areas of the cerebral cortex and which neural rhythms contributed to the recognition of a motor intention.",
     aboutSubtitle1: "Signal Acquisition", 
-    aboutContent1: "EEG recording with 14 channels (10-20 system). Subjects performed Motor Imagery tasks in a controlled environment.",
-    aboutSubtitle2: "Signal Processing", 
-    aboutContent2: "Segmentation of the signal into three temporal windows. Advanced features extracted such as spectral entropy and power bands.",
+    aboutContent1: "Data acquisition involved a group of 30 users, whose brainwaves were recorded using an advanced 14-channel Emotiv headset. For each participant, an average of about 50 epochs were collected, carefully divided into three specific mental states: a resting phase, right arm motor imagery, and left arm motor imagery.",
+    aboutSubtitle2: "Data Processing", 
+    aboutContent2: "The raw data underwent a careful cleaning phase to remove artifacts and background noise from the individual epochs. Subsequently, the signal was segmented into three distinct time windows to capture the dynamic evolution of brain activity. From these segments, 18 fundamental features were extracted, including spectral entropy, frequency band power (such as alpha and beta), and other advanced statistical measures.",
     aboutSubtitle3: "Model Training", 
-    aboutContent3: "Validation through Leave-One-Group-Out (LOGO). Trained and optimized advanced algorithms such as SVM and XGBoost.",
-    aboutSubtitle4: "AI Explanation", 
-    aboutContent4: "Application of SHAP to identify the most influential features. Visualization through temporal graphs and topoplots.",
+    aboutContent3: "To train the Artificial Intelligence, a rigorous LOGO (Leave-One-Group-Out) approach was adopted, a validation technique that tests the model on a completely new user to evaluate its true generalization capability. Specifically, an SVM (Support Vector Machine) classifier was trained, conducting an in-depth search to find the optimal customized hyperparameters for each individual user.",
+    aboutSubtitle4: "Explainable AI (SHAP)", 
+    aboutContent4: "To fully understand the reasoning behind the obtained predictions, a SHAP analysis was conducted. This powerful tool allows breaking down the model's decisions to understand with absolute transparency which specific time window, which EEG channel, and which single feature weighed the most in recognizing the user's movement intention.",
     // FRASI TOPOPLOT E SHAPBARCHART
     valore: "SHAP Value",
     labelShapBar: "Average Model Impact (SHAP Value)",
@@ -275,10 +303,42 @@ export const translations = {
     confermaElimDescr1: "Are you sure you want to permanently delete your account? This action is ",
     confermaElimDescr2: " irreversible ",
     confermaElimDescr3: "and all your data will be permanently removed.",
-    siElimina: "Yes, delete account"
+    siElimina: "Yes, delete account",
+    //FRASI HELP
+    helpTitle: "Support Center",
+    helpDesc: "Guide to interpreting EEG data for Motor Imagery classification.",
+    
+    helpDomanda1: "What can be done on the Population, Patient, and Comparison pages?",
+    helpRisposta1_1: "The dashboard is divided into three main analysis sections, structured to offer a view from macro to micro:",
+    helpRisposta1_2_titolo: "Population: ",
+    helpRisposta1_2_desc: "This is the global view. It allows analyzing the overall trends and performance of the algorithm calculated as an average across all patients in the dataset. It is ideal for evaluating the model's general stability.",
+    helpRisposta1_3_titolo: "Patient: ",
+    helpRisposta1_3_desc: "This is the individual view. It allows selecting a single user and analyzing their performance in detail. The data shown here is calculated by analyzing all epochs related exclusively to that specific patient.",
+    helpRisposta1_4_titolo: "Comparison: ",
+    helpRisposta1_4_desc: "This is the cross-analytical view. It allows placing two different patients side by side to directly compare their brain activity and understand the differences in their SHAP data and individual performances.",
+
+    helpDomanda2: "How do you read F1 and AUC data?",
+    helpRisposta2_1: "The F1-Score and AUC metrics indicate the accuracy and reliability of the algorithm in correctly classifying the imagined movement. Their interpretation depends on the current page:",
+    helpRisposta2_2_titolo: "On the Patient page: ",
+    helpRisposta2_2_desc: "The values shown represent the average calculated across all recorded epochs for that single patient, indicating how reliable the model is for the selected subject.",
+    helpRisposta2_3_titolo: "On the Population page: ",
+    helpRisposta2_3_desc: "The values represent the overall average calculated across all patients in the dataset and are visible in the interactive chart. They allow evaluating the general reliability of the entire system.",
+
+    helpDomanda3: "How do you read the SHAP values in the bar charts?",
+    helpRisposta3_1: "The SHAP bar charts show the importance of each time window and feature in helping the model make a decision.",
+    helpRisposta3_2: "The length of the bar represents the weight or impact of that specific item. Since they are arranged in descending order, the items positioned at the top of the chart are those that provided the most crucial information to distinguish whether the patient was imagining the right or left arm.",
+
+    helpDomanda4: "How do you read Topoplots and predicted classes?",
+    helpRisposta4: "The Topoplot allows graphically visualizing, through the layout of the 14 channels, which areas of the brain are most heavily influencing the model's decision.",
+    helpRisposta4_1_titolo: "The colors: ",
+    helpRisposta4_1_desc: "The color indicates the direction in which the sensor is driving the prediction, based on the positive or negative sign of the SHAP value.",
+    helpRisposta4_2_titolo: "The intensity: ",
+    helpRisposta4_2_desc: "The intensity of the color patch indicates the absolute importance of that sensor. The more pronounced the color, the greater the mathematical influence that specific brain area had on the algorithm's final result.",
 
     
   },
+
+
   es: {
     //FRASI SIGN IN - SIGN UP
     accedi: "Iniciar Sesión",
@@ -306,7 +366,7 @@ export const translations = {
     // FRASI MENU
     menuHome: "Inicio",
     menuPopulation: "Población",
-    menuPatients: "Pacientes",
+    menuPatients: "Usuarios",
     menuComparison: "Comparación",
     menuSettings: "Configuración",
     menuAbout: "Acerca de",
@@ -378,14 +438,14 @@ export const translations = {
     aboutSubtitle: "Un puente entre la Mente y la Máquina",
     aboutContent: "Esta interfaz nace con el objetivo de hacer transparente y interpretable los modelos de Machine Learning aplicados a las señales cerebrales (EEG). Tradicionalmente, los algoritmos operan como \"cajas negras\", proporcionando un resultado sin explicar el razonamiento subyacente.",
     aboutContentContinua: "A través del uso de eXplainable AI (XAI) y el algoritmo SHAP, la plataforma permite a investigadores y clínicos visualizar en tiempo real qué áreas de la corteza cerebral y qué ritmos neurales contribuyeron al reconocimiento de una intención motora.",
-    aboutSubtitle1: "Adquisición de Señal", 
-    aboutContent1: "Grabación EEG a 14 canales (sistema 10-20). Los sujetos realizaron tareas de Motor Imagery en un entorno controlado.",
-    aboutSubtitle2: "Procesamiento de Señal", 
-    aboutContent2: "Segmentación de la señal en tres ventanas temporales. Extracción de características avanzadas como entropía espectral y bandas de potencia.",
-    aboutSubtitle3: "Entrenamiento de Modelos", 
-    aboutContent3: "Validación a través de Leave-One-Group-Out (LOGO). Entrenados y optimizados algoritmos avanzados como SVM y XGBoost.",
-    aboutSubtitle4: "Explicación AI", 
-    aboutContent4: "Aplicación de SHAP para identificar las características más influyentes. Visualización a través de gráficos temporales y topoplots.",
+    aboutSubtitle1: "Adquisición de Señales", 
+    aboutContent1: "La adquisición de datos involucró a un grupo de 30 usuarios, cuyos trazados cerebrales fueron registrados utilizando un avanzado casco Emotiv de 14 canales. Para cada participante se recopiló un promedio de unas 50 épocas, cuidadosamente divididas en tres estados mentales específicos: una fase de reposo, imaginación motora del brazo derecho e imaginación motora del brazo izquierdo.",
+    aboutSubtitle2: "Procesamiento de Datos", 
+    aboutContent2: "Los datos brutos se sometieron a una cuidadosa fase de limpieza para eliminar artefactos y ruido de fondo de las épocas individuales. Posteriormente, la señal se segmentó en tres ventanas temporales distintas para capturar la evolución dinámica de la actividad cerebral. De estos segmentos se extrajeron 18 características fundamentales, que incluyen la entropía espectral, la potencia de las bandas de frecuencia (como alfa y beta) y otras medidas estadísticas avanzadas.",
+    aboutSubtitle3: "Entrenamiento del Modelo", 
+    aboutContent3: "Para entrenar la Inteligencia Artificial se adoptó un riguroso enfoque LOGO (Leave-One-Group-Out), una técnica de validación que prueba el modelo en un usuario completamente nuevo para evaluar su verdadera capacidad de generalización. Específicamente, se entrenó un clasificador SVM (Support Vector Machine), realizando una búsqueda exhaustiva para encontrar los hiperparámetros óptimos personalizados para cada usuario individual.",
+    aboutSubtitle4: "IA Explicable (SHAP)", 
+    aboutContent4: "Para comprender a fondo las motivaciones detrás de las predicciones obtenidas, se llevó a cabo el análisis SHAP. Esta poderosa herramienta permite desglosar las decisiones del modelo para comprender con absoluta transparencia qué ventana temporal específica, qué canal EEG y qué característica individual tuvieron el mayor peso para reconocer la intención de movimiento del usuario.",
     // FRASI TOPOPLOT E SHAPBARCHART
     valore: "Valor SHAP",
     labelShapBar: "Impacto Promedio en el Modelo (Valor SHAP)",
@@ -413,7 +473,37 @@ export const translations = {
     confermaElimDescr1: "¿Estás seguro de que deseas eliminar definitivamente tu cuenta? Esta acción es ",
     confermaElimDescr2: " irreversible ",
     confermaElimDescr3: "y todos tus datos serán eliminados para siempre.",
-    siElimina: "Sí, eliminar cuenta"
+    siElimina: "Sí, eliminar cuenta",
+    //FRASI HELP
+    helpTitle: "Centro de Soporte",
+    helpDesc: "Guía para la interpretación de datos EEG para la clasificación de la Imaginación Motora.",
+    
+    helpDomanda1: "¿Qué hacer en las páginas de Población, Paciente y Comparación?",
+    helpRisposta1_1: "El panel de control está dividido en tres secciones principales de análisis, estructuradas para ofrecer una visión de lo macro a lo micro:",
+    helpRisposta1_2_titolo: "Población: ",
+    helpRisposta1_2_desc: "Esta es la visión global. Permite analizar la tendencia y el rendimiento general del algoritmo calculados como un promedio de todos los pacientes del conjunto de datos. Es ideal para evaluar la estabilidad general del modelo.",
+    helpRisposta1_3_titolo: "Paciente: ",
+    helpRisposta1_3_desc: "Esta es la visión individual. Permite seleccionar a un único usuario y analizar su rendimiento en detalle. Los datos mostrados se calculan analizando todas las épocas relativas exclusivamente a ese paciente específico.",
+    helpRisposta1_4_titolo: "Comparación: ",
+    helpRisposta1_4_desc: "Esta es la visión analítica cruzada. Te permite colocar a dos pacientes diferentes frente a frente para comparar directamente su actividad cerebral y entender las diferencias en sus datos SHAP y rendimientos individuales.",
+
+    helpDomanda2: "¿Cómo se leen los datos de F1 y AUC?",
+    helpRisposta2_1: "Las métricas de F1-Score y AUC indican la precisión y confiabilidad del algoritmo para clasificar correctamente el movimiento imaginado. Su interpretación depende de la página actual:",
+    helpRisposta2_2_titolo: "En la página Paciente: ",
+    helpRisposta2_2_desc: "Los valores mostrados representan el promedio calculado entre todas las épocas registradas para ese paciente individual, indicando qué tan confiable es el modelo en el sujeto seleccionado.",
+    helpRisposta2_3_titolo: "En la página Población: ",
+    helpRisposta2_3_desc: "Los valores representan el promedio global calculado de todos los pacientes del conjunto de datos y son visibles en el gráfico interactivo. Permiten evaluar la confiabilidad general de todo el sistema.",
+
+    helpDomanda3: "¿Cómo leer los valores SHAP de los gráficos de barras?",
+    helpRisposta3_1: "Los gráficos de barras SHAP muestran la importancia de cada ventana temporal y cada característica para ayudar al modelo a tomar una decisión.",
+    helpRisposta3_2: "La longitud de la barra representa el peso o el impacto de ese elemento específico. Al estar dispuestos en orden descendente, los elementos situados en la parte superior del gráfico son los que han aportado la información más determinante para distinguir si el paciente estaba imaginando el brazo derecho o el izquierdo.",
+
+    helpDomanda4: "¿Cómo se leen los Topoplots y las clases predichas?",
+    helpRisposta4: "El Topoplot permite visualizar gráficamente, mediante la distribución de los 14 canales, qué áreas del cerebro están influyendo más en la decisión del modelo.",
+    helpRisposta4_1_titolo: "Los colores: ",
+    helpRisposta4_1_desc: "El color indica la dirección hacia la cual el sensor está empujando la predicción, basándose en el signo positivo o negativo del valor SHAP.",
+    helpRisposta4_2_titolo: "La intensidad: ",
+    helpRisposta4_2_desc: "La intensidad de la mancha de color indica la importancia absoluta de ese sensor. Cuanto más marcado sea el color, mayor será la influencia matemática que esa zona cerebral precisa ha tenido en el resultado final del algoritmo.",
     
   },
 

@@ -232,10 +232,10 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                           
                           {/* Corpo del Tooltip */}
                           <Box sx={{ p: forceMobile ? 1 : 1.5 }}>
-                            <Typography variant="body2" sx={{mb: forceMobile ? 0.5 : 1, fontWeight: 400, fontSize: forceMobile ? '0.65rem' : '0.875rem' }}>
+                            <Typography variant="body2" sx={{mb: forceMobile ? 0.5 : 1, fontWeight: 400, fontSize: forceMobile ? '0.8rem' : '0.875rem' }}>
                               {t.valore}: {displayValue?.toFixed(4)}
                             </Typography>
-                            <Typography variant="body2" sx={{ fontSize: forceMobile ? '0.65rem' : '0.875rem', lineHeight: 1.2 }}>
+                            <Typography variant="body2" sx={{ fontSize: forceMobile ? '0.8rem' : '0.875rem', lineHeight: 1.2 }}>
                               {ch.description}
                             </Typography>
                           </Box>

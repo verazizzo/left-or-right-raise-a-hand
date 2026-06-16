@@ -12,6 +12,11 @@ import MainGrid from '../components/MainGrid';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
 import Methodology from '../components/Methodology';
+import Typography from '@mui/material/Typography';
+
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
 
 import {
   chartsCustomizations,
@@ -32,6 +37,8 @@ const xThemeComponents = {
 
 export default function About(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
+  const { language } = useSettings();
+  const t = translations[language];
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -62,7 +69,7 @@ export default function About(props: { disableCustomTheme?: boolean }) {
           })}
         >
           <Stack
-            spacing={2}
+            spacing={3}
             sx={{
               alignItems: 'stretch',
               mx: 3,
@@ -71,6 +78,12 @@ export default function About(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <Header />
+
+            <Box sx={{ mt: 4, mb: 2, width: '100%', textAlign: 'left' }}>
+              <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                {t.aboutTitle}
+              </Typography>
+            </Box>
             <Methodology />
 
           </Stack>

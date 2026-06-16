@@ -96,15 +96,15 @@ export default function StatCard({
     up:
       theme.palette.mode === 'light'
         ? theme.palette.success.main
-        : theme.palette.success.dark,
+        : theme.palette.success.light, // <-- Più luminoso nel tema scuro
     down:
       theme.palette.mode === 'light'
         ? theme.palette.error.main
-        : theme.palette.error.dark,
+        : theme.palette.error.light,   // <-- Più luminoso nel tema scuro
     neutral:
       theme.palette.mode === 'light'
         ? theme.palette.grey[400]
-        : theme.palette.grey[700],
+        : theme.palette.grey[300],     // <-- Grigio più chiaro nel tema scuro
   };
 
   const labelColors = {
@@ -138,7 +138,7 @@ export default function StatCard({
               white-space: pre-wrap !important;
               max-width: 120px !important;
               padding: 4px 6px !important;
-              font-size: 0.70rem !important;
+              font-size: 0.80rem !important;
               line-height: 1.2 !important;
             }
           `}

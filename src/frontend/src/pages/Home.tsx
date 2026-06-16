@@ -20,8 +20,8 @@ import {
   treeViewCustomizations,
 } from '../theme/customizations';
 
-import SfondoNeuroniChiaro from '../assets/neurone_sfum.png';
-import SfondoNeuroniScuro from '../assets/neurone_sfum_dark.png';
+import SfondoNeuroniScuro from '../assets/neurone_sfum.png';
+import SfondoNeuroniChiaro from '../assets/neurone_sfum_3sfum.png';
 
 
 import { useSettings } from '../context/SettingsContext';
@@ -68,7 +68,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
         {/* CONTAINER SVG DI SFONDO */}
         <Box
           sx={(theme) => ({
-            position: 'absolute',
+            position: 'fixed',
             top: 0,
             left: 0,
             width: '100%',

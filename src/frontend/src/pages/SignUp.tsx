@@ -39,7 +39,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
   boxShadow:
     'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
   [theme.breakpoints.up('sm')]: {
-    width: '450px',
+    maxWidth: '450px',
   },
   ...theme.applyStyles('dark', {
     boxShadow:
@@ -58,7 +58,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   '&::before': {
     content: '""',
     display: 'block',
-    position: 'absolute',
+    position: 'fixed',
     zIndex: -1,
     inset: 0,
     backgroundImage:
@@ -274,7 +274,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
             }}
           >
-            <DashboardLogo disableLink/>
+            <DashboardLogo redirectTo="/login" />
           </Box>
 
 

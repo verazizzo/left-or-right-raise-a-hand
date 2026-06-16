@@ -152,11 +152,11 @@ export default function ShapBarChart({
               whiteSpace: 'pre-wrap !important', 
               
               // Se siamo nel telefono limite a 160px, altrimenti liberi a 300px
-              maxWidth: forceMobile ? '160px !important' : '300px !important', 
+              maxWidth: forceMobile ? '180px !important' : '300px !important', 
               
               // Riduciamo margini e font solo sul telefono per compattarlo
               padding: forceMobile ? '6px 8px !important' : '12px !important', 
-              fontSize: forceMobile ? '0.70rem !important' : '0.875rem !important',
+              fontSize: forceMobile ? '0.80rem !important' : '0.875rem !important',
               
               lineHeight: '1.4 !important', 
               textAlign: 'left !important',

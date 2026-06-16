@@ -10,18 +10,18 @@ import Comparison from './pages/Comparison';
 import Settings from './pages/Setting';
 import Profile from './pages/Profile';
 import Help from './pages/Help';
+import ScrollToTop from './components/ScrollToTop';
 
-
-// 1. IMPORTA IL PROVIDER DELLE IMPOSTAZIONI
 import { SettingsProvider } from './context/SettingsContext';
-
-
 
 export default function App() {
   return (
-    // 2. AVVOLGI L'INTERA APP CON IL PROVIDER
     <SettingsProvider>
       <div className="app-container">
+        
+        {/* Il nostro componente per lo scorrimento automatico */}
+        <ScrollToTop />
+        
         <Routes>
           <Route path="/register" element={<SignUp />} />
           <Route path="/login" element={<SignIn />} />
@@ -37,6 +37,7 @@ export default function App() {
 
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
+        
       </div>
     </SettingsProvider>
   );

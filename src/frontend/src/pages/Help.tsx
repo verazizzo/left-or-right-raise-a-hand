@@ -59,132 +59,131 @@ export default function Help(props: { disableCustomTheme?: boolean }) {
 
             <Box sx={{ mt: 4, mb: 2 }}>
               <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-                Centro di Supporto e Tutorial
+                {t.helpTitle}
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                Guida all'interpretazione dei dati EEG per la classificazione dell'Immaginazione Motoria (Motor Imagery).
+                {t.helpDesc}
               </Typography>
             </Box>
 
             {/* SEZIONE 1: FAQ E TUTORIAL */}
-            <Card variant="outlined" sx={{ mb: 4 }}>
-<CardContent sx={{ p: 0 }}>
-                
-                {/* Domanda 1: Pagine dell'App */}
-                <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <DashboardIcon color="primary" />
-                      <Typography sx={{ fontWeight: 600 }}>Cosa fare nelle pagine Popolazione, Paziente e Confronto?</Typography>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ p: 3, bgcolor: 'background.default' }}>
-                    <Typography variant="body2" sx={{ mb: 2 }}>
-                      La dashboard è divisa in tre sezioni di analisi principali, per offrirti una visione dal macro al micro:
-                    </Typography>
-                    <Typography component="div" variant="body2">
-                      <ul>
-                        <li>
-                          <Box sx={{ mb: 1 }}>
-                            <strong>Popolazione:</strong> Questa è la visione globale. Qui puoi analizzare l'andamento e le performance generali dell'algoritmo calcolate come media su <em>tutti i pazienti</em> del dataset. È ideale per valutare la stabilità generale del modello.
-                          </Box>
-                        </li>
-                        <li>
-                          <Box sx={{ mb: 1 }}>
-                            <strong>Paziente:</strong> Questa è la visione individuale. Permette di selezionare un singolo utente e analizzarne nel dettaglio le performance. I dati mostrati qui sono calcolati analizzando tutte le epoche (le varie finestre temporali di registrazione) relative solo a quel paziente specifico.
-                          </Box>
-                        </li>
-                        <li>
-                          <Box>
-                            <strong>Confronto:</strong> Questa è la visione analitica incrociata. Ti permette di affiancare due pazienti diversi (o due sessioni diverse) per comparare direttamente la loro attività cerebrale e capire le differenze nei loro dati SHAP e nelle performance.
-                          </Box>
-                        </li>
-                      </ul>
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <Card variant="outlined" sx={{ mb: 4, maxWidth: 1000, width: '100%', mx: 'auto' }}>
+                <CardContent sx={{ p: 0 }}>
+                  
+                  {/* Domanda 1: Pagine dell'App */}
+                  <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <DashboardIcon color="primary" />
+                        <Typography sx={{ fontWeight: 600 }}>{t.helpDomanda1}</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: 3, bgcolor: 'background.default' }}>
+                      <Typography variant="body2" sx={{ mb: 2 }}>
+                      {t.helpRisposta1_1}
+                      </Typography>
+                      <Typography component="div" variant="body2">
+                        <ul>
+                          <li>
+                            <Box sx={{ mb: 1 }}>
+                              <strong>{t.helpRisposta1_2_titolo}</strong> {t.helpRisposta1_2_desc}
+                            </Box>
+                          </li>
+                          <li>
+                            <Box sx={{ mb: 1 }}>
+                              <strong>{t.helpRisposta1_3_titolo}</strong> {t.helpRisposta1_3_desc}
+                            </Box>
+                          </li>
+                          <li>
+                            <Box>
+                              <strong>{t.helpRisposta1_4_titolo}</strong> {t.helpRisposta1_4_desc}
+                            </Box>
+                          </li>
+                        </ul>
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
 
-                {/* Domanda 2: Precision e Recall */}
-                <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <AssessmentIcon color="primary" />
-                      <Typography sx={{ fontWeight: 600 }}>Come si leggono i dati di Precision e Recall?</Typography>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ p: 3, bgcolor: 'background.default' }}>
-                    <Typography variant="body2" sx={{ mb: 2 }}>
-                      Le metriche di Precision (Precisione) e Recall (Sensibilità) indicano quanto l'algoritmo sia stato bravo a classificare correttamente il movimento immaginato. La loro lettura dipende dalla pagina in cui ti trovi:
-                    </Typography>
-                    <Typography component="div" variant="body2">
-                      <ul>
-                        <li>
-                          <Box sx={{ mb: 1 }}>
-                            <strong>Nella pagina Paziente:</strong> I valori che vedi sono la media calcolata tra <em>tutte le epoche</em> (finestre temporali) registrate per quel singolo paziente. Ti dice quanto il modello è affidabile su di lui.
-                          </Box>
-                        </li>
-                        <li>
-                          <Box>
-                            <strong>Nella pagina Popolazione:</strong> I valori rappresentano la media calcolata su <em>tutti i pazienti</em> e sono visibili nel grafico interattivo. Ti permettono di capire l'affidabilità generale del tuo sistema.
-                          </Box>
-                        </li>
-                      </ul>
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
+                  {/* Domanda 2: Precision e Recall */}
+                  <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <AssessmentIcon color="primary" />
+                        <Typography sx={{ fontWeight: 600 }}>{t.helpDomanda2}</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: 3, bgcolor: 'background.default' }}>
+                      <Typography variant="body2" sx={{ mb: 2 }}>
+                        {t.helpRisposta2_1}
+                      </Typography>
+                      <Typography component="div" variant="body2">
+                        <ul>
+                          <li>
+                            <Box sx={{ mb: 1 }}>
+                              <strong>{t.helpRisposta2_2_titolo}</strong> {t.helpRisposta2_2_desc}
+                            </Box>
+                          </li>
+                          <li>
+                            <Box>
+                              <strong>{t.helpRisposta2_3_titolo}</strong> {t.helpRisposta2_3_desc}
+                            </Box>
+                          </li>
+                        </ul>
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
 
-                {/* Domanda 3: Grafici a barre SHAP */}
-                <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <InsightsIcon color="primary" />
-                      <Typography sx={{ fontWeight: 600 }}>Come leggere i valori SHAP dei grafici a barre?</Typography>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ p: 3, bgcolor: 'background.default' }}>
-                    <Typography variant="body2" sx={{ mb: 2 }}>
-                      I grafici a barre SHAP mostrano l'importanza di ciascun sensore EEG nell'aiutare il modello a prendere una decisione.
-                    </Typography>
-                    <Typography variant="body2">
-                      La lunghezza della barra rappresenta il "peso" o l'impatto di quel canale. I canali posizionati in alto nel grafico (con le barre più lunghe) sono quelli che hanno fornito l'informazione più determinante per distinguere se il paziente stava immaginando il braccio destro o sinistro.
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
+                  {/* Domanda 3: Grafici a barre SHAP */}
+                  <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <InsightsIcon color="primary" />
+                        <Typography sx={{ fontWeight: 600 }}>{t.helpDomanda3}</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: 3, bgcolor: 'background.default' }}>
+                      <Typography variant="body2" sx={{ mb: 2 }}>
+                        {t.helpRisposta3_1}
+                      </Typography>
+                      <Typography variant="body2">
+                        {t.helpRisposta3_2}
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
 
-                {/* Domanda 4: Topoplot */}
-                <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <PsychologyIcon color="primary" />
-                      <Typography sx={{ fontWeight: 600 }}>Come si leggono i Topoplot e le classi predette?</Typography>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ p: 3, bgcolor: 'background.default' }}>
-                    <Typography variant="body2" sx={{ mb: 2 }}>
-                      L'obiettivo primario dell'algoritmo è capire se la persona sta immaginando di alzare il <strong>Braccio Destro</strong> o il <strong>Braccio Sinistro</strong> (Motor Imagery). Il Topoplot ti aiuta a visualizzare su quali aree del cervello si basa questa decisione.
-                    </Typography>
-                    <Typography component="div" variant="body2">
-                      <ul>
-                        <li>
-                          <Box sx={{ mb: 1 }}>
-                            <strong>I Colori (Le Classi):</strong> Il colore (es. Rosso o Blu) indica in quale direzione il sensore sta spingendo la predizione, basandosi sul segno positivo o negativo del valore SHAP. Il rosso punta a una classe (es. Braccio Destro), il blu all'altra (es. Braccio Sinistro).
-                          </Box>
-                        </li>
-                        <li>
-                          <Box>
-                            <strong>L'Intensità e la Dimensione:</strong> L'intensità della macchia di colore e la grandezza del cerchio disegnato sul canale indicano l'importanza assoluta di quel sensore. Più il colore è marcato (o il raggio è ampio), maggiore è l'influenza matematica che quella precisa zona del cervello ha avuto sul risultato finale dell'algoritmo.
-                          </Box>
-                        </li>
-                      </ul>
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
+                  {/* Domanda 4: Topoplot */}
+                  <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <PsychologyIcon color="primary" />
+                        <Typography sx={{ fontWeight: 600 }}>{t.helpDomanda4}</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: 3, bgcolor: 'background.default' }}>
+                      <Typography variant="body2" sx={{ mb: 2 }}>
+                        {t.helpRisposta4}
+                      </Typography>
+                      <Typography component="div" variant="body2">
+                        <ul>
+                          <li>
+                            <Box sx={{ mb: 1 }}>
+                              <strong>{t.helpRisposta4_1_titolo}</strong> {t.helpRisposta4_1_desc}
+                            </Box>
+                          </li>
+                          <li>
+                            <Box>
+                              <strong>{t.helpRisposta4_2_titolo}</strong> {t.helpRisposta4_2_desc}
+                            </Box>
+                          </li>
+                        </ul>
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
 
-              </CardContent>
-            </Card>
-
-          
-
+                </CardContent>
+              </Card>
+            </Box>
           </Stack>
         </Box>
       </Box>
