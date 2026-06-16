@@ -400,7 +400,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                               },
                             }}
                           >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -447,7 +447,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                               },
                             }}
                           >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
                         </InputAdornment>
                       ),
