@@ -2,6 +2,29 @@ import { a } from "@react-spring/web";
 
 export const translations = {
   it: {
+    //FRASI SIGN IN - SIGN UP
+    accedi: "Accedi",
+    registrati: "Registrati",
+    nome: "Nome",
+    cognome: "Cognome",
+    email: "Email",
+    password: "Password",
+    passowrddimenticata: "Hai dimenticato la password?",
+    confermapassword: "Conferma Password",
+    noccount: "Non hai un account?",
+    registratiqui: "Registrati qui",
+    giaaccount: "Hai già un account?",
+    accediqui: "Accedi qui",
+    // ERRORI
+    errNomeObbligatorio: "Il nome è obbligatorio.",
+    errCognomeObbligatorio: "Il cognome è obbligatorio.",
+    errEmailObbligatoria: "L'indirizzo email è obbligatorio.",
+    errEmailValida: "Inserire un indirizzo email valido.",
+    errPasswordObbligatoria: "La password è obbligatoria.",
+    errPasswordCorta: "La password deve contenere almeno 6 caratteri.",
+    errPasswordConferma: "È necessario confermare la password.",
+    errPasswordCoincidono: "Le password non coincidono.",
+    errDurante: "Errore durante la registrazione. Riprova!",
     // FRASI MENU
     menuHome: "Home",
     menuPopulation: "Popolazione",
@@ -34,7 +57,7 @@ export const translations = {
     welcomeTitle1: "Benevenuto ",
     welcomeTitle2: " al tuo Centro Analisi EEG",
     welcomeSubtitle: "Monitoraggio, intelligenza artificiale e analisi SHAP a portata di mano.",
-    btnNewAnalysis: "Avvia Nuova Analisi",
+    welcomeDesc: "Come funziona davvero il cervello umano? Cosa succede esattamente nei nostri tracciati quando pensiamo di alzare un braccio o l'altro? Scoprilo con noi esplorando i dati attraverso modelli avanzati e visualizzazioni interattive. Analizza i risultati ottenuti su diversi utenti per spiegare come l'IA interpreta ogni singolo movimento.",
     //FRASI POPOLAZIONE
     titoloPopo: "Spiegabilità IA - Analisi Popolazione",
     titoloPopoDesc: "Panoramica dei risultati complessivi ottenuti dall'analisi dell'intera popolazione di pazienti.",
@@ -97,9 +120,6 @@ export const translations = {
     // FRASI PROFILE.TSX
     impostazioniProfilo: "Impostazioni Profilo",
     infoPersonali: "Informazioni Personali",
-    nome: "Nome",
-    cognome: "Cognome",
-    email: "Email",
     modifica: "Modifica",
     salva: "Salva Modifiche",
     annulla: "Annulla Modifiche",
@@ -122,6 +142,29 @@ export const translations = {
     
   },
   en: {
+    //FRASI SIGN IN - SIGN UP
+    accedi: "Log in",
+    registrati: "Sign Up",
+    nome: "Name",
+    cognome: "Surname",
+    email: "Email",
+    password: "Password",
+    passowrddimenticata: "Forgot your password?",
+    confermapassword: "Confirm Password",
+    noccount: "Don't have an account?",
+    registratiqui: "Sign Up here",
+    giaaccount: "Already have an account?",
+    accediqui: "Log in here",
+    // ERRORI
+    errNomeObbligatorio: "Name is required.",
+    errCognomeObbligatorio: "Surname is required.",
+    errEmailObbligatoria: "Email is required.",
+    errEmailValida: "Insert a valid email address.",
+    errPasswordObbligatoria: "Password is required.",
+    errPasswordCorta: "Password must contain at least 6 characters.",
+    errPasswordConferma: "You must confirm the password.",
+    errPasswordCoincidono: "Passwords do not match.",
+    errDurante: "Error during registration. Try again!",
     // FRASI MENU
     menuHome: "Home",
     menuPopulation: "Population",
@@ -154,7 +197,7 @@ export const translations = {
     welcomeTitle1: "Welcome ",
     welcomeTitle2: " to your EEG Analysis Hub",
     welcomeSubtitle: "Monitoring, AI insights, and SHAP analysis at your fingertips.",
-    btnNewAnalysis: "Start New Analysis",
+    welcomeDesc: "How does the human brain really work? What exactly happens in our traces when we think about raising one arm or the other? Discover it with us by exploring the data through advanced models and interactive visualizations. Analyze the results obtained from different users to explain how AI interprets every single movement.",
     //FRASI POPOLAZIONE
     titoloPopo: "AI Explanation - Population Analysis",
     titoloPopoDesc: "Overview of the overall results obtained from the analysis of the entire patient population.",
@@ -217,9 +260,6 @@ export const translations = {
     // FRASI PROFILE.TSX
     impostazioniProfilo: "Profile Settings",
     infoPersonali: "Personal Information",
-    nome: "Name",
-    cognome: "Surname",
-    email: "Email",
     modifica: "Modify",
     salva: "Save Changes",
     annulla: "Cancel Changes",
@@ -240,6 +280,29 @@ export const translations = {
     
   },
   es: {
+    //FRASI SIGN IN - SIGN UP
+    accedi: "Iniciar Sesión",
+    registrati: "Registrarse",
+    nome: "Nombre",
+    cognome: "Apellido",
+    email: "Correo electrónico",
+    password: "Contraseña",
+    passowrddimenticata: "¿Olvidaste tu contraseña?",
+    confermapassword: "Confirmar Contraseña",
+    noccount: "¿No tienes una cuenta?",
+    registratiqui: "Registrate aquí",
+    giaaccount: "¿Ya tienes una cuenta?",
+    accediqui: "Accede aquí",
+    //ERRORI
+    errNomeObbligatorio: "El nombre es obligatorio.",
+    errCognomeObbligatorio: "El apellido es obligatorio.",
+    errEmailObbligatoria: "El correo electrónico es obligatorio.",
+    errEmailValida: "Inserte una dirección de correo electrónico válida.",
+    errPasswordObbligatoria: "La contraseña es obligatoria.",
+    errPasswordCorta: "La contraseña debe contener al menos 6 caracteres.",
+    errPasswordConferma: "Debes confirmar la contraseña.",
+    errPasswordCoincidono: "Las contraseñas no coinciden.",
+    errDurante: "Error durante el registro. Inténtalo de nuevo!",
     // FRASI MENU
     menuHome: "Inicio",
     menuPopulation: "Población",
@@ -272,7 +335,7 @@ export const translations = {
     welcomeTitle1: "Bienvenido ",
     welcomeTitle2: " a tu Centro de Análisis EEG",
     welcomeSubtitle: "Monitoreo, conocimientos de IA y análisis SHAP al alcance de tu mano.",
-    btnNewAnalysis: "Iniciar Nuevo Análisis",
+    welcomeDesc: "¿Cómo funciona realmente el cerebro humano? ¿Qué sucede exactamente en nuestros trazados cuando pensamos en levantar un brazo o el otro? Descúbrelo con nosotros explorando los datos a través de modelos avanzados y visualizaciones interactivas. Analiza los resultados obtenidos de diferentes usuarios para explicar cómo la IA interpreta cada movimiento.",
     //FRASI POPOLAZIONE
     titoloPopo: "Explicación IA - Análisis de Población",
     titoloPopoDesc: "Vista panorámica de los resultados de análisis de la población entera de pacientes.",
@@ -335,9 +398,6 @@ export const translations = {
     // FRASI PROFILE.TSX
     impostazioniProfilo: "Perfil Configuración",
     infoPersonali: "Información Personal",
-    nome: "Nombre",
-    cognome: "Apellido",
-    email: "Correo electrónico",
     modifica: "Editar",
     salva: "Guardar cambios",
     annulla: "Cancelar cambios",

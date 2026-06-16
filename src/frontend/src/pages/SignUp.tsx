@@ -21,8 +21,12 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import logoImg from '../assets/logo_sfum.svg';
-import titoloImg from '../assets/titolo_sfum.svg';
+
+import DashboardLogo from '../components/DashboardLogo';
+
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -78,6 +82,9 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [globalError, setGlobalError] = useState('');
   const [success, setSuccess] = useState(false);
 
+  const { language } = useSettings();
+  const t = translations[language];
+
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
@@ -116,7 +123,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       case 'email':
         if (!value || !/\S+@\S+\.\S+/.test(value)) {
           setEmailError(true);
-          setEmailErrorMessage('Inserire un indirizzo email valido.');
+          setEmailErrorMessage(t.errEmailValida);
         } else {
           setEmailError(false);
           setEmailErrorMessage('');
@@ -126,14 +133,14 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       case 'password':
         if (!value || value.length < 6) {
           setPasswordError(true);
-          setPasswordErrorMessage('La password deve contenere almeno 6 caratteri.');
+          setPasswordErrorMessage(t.errPasswordCorta);
         } else {
           setPasswordError(false);
           setPasswordErrorMessage('');
         }
         if (formData.confirmPassword && value !== formData.confirmPassword) {
           setConfirmPasswordError(true);
-          setConfirmPasswordErrorMessage('Le password non coincidono.');
+          setConfirmPasswordErrorMessage(t.errPasswordCoincidono);
         } else if (formData.confirmPassword && value === formData.confirmPassword) {
           setConfirmPasswordError(false);
           setConfirmPasswordErrorMessage('');
@@ -143,7 +150,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       case 'confirmPassword':
         if (value !== formData.password) {
           setConfirmPasswordError(true);
-          setConfirmPasswordErrorMessage('Le password non coincidono.');
+          setConfirmPasswordErrorMessage(t.errPasswordCoincidono);
         } else {
           setConfirmPasswordError(false);
           setConfirmPasswordErrorMessage('');
@@ -168,7 +175,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     if (!formData.name.trim()) {
       setNameError(true);
-      setNameErrorMessage('Il nome è obbligatorio.');
+      setNameErrorMessage(t.errNomeObbligatorio);
       isValid = false;
     } else {
       setNameError(false);
@@ -177,7 +184,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     if (!formData.surname.trim()) {
       setSurnameError(true);
-      setSurnameErrorMessage('Il cognome è obbligatorio.');
+      setSurnameErrorMessage(t.errCognomeObbligatorio);
       isValid = false;
     } else {
       setSurnameError(false);
@@ -186,11 +193,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     if (!formData.email.trim()) {
       setEmailError(true);
-      setEmailErrorMessage('L\'indirizzo email è obbligatorio.');
+      setEmailErrorMessage(t.errEmailObbligatoria);
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       setEmailError(true);
-      setEmailErrorMessage('Inserire un indirizzo email valido.');
+      setEmailErrorMessage(t.errEmailValida);
       isValid = false;
     } else {
       setEmailError(false);
@@ -199,11 +206,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     if (!formData.password) {
       setPasswordError(true);
-      setPasswordErrorMessage('La password è obbligatoria.');
+      setPasswordErrorMessage(t.errPasswordObbligatoria);
       isValid = false;
     } else if (formData.password.length < 6) {
       setPasswordError(true);
-      setPasswordErrorMessage('La password deve contenere almeno 6 caratteri.');
+      setPasswordErrorMessage(t.errPasswordCorta);
       isValid = false;
     } else {
       setPasswordError(false);
@@ -212,11 +219,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     if (!formData.confirmPassword) {
       setConfirmPasswordError(true);
-      setConfirmPasswordErrorMessage('È necessario confermare la password.');
+      setConfirmPasswordErrorMessage(t.errPasswordConferma);
       isValid = false;
     } else if (formData.password !== formData.confirmPassword) {
       setConfirmPasswordError(true);
-      setConfirmPasswordErrorMessage('Le password non coincidono.');
+      setConfirmPasswordErrorMessage(t.errCognomeObbligatorio);
       isValid = false;
     } else {
       setConfirmPasswordError(false);
@@ -243,14 +250,14 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       );
       setSuccess(true);
     } catch (err: any) {
-      setGlobalError(err.response?.data?.message || 'Errore durante la registrazione');
+      setGlobalError(err.response?.data?.message || t.errDurante);
     }
   };
 
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
+      
       <SignUpContainer direction="column" sx={{ justifyContent: 'space-between' }}>
         <Card variant="outlined">
 
@@ -261,29 +268,22 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               flexDirection: 'column', 
               alignItems: 'center', 
               justifyContent: 'center',
-              mb: 1 
+              mb: 2 ,
+              transform: 'scale(1.5)', // <-- INGRANDISCE TUTTO DEL 50%
+              transformOrigin: 'center' // Assicura che si ingrandisca dal centro
+
             }}
           >
-            <img 
-              src={logoImg} 
-              alt="Logo Piattaforma" 
-              style={{ width: '90px', marginBottom: '15px' }} 
-            />
-            
-            <img 
-              src={titoloImg} 
-              alt="Nome Piattaforma" 
-              style={{ height: '30px' }} 
-            />
+            <DashboardLogo disableLink/>
           </Box>
 
 
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'text.primary' }}
+            sx={{textAlign: 'center', width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'text.primary' }}
           >
-            Registrati
+            {t.registrati}
           </Typography>
 
           {globalError && (
@@ -312,7 +312,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
               <FormControl>
-                <FormLabel htmlFor="name">Nome</FormLabel>
+                <FormLabel htmlFor="name">{t.nome}</FormLabel>
                 <TextField
                   autoComplete="name"
                   name="name"
@@ -329,7 +329,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               </FormControl>
               
               <FormControl>
-                <FormLabel htmlFor="surname">Cognome</FormLabel>
+                <FormLabel htmlFor="surname">{t.cognome}</FormLabel>
                 <TextField
                   name="surname"
                   required
@@ -345,7 +345,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               </FormControl>
 
               <FormControl>
-                <FormLabel htmlFor="email">Email</FormLabel>
+                <FormLabel htmlFor="email">{t.email}</FormLabel>
                 <TextField
                   required
                   fullWidth
@@ -362,7 +362,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 />
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="password">Password</FormLabel>
+                <FormLabel htmlFor="password">{t.password}</FormLabel>
                 <TextField
                   required
                   fullWidth
@@ -409,7 +409,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 />
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="confirmPassword">Conferma Password</FormLabel>
+                <FormLabel htmlFor="confirmPassword">{t.confermapassword}</FormLabel>
                 <TextField
                   required
                   fullWidth
@@ -460,21 +460,21 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 fullWidth
                 variant="contained"
               >
-                Registrati
+                {t.registrati}
               </Button>
             </Box>
           )}
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Typography sx={{ textAlign: 'center' }}>
-              Hai già un account?{' '}
+              {t.giaaccount}{' '}
               <Link
                 component={RouterLink}
                 to="/login"
                 variant="body2"
                 sx={{ alignSelf: 'center', color: '#0070e0' }}
               >
-                Accedi qui
+                {t.accediqui}
               </Link>
             </Typography>
           </Box>

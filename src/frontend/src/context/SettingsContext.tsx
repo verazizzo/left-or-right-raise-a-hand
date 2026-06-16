@@ -4,15 +4,18 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 export type FontSizeOption = 'small' | 'medium' | 'large';
 export type LanguageOption = 'it' | 'en' | 'es';
 export type ViewModeOption = 'web' | 'mobile';
+export type ModeOption = 'light' | 'dark';
 
 // Struttura dei dati del Context (TypeScript ora sa che esistono tutte queste variabili)
 interface SettingsContextType {
   language: LanguageOption;
   fontSize: FontSizeOption;
   viewMode: ViewModeOption;
+  mode: ModeOption;
   setLanguage: (lang: LanguageOption) => void;
   setFontSize: (size: FontSizeOption) => void;
   setViewMode: (mode: ViewModeOption) => void;
+  toggleColorMode: () => void;
   forceMobile: boolean;
   toggleForceMobile: () => void;
 }
@@ -22,7 +25,20 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   // Carica le impostazioni iniziali dal localStorage o usa i default
   const [language, setLang] = useState<LanguageOption>(() => {
-    return (localStorage.getItem('app_lang') as LanguageOption) || 'it';
+    // 1. Prova a vedere se c'è una scelta salvata
+    const saved = localStorage.getItem('app_lang');
+    if (saved) return saved as LanguageOption;
+
+    // 2. Se non c'è, guarda la lingua del browser (es. "it-IT" -> "it")
+    const browserLang = navigator.language.split('-')[0];
+    
+    // Verifica se la lingua del browser è supportata (it, en, es)
+    if (['it', 'en', 'es'].includes(browserLang)) {
+      return browserLang as LanguageOption;
+    }
+
+    // 3. Default finale
+    return 'it';
   });
 
   const [fontSize, setFont] = useState<FontSizeOption>(() => {
@@ -61,6 +77,25 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  // --- MAGIA PER IL TEMA ---
+  // AL PRIMO ACCESSO USO IL TEMA DI SISTEMA, POI ACCEDO, SCELGO IL TEMA, E SE FACCIO IL LOGOUT SI MANTIENE QUEL TEMA
+  // Stato del tema con logica "sistema o salvato"
+  const [mode, setMode] = useState<ModeOption>(() => {
+    const saved = localStorage.getItem('theme_mode');
+    if (saved) return saved as ModeOption;
+    // Se non salvato, controlla il sistema
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  // Funzione per cambiare tema
+  const toggleColorMode = () => {
+    setMode((prev) => {
+      const next = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme_mode', next);
+      return next;
+    });
+  };
+
   // --- LA MAGIA PER IL FONT SIZE ---
   // Questo useEffect "ascolta" ogni volta che cambia fontSize e aggiorna la radice dell'HTML.
   // Material UI usa i "rem", quindi cambiando la radice scaliamo tutta l'app istantaneamente!
@@ -83,9 +118,11 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         fontSize, 
         viewMode, 
         forceMobile, 
+        mode,
         setLanguage, 
         setFontSize, 
         setViewMode,
+        toggleColorMode,
         toggleForceMobile
       }}
     >

@@ -15,12 +15,12 @@ export default function AppNavbar() {
 
   return (
     <AppBar
-      position="fixed"
+      position="fixed" elevation={0}
       sx={{
         display: { xs: 'block', md: 'none' }, // Visibile solo su mobile
         boxShadow: 'none',
-        bgcolor: 'transparent',
-        backgroundImage: 'none',
+        bgcolor: 'transparent !important',
+        backgroundImage: 'none !important',
         // Abbiamo tolto i vecchi left/right perché ora la larghezza è gestita da AppTheme
         // === IL TRUCCO DI MAGIA ===
         // Rende la barra trasparente "immateriale": i click la trapassano 

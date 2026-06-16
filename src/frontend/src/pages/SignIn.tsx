@@ -23,8 +23,10 @@ import ForgotPassword from '../components/ForgotPassword';
 import AppTheme from '../shared-theme/AppTheme';
 import ColorModeSelect from '../shared-theme/ColorModeSelect';
 
-import logoImg from '../assets/logo_sfum.svg';
-import titoloImg from '../assets/titolo_sfum.svg';
+import DashboardLogo from '../components/DashboardLogo';
+
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -72,6 +74,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
+  const { language } = useSettings();
+  const t = translations[language];
 
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
@@ -163,7 +167,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" sx={{ justifyContent: 'space-between' }}>
-        <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
+        
         <Card variant="outlined">
 
           {/* 🚀 SEZIONE BRANDING: Logo e Titolo SVG */}
@@ -173,29 +177,22 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               flexDirection: 'column', 
               alignItems: 'center', 
               justifyContent: 'center',
-              mb: 1 
+              mb: 2 ,
+              transform: 'scale(1.5)', // <-- INGRANDISCE TUTTO DEL 50%
+              transformOrigin: 'center' // Assicura che si ingrandisca dal centro
             }}
           >
-            <img 
-              src={logoImg} 
-              alt="Logo Piattaforma" 
-              style={{ width: '90px', marginBottom: '15px' }} 
-            />
-            
-            <img 
-              src={titoloImg} 
-              alt="Nome Piattaforma" 
-              style={{ height: '30px' }} 
-            />
+            <DashboardLogo disableLink/>
+
           </Box>
 
 
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'text.primary' }}
+            sx={{textAlign: 'center', width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'text.primary' }}
           >
-            Accedi
+            {t.accedi}
           </Typography>
 
           {apiError && (
@@ -216,7 +213,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormLabel htmlFor="email">{t.email}</FormLabel>
               <TextField
                 error={emailError}
                 helperText={emailErrorMessage}
@@ -233,7 +230,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormLabel htmlFor="password">{t.password}</FormLabel>
               <TextField
                 error={passwordError}
                 helperText={passwordErrorMessage}
@@ -285,7 +282,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="body2"
               sx={{ alignSelf: 'self-start', color: '#0070e0' }}
             >
-              Hai dimenticato la password?
+              {t.passowrddimenticata}
             </MuiLink>
             <Button
               type="submit"
@@ -293,19 +290,19 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="contained"
               onClick={validateInputs}
             >
-              Accedi
+              {t.accedi}
             </Button>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Typography sx={{ textAlign: 'center' }}>
-              Non hai un account?{' '}
+              {t.noccount}{' '}
               <MuiLink
                 component={RouterLink}
                 to="/register"
                 variant="body2"
                 sx={{ alignSelf: 'center', color: '#0070e0' }}
               >
-                Registrati qui
+                {t.registratiqui}
               </MuiLink>
             </Typography>
           </Box>

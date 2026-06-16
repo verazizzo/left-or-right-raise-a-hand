@@ -45,7 +45,9 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (!token) {
-      localStorage.clear();
+      // SOSTITUITO .clear() CON LA RIMOZIONE MIRATA in modo da passare informazioni come lingua e tema
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user_profile');
       navigate('/login');
       return;
     }
@@ -53,7 +55,9 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
 
   const handleLogout = () => {
     handleClose();
-    localStorage.clear();
+    // SOSTITUITO .clear() CON LA RIMOZIONE MIRATA PER SALVARE IL TEMA E LA LINGUA
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user_profile');
     navigate('/login');
   };
 

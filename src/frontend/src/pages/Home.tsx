@@ -20,7 +20,9 @@ import {
   treeViewCustomizations,
 } from '../theme/customizations';
 
-import SfondoNeuroni from '../assets/neurone_sfum.png';
+import SfondoNeuroniChiaro from '../assets/neurone_sfum.png';
+import SfondoNeuroniScuro from '../assets/neurone_sfum_dark.png';
+
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
@@ -55,32 +57,38 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
     setUser(JSON.parse(savedUser));
   }, [navigate]);
 
-  // HO RIMOSSO: if (!user) return null; <--- Era questo che causava lo sfarfallio!
-
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         
-        {/* Adesso la barra nasce SUBITO, niente più sfarfallii! */}
         <SideMenu />
         <AppNavbar />
 
         {/* CONTAINER SVG DI SFONDO */}
         <Box
-          sx={{
+          sx={(theme) => ({
             position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%',
             zIndex: 0, 
-            backgroundImage: `url(${SfondoNeuroni})`,
+            
+            // Sfondo standard (Luce)
+            backgroundImage: `url(${SfondoNeuroniChiaro})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            opacity: 1.0 
-          }}
+            opacity: 1.0,
+            
+            // === SWAP DELLO SFONDO IN MODALITÀ NOTTE ===
+            ...theme.applyStyles('dark', {
+              backgroundImage: `url(${SfondoNeuroniScuro})`,
+              // Se l'immagine scura è troppo forte, puoi abbassare leggermente l'opacità qui
+              // opacity: 0.8 
+            })
+          })}
         />
 
         <Box
@@ -90,15 +98,24 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
           <Stack spacing={2} sx={{ mx: 3, pb: 5, mt: { xs: 1, md: 0 } }}>
             <Header />
             
-            {/* Il testo di Benvenuto viene mostrato SOLO se "user" è caricato,
-                grazie al trucchetto {user && (...)} */}
             {user && (
-              <Box sx={{ width: '40%', pt: 10, pl: 5 }}>
+              <Box 
+                sx={{ 
+                  // ECCO LA MODIFICA: 
+                  // 100% su mobile, 80% su tablet, 65% su desktop
+                  width: { xs: '100%', sm: '80%', md: '65%' }, 
+                  pt: { xs: 5, md: 10 }, // Meno margine alto su mobile
+                  pl: { xs: 0, md: 5 }   // Niente margine sinistro extra su mobile
+                }}
+              >
                 <Typography variant="h2" sx={{ fontWeight: 800 }}>
                   {t.welcomeTitle1} {user.name} {t.welcomeTitle2}
                 </Typography>
                 <Typography variant="h5" sx={{ mt: 2 }}>
                   {t.welcomeSubtitle}
+                </Typography>
+                <Typography variant="body1" color="text.secondary" sx={{ mt: 10, fontSize: '1.1rem' }}>
+                  {t.welcomeDesc}
                 </Typography>
               </Box>
             )}

@@ -24,12 +24,19 @@ export default function AppTheme(props: AppThemeProps) {
   const { children, disableCustomTheme, themeComponents } = props;
 
   // PRENDI LA VARIABILE DAL CONTESTO
-  const { forceMobile } = useSettings();
+  const { forceMobile, mode } = useSettings();
 
   const theme = React.useMemo(() => {
     return disableCustomTheme
       ? {}
       : createTheme({
+        // PASSAGGIO FONDAMENTALE: Passiamo la modalità (light/dark)
+          colorSchemes: {
+            light: colorSchemes.light,
+            dark: colorSchemes.dark,
+          },
+          defaultColorScheme: mode, // Imposta il tema scelto dall'utente/sistema
+
         // --- ECCO IL TRUCCO DEI BREAKPOINTS ---
           breakpoints: {
             values: forceMobile
@@ -107,7 +114,7 @@ export default function AppTheme(props: AppThemeProps) {
             ...themeComponents,
           },
         });
-  }, [disableCustomTheme, themeComponents, forceMobile]);
+  }, [disableCustomTheme, themeComponents, forceMobile, mode]);
   if (disableCustomTheme) {
     return <React.Fragment>{children}</React.Fragment>;
   }
