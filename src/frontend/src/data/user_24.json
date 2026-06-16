@@ -1,0 +1,156 @@
+{
+    "user_id": "user_24",
+    "is_real_session": false,
+    "channels": [
+        {
+            "id": "AF3",
+            "shap_absolute": 0.0352723570503087,
+            "shap_directional": 0.0023525779065716687
+        },
+        {
+            "id": "AF4",
+            "shap_absolute": 0.03516063956105044,
+            "shap_directional": 0.012198490145168479
+        },
+        {
+            "id": "F3",
+            "shap_absolute": 0.0,
+            "shap_directional": 0.0
+        },
+        {
+            "id": "F4",
+            "shap_absolute": 0.0017128359032189083,
+            "shap_directional": -0.0017128359032189083
+        },
+        {
+            "id": "F7",
+            "shap_absolute": 0.012960552323934532,
+            "shap_directional": -0.006562191760443777
+        },
+        {
+            "id": "F8",
+            "shap_absolute": 0.07048350195988175,
+            "shap_directional": 0.008927541108926445
+        },
+        {
+            "id": "FC5",
+            "shap_absolute": 0.03010976647398746,
+            "shap_directional": -0.005065773951102633
+        },
+        {
+            "id": "FC6",
+            "shap_absolute": 0.01645913324135644,
+            "shap_directional": 0.01234556286225711
+        },
+        {
+            "id": "O1",
+            "shap_absolute": 0.18551830993272456,
+            "shap_directional": -0.0075034832762667985
+        },
+        {
+            "id": "O2",
+            "shap_absolute": 0.03953648516464974,
+            "shap_directional": 0.01375394034172547
+        },
+        {
+            "id": "P7",
+            "shap_absolute": 0.21046029523781803,
+            "shap_directional": -0.1413781008565412
+        },
+        {
+            "id": "P8",
+            "shap_absolute": 0.014979471447202124,
+            "shap_directional": -0.01191257064539412
+        },
+        {
+            "id": "T7",
+            "shap_absolute": 0.020001758082546377,
+            "shap_directional": -0.020001758082546377
+        },
+        {
+            "id": "T8",
+            "shap_absolute": 0.008658134736026703,
+            "shap_directional": 0.002938317633437276
+        }
+    ],
+    "features": [
+        {
+            "id": "Alpha",
+            "shap_absolute": 0.0050861443181309356
+        },
+        {
+            "id": "ApEn",
+            "shap_absolute": 0.13739560253347252
+        },
+        {
+            "id": "Beta1",
+            "shap_absolute": 0.02256831833413334
+        },
+        {
+            "id": "Beta2",
+            "shap_absolute": 0.06835773530407274
+        },
+        {
+            "id": "Beta3",
+            "shap_absolute": 0.003355296780524566
+        },
+        {
+            "id": "DFA",
+            "shap_absolute": 0.013892145340154798
+        },
+        {
+            "id": "HFD",
+            "shap_absolute": 0.003156336111456221
+        },
+        {
+            "id": "HjorthComp",
+            "shap_absolute": 0.037638899987140484
+        },
+        {
+            "id": "HjorthMob",
+            "shap_absolute": 0.0013925570589213134
+        },
+        {
+            "id": "KFD",
+            "shap_absolute": 0.16162927372028715
+        },
+        {
+            "id": "LZV",
+            "shap_absolute": 0.03426786211688406
+        },
+        {
+            "id": "PFD",
+            "shap_absolute": 0.007508469954703568
+        },
+        {
+            "id": "PermEn",
+            "shap_absolute": 0.003098389403975206
+        },
+        {
+            "id": "SVDEn",
+            "shap_absolute": 0.0037498410678063277
+        },
+        {
+            "id": "SampEn",
+            "shap_absolute": 0.16119790113985705
+        },
+        {
+            "id": "SpecEn",
+            "shap_absolute": 0.017018467943185484
+        }
+    ],
+    "windows": [
+        {
+            "id": "0-5s",
+            "shap_absolute": 0.3200399925570424
+        },
+        {
+            "id": "11-15s",
+            "shap_absolute": 0.21120398686504366
+        },
+        {
+            "id": "6-10s",
+            "shap_absolute": 0.1500692616926197
+        }
+    ]
+}

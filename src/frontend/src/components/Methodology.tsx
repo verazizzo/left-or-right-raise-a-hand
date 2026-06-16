@@ -15,7 +15,7 @@ import { translations } from '../data/translations';
 import Caschetto from '../assets/caschetto.svg';
 
 export default function Methodology() {
-  const { language } = useSettings();
+  const { language, forceMobile } = useSettings();
   const t = translations[language];
   const steps = [
     {
@@ -105,7 +105,7 @@ export default function Methodology() {
       <Box 
         sx={{ 
           display: 'grid', 
-          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }, 
+          gridTemplateColumns: forceMobile ? '1fr' : { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
           gap: { xs: 2, md: 3 } // Gap ridotto leggermente per dare più spazio al testo dentro le card
         }}
       >
@@ -137,6 +137,7 @@ export default function Methodology() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  alignSelf: 'center',
                   width: 48,
                   height: 48,
                   borderRadius: 2,

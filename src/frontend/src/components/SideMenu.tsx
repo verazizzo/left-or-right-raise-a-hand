@@ -175,20 +175,21 @@ export default function SideMenu() {
           {open ? (
             <Avatar
               sizes="small"
-              alt={`${user.name} ${user.surname}`}
-              src="/static/images/avatar/7.jpg"
               sx={{ width: 36, height: 36, bgcolor: 'primary.main', color: 'primary.contrastText' }}
-            />
+            >
+              {/* Estrae la prima lettera del nome e del cognome */}
+              {user.name.charAt(0).toUpperCase()}
+            </Avatar>
           ) : (
             <OptionsMenu 
               customTrigger={
                 <Tooltip title={t.profilo} placement="right" arrow>
                   <Avatar
                     sizes="small"
-                    alt={`${user.name} ${user.surname}`}
-                    src="/static/images/avatar/7.jpg"
                     sx={{ width: 36, height: 36, bgcolor: 'primary.main', color: 'primary.contrastText' }}
-                  />
+                  >
+                    {user.name.charAt(0).toUpperCase()}
+                  </Avatar>
                 </Tooltip>
               } 
             />

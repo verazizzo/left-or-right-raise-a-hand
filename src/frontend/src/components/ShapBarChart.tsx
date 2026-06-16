@@ -37,16 +37,26 @@ export default function ShapBarChart({
     setIsRightHalf(x > rect.width / 2);
   };
 
-  const bluePalette = [
-    '#082F6A', '#0D47A1', '#1565C0', '#1976D2', '#1E88E5', 
-    '#2196F3', '#42A5F5', '#64B5F6', '#90CAF9', '#BBDEFB', 
+// Palette "Colorblind-Safe" (basata su Okabe-Ito e Paul Tol)
+  // Colori studiati scientificamente per essere distinguibili in ogni forma di daltonismo
+  const accessiblePalette = [
+    '#0072B2', // 1. Blu scuro
+    '#D55E00', // 2. Rosso/Vermiglio (Molto contrastato col blu)
+    '#009E73', // 3. Verde acqua scuro
+    '#E69F00', // 4. Arancione chiaro
+    '#CC79A7', // 5. Rosa/Prugna
+    '#56B4E9', // 6. Azzurro cielo (Diverso dal blu scuro)
+    '#F0E442', // 7. Giallo (Usare con cautela su sfondi bianchi, ma ok nei grafici)
+    '#44AA99', // 8. Ottanio/Teal
+    '#332288', // 9. Indaco scuro
+    '#999999', // 10. Grigio neutro (Perfetto per le baseline)
   ];
 
   // Se ci sono SOLO 3 barre peschiamo il 1°, il 6° e il 10° colore per staccarli bene.
   // Altrimenti prendiamo i colori di fila.
   const chartColors = labels.length === 3 
-    ? [bluePalette[0], bluePalette[4], bluePalette[8]] 
-    : bluePalette.slice(0, labels.length);
+    ? [accessiblePalette[0], accessiblePalette[1], accessiblePalette[2]] 
+    : accessiblePalette.slice(0, labels.length);
 
   return (
     <Card variant="outlined" sx={{ width: '100%', height: '100%' }} onMouseMove={handleMouseMove}>

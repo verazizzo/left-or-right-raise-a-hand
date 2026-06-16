@@ -151,6 +151,9 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                         <FormLabel component="legend" sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>
                           {t.viewModeTitle}
                         </FormLabel>
+                        <Typography variant="caption" color="text.secondary">
+                          {t.viewModeDesc}
+                        </Typography>
                         {/* L'INTERRUTTORE MAGICO */}
                         <Switch 
                           checked={forceMobile} 

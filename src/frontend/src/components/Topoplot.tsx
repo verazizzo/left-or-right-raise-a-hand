@@ -98,7 +98,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
             >
               <Box component="svg" viewBox="0 0 500 500" sx={{ width: '100%', height: '100%' }}>
                 <defs>
-                   {datiSicuri.map((ch) => {
+                   {datiSicuri.map((ch: any) => {
                     const shapDir = ch.shap_directional || 0;
                     const absVal = Math.abs(ch.shap_absolute);
                     
@@ -129,7 +129,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                 </defs>
 
                     <g filter="url(#mne-blur)">
-                    {datiSicuri.map((ch) => {
+                    {datiSicuri.map((ch: any) => {
                         const coords = coordinateCanali[ch.id];
                         if (!coords) return null;
                         
@@ -175,7 +175,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
               sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 3 }}
             >
               <g id={`nodi-e-testi-${uniqueId}`}>
-                {datiSicuri.map((ch) => {
+                {datiSicuri.map((ch: any) => {
                   const coords = coordinateCanali[ch.id];
                   if (!coords) return null;
                   
@@ -243,7 +243,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                       }
                     >
                       {/* Trigger del tooltip con hitbox espansa */}
-                      <g style={{ cursor: 'pointer', outline: 'none' }}>
+                      <g style={{ cursor: 'default', outline: 'none' }}>
                         <circle cx={coords.cx} cy={coords.cy} r={forceMobile ? "35" : "25"} fill="transparent" />
                         <circle cx={coords.cx} cy={coords.cy} r={forceMobile ? "9" : "6"} fill="#0f172a" stroke="#ffffff" strokeWidth={forceMobile ? "3" : "2"} />
                         

@@ -255,6 +255,19 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}
                           edge="end"
+                          // 1. Spegne l'animazione "a onda" quando clicchi
+                          disableRipple 
+                          
+                          // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
+                          sx={{ 
+                            border: 'none !important',
+                            backgroundColor: 'transparent !important',
+                            boxShadow: 'none !important',
+                            outline: 'none !important',
+                            '&:hover': {
+                              backgroundColor: 'transparent !important',
+                            },
+                          }}
                         >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>

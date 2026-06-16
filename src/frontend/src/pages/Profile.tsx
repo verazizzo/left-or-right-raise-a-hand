@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { alpha } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 // Importazione elementi per la finestra di pop-up
 import Dialog from '@mui/material/Dialog';
@@ -40,11 +41,23 @@ import { modifyUser, getProfile, remove, changePassword } from '../api/auth';
 
 export default function Profile(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
-  const { language } = useSettings();
+  const { language, forceMobile } = useSettings();
   const t = translations[language];
+
+  // --- 3. ATTIVIAMO IL RADAR ---
+  const theme = useTheme();
+  // Se lo schermo è più piccolo di 'md' (900px), scatterà a vero.
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); 
+  // La variabile definitiva: vero se c'è l'interruttore OPPURE se la finestra è piccola
+  const isMobileLayout = forceMobile || isSmallScreen;
+
+  // 1. LEGGIAMO I DATI UNA SOLA VOLTA ALL'AVVIO
+  const initialUser = JSON.parse(localStorage.getItem('user_profile') || '{}');
   
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  // 2. INIZIALIZZIAMO LO STATO DIRETTAMENTE CON I DATI REALI
+  const [firstName, setFirstName] = useState(initialUser.name || '');
+  const [lastName, setLastName] = useState(initialUser.surname || '');
+  
   const [editFirstName, setEditFirstName] = useState('');
   const [editLastName, setEditLastName] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -68,20 +81,15 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   };
 
 
+  // 3. IL USE-EFFECT SERVE SOLO COME CONTROLLO DI SICUREZZA (Niente più setFirstName qui!)
   useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem('user_profile') || '{}');
     const token = localStorage.getItem('access_token');
-
-    if (!savedUser || !token) {
+    // Se non ha il token o non c'è un nome salvato, lo cacciamo al login
+    if (!token || !initialUser.name) {
       localStorage.clear();
       navigate('/login');
-      return;
     }
-
-    setFirstName(savedUser.name);
-    setLastName(savedUser.surname);
-
-  }, []);
+  }, [navigate, initialUser.name]);
 
   const handleEditClick = () => {
     setEditFirstName(firstName);
@@ -338,6 +346,19 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                                     onClick={handleClickShowPassword}
                                     onMouseDown={handleMouseDownPassword}
                                     edge="end"
+                                    // 1. Spegne l'animazione "a onda" quando clicchi
+                                    disableRipple 
+                                    
+                                    // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
+                                    sx={{ 
+                                      border: 'none !important',
+                                      backgroundColor: 'transparent !important',
+                                      boxShadow: 'none !important',
+                                      outline: 'none !important',
+                                      '&:hover': {
+                                        backgroundColor: 'transparent !important',
+                                      },
+                                    }}
                                   >
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                   </IconButton>
@@ -368,6 +389,19 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                                     onClick={handleClickShowPassword}
                                     onMouseDown={handleMouseDownPassword}
                                     edge="end"
+                                    // 1. Spegne l'animazione "a onda" quando clicchi
+                                    disableRipple 
+                          
+                                    // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
+                                    sx={{ 
+                                      border: 'none !important',
+                                      backgroundColor: 'transparent !important',
+                                      boxShadow: 'none !important',
+                                      outline: 'none !important',
+                                      '&:hover': {
+                                        backgroundColor: 'transparent !important',
+                                      },
+                                    }}
                                   >
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                   </IconButton>
@@ -409,7 +443,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                     
                     <Divider sx={{ mb: 3, borderColor: 'error.light' }} />
                     
-                    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between', gap: 2 }}>
+                    <Box sx={{ display: 'flex', flexDirection: isMobileLayout ? 'column' : { xs: 'column', sm: 'row' }, alignItems: isMobileLayout ? 'flex-start' : { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between', gap: isMobileLayout ? 3 : 2 }}>
                       <Box>
                         <Typography variant="body2" color="text.secondary">
                           {t.eliminaAccountDescr}
@@ -424,6 +458,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                           whiteSpace: 'nowrap', 
                           fontWeight: 'bold',
                           boxShadow: 'none',
+                          alignSelf: isMobileLayout ? 'flex-end' : 'auto'
                         }}
                       >
                         {t.eliminaButton}

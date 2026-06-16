@@ -29,8 +29,7 @@ export const translations = {
     sysDb: "Stato Database",
     connected: "Connesso",
     viewModeTitle: "Modalità Visualizzazione Mobile",
-    viewModeWeb: "Web App (Desktop)",
-    viewModeMobile: "Mobile App (Smartphone)",
+    viewModeDesc: "Attiva per visualizzare l'interfaccia in versione Mobile",
     // FRASI HOME
     welcomeTitle1: "Benevenuto ",
     welcomeTitle2: " al tuo Centro Analisi EEG",
@@ -149,9 +148,8 @@ export const translations = {
     shap: "SHAP Engine",
     sysDb: "Database Status",
     connected: "Connected",
-    viewModeTitle: "View Mode",
-    viewModeWeb: "Web App (Desktop)",
-    viewModeMobile: "Mobile App (Smartphone)",
+    viewModeTitle: "View Mode Mobile",
+    viewModeDesc: "Enable to view the mobile interface",
     // FRASI HOME
     welcomeTitle1: "Welcome ",
     welcomeTitle2: " to your EEG Analysis Hub",
@@ -268,9 +266,8 @@ export const translations = {
     shap: "Motor SHAP",
     sysDb: "Estado de la Base de Datos",
     connected: "Conectado",
-    viewModeTitle: "Modo de Visualización",
-    viewModeWeb: "Web App (Escritorio)",
-    viewModeMobile: "Mobile App (Móvil)",
+    viewModeTitle: "Modo de Visualización Mobile",
+    viewModeDesc: "Activar para ver la interfaz en versión Mobile",
     // FRASI HOME 
     welcomeTitle1: "Bienvenido ",
     welcomeTitle2: " a tu Centro de Análisis EEG",

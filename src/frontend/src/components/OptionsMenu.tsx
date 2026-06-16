@@ -11,6 +11,9 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import { Box, IconButton } from '@mui/material';
 
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { useSettings } from '../context/SettingsContext';
@@ -20,8 +23,13 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   
-  const { language } = useSettings();
+  const { language, forceMobile } = useSettings();
   const t = translations[language];
+
+  // --- RADAR PER LO SCHERMO ---
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); 
+  const isMobileLayout = forceMobile || isSmallScreen;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,7 +59,6 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
 
   const menuItems = React.useMemo(() => [
     { text: t.profilo, path: '/profile' },
-    { text: t.impostazioni, path: '/settings-profile' },
   ], [t.profilo, t.impostazioni]);
 
   return (
@@ -72,9 +79,34 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
         open={open}
         onClose={handleClose}
         onClick={handleClose}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        // LA LOGICA DEFINITIVA:
+        // PC (isMobileLayout falso): Si aggancia SOPRA l'icona (vertical: 'top')
+        // Mobile (isMobileLayout vero): Si aggancia SOTTO l'icona (vertical: 'bottom')
+        anchorOrigin={{ 
+          horizontal: 'right', 
+          vertical: isMobileLayout ? 'bottom' : 'top' 
+        }}
+        
+        // PC: Nasce dal basso verso l'alto
+        // Mobile: Nasce dall'alto verso il basso
+        transformOrigin={{ 
+          horizontal: 'right', 
+          vertical: isMobileLayout ? 'top' : 'bottom' 
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              // ECCO LA MAGIA PER LA LARGHEZZA PRECISA
+              width: '120px', // Cambia questo valore con i pixel che preferisci!
+            }
+          }
+        }}
         sx={{
+          // --- ECCO LA MAGIA DELLO STACCO! ---
+          // Se mobile (scende), lo spingiamo in giù di 8px (1 in scala MUI)
+          // Se PC (sale), lo spingiamo in su di -8px (-1 in scala MUI)
+          mt: isMobileLayout ? 0 : -1,
+
           [`& .${listClasses.root}`]: {
             padding: '4px',
           },
