@@ -162,7 +162,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         
         <Card variant="outlined">
 
-          {/* 🚀 SEZIONE BRANDING: Logo e Titolo SVG */}
           <Box 
             sx={{ 
               display: 'flex', 
@@ -170,8 +169,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               alignItems: 'center', 
               justifyContent: 'center',
               mb: 2 ,
-              transform: 'scale(1.5)', // <-- INGRANDISCE TUTTO DEL 50%
-              transformOrigin: 'center' // Assicura che si ingrandisca dal centro
+              transform: 'scale(1.5)', 
+              transformOrigin: 'center' 
             }}
           >
             <DashboardLogo disableLink/>

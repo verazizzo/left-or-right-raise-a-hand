@@ -139,12 +139,12 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
 
     // 2. Controlli di validazione
     if (!newPassword || newPassword.length < 6) {
-      setPasswordError('La nuova password deve contenere almeno 6 caratteri.');
+      setPasswordError(t.errPasswordCorta);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setPasswordError('Le password non coincidono!');
+      setPasswordError(t.errPasswordCoincidono);
       return;
     }
 
@@ -154,14 +154,14 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
       await changePassword(newPassword);
       
       // 4. Se va a buon fine, mostriamo il banner verde e svuotiamo i campi
-      setPasswordSuccess('Password aggiornata con successo!');
+      setPasswordSuccess(t.aggPassSuccess);
       setNewPassword('');
       setConfirmPassword('');
 
     } catch (error: any) {
       console.error('Errore durante il cambio password:', error);
       // Mostriamo il banner rosso con l'errore del backend (o uno generico)
-      setPasswordError(error.response?.data?.message || 'Si è verificato un errore durante l\'aggiornamento.');
+      setPasswordError(error.response?.data?.message || t.aggPassFail);
     } finally {
       setIsLoading(false);
     }
@@ -180,7 +180,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
       
     } catch (error: any) {
       console.error('Errore durante l’eliminazione dell’account:', error);
-      alert(error.response?.data?.message || 'Impossibile eliminare l’account. Riprova.');
+      alert(error.response?.data?.message || t.eliminaFail);
     } finally {
       setIsLoading(false);
       setOpenDeleteDialog(false);
