@@ -17,6 +17,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../shared-theme/AppTheme';
 
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex', flexDirection: 'column', alignSelf: 'center',
   width: '100%', padding: theme.spacing(4), gap: theme.spacing(2),
@@ -26,6 +29,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
 export default function UpdatePassword(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { language } = useSettings();
+  const t = translations[language];
   
   const email = location.state?.email || '';
 
@@ -55,15 +60,15 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
     setError('');
 
     if (otp.length !== 8) {
-      setError('Il codice deve essere di 8 cifre.');
+      setError(t.errore8cifre);
       return;
     }
     if (password.length < 6) {
-      setError('La password deve avere almeno 6 caratteri.');
+      setError(t.errPasswordCorta);
       return;
     }
     if (password !== confirmPassword) {
-      setError('Le password non coincidono.');
+      setError(t.errPasswordCoincidono);
       return;
     }
 
@@ -74,7 +79,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
       setTimeout(() => navigate('/login'), 3000);
 
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Errore durante l\'aggiornamento.');
+      setError(err.response?.data?.message || t.erroreAggiornamento);
     }
   };
 
@@ -84,20 +89,20 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Card variant="outlined">
           <Typography component="h1" variant="h5" sx={{ textAlign: 'center', mb: 2 }}>
-            Inserisci il codice di sicurezza
+            {t.inserisciCodice}
           </Typography>
 
           <Typography variant="body2" sx={{ textAlign: 'center', mb: 2, color: 'text.secondary' }}>
-            Abbiamo inviato un codice a 8 cifre a <strong>{email}</strong>. Inseriscilo qui sotto per creare una nuova password.
+            {t.inserisciCodiceDesc1} <strong>{email}</strong>. {t.inserisciCodiceDesc2}
           </Typography>
 
           {error && <Alert severity="error">{error}</Alert>}
-          {success && <Alert severity="success">Password aggiornata! Reindirizzamento al login...</Alert>}
+          {success && <Alert severity="success">{t.passAggio}</Alert>}
 
           {!success && (
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <FormControl>
-                <FormLabel htmlFor="otp">Codice a 8 cifre</FormLabel>
+                <FormLabel htmlFor="otp">{t.codice8cifre}</FormLabel>
                 <TextField
                   id="otp"
                   placeholder="12345678"
@@ -117,7 +122,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                 />
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="password">Nuova Password</FormLabel>
+                <FormLabel htmlFor="password">{t.nuovaPass}</FormLabel>
                 <TextField
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -145,7 +150,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                 />
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="confirmPassword">Conferma Password</FormLabel>
+                <FormLabel htmlFor="confirmPassword">{t.confermaPass}</FormLabel>
                 <TextField
                   id="confirmPassword"
                   type={showPassword ? 'text' : 'password'}
@@ -173,7 +178,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                 />
               </FormControl>
               <Button type="submit" fullWidth variant="contained">
-                Salva Nuova Password
+                {t.aggPass}
               </Button>
             </Box>
           )}

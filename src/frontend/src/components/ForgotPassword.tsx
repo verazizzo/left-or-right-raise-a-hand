@@ -12,6 +12,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Alert from '@mui/material/Alert';
 
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
 interface ForgotPasswordProps {
   open: boolean;
   handleClose: () => void;
@@ -19,6 +22,9 @@ interface ForgotPasswordProps {
 
 export default function ForgotPassword({ open, handleClose }: ForgotPasswordProps) {
   const navigate = useNavigate();
+  const { language } = useSettings();
+  const t = translations[language];
+
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -55,11 +61,11 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
     >
       <form onSubmit={handleSubmit}>
         
-        <DialogTitle>Reimposta password</DialogTitle>
+        <DialogTitle>{t.finestraTitolo}</DialogTitle>
         
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
           <DialogContentText>
-            Inserisci l'indirizzo email del tuo account e ti invieremo un codice da inserire per reimpostare la password.
+            {t.finestraDesc}
           </DialogContentText>
 
           {message && <Alert severity="success">{message}</Alert>}
@@ -72,7 +78,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
             id="email"
             name="email"
             label="Indirizzo Email"
-            placeholder="nome@email.com"
+            placeholder={t.esempioEmail}
             type="email"
             fullWidth
             value={email}
@@ -83,14 +89,14 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
         
         <DialogActions sx={{ pb: 3, px: 3 }}>
           <Button onClick={handleCloseModal} disabled={isLoading}>
-            Annulla
+            {t.annulla}
           </Button>
           <Button 
             variant="contained" 
             type="submit" 
             disabled={isLoading || !!message || !email.trim()}
           >
-            {isLoading ? 'Invio in corso...' : 'Continua'}
+            {isLoading ? t.invioincorso : t.continua }
           </Button>
         </DialogActions>
 
