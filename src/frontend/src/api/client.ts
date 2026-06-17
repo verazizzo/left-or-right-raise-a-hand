@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+const isLocalhost = window.location.hostname === 'localhost';
+
 export const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: isLocalhost 
+    ? 'http://localhost:3000' 
+    : 'https://cortx-backend.onrender.com',
+
   headers: {
     'Content-Type': 'application/json',
   },
