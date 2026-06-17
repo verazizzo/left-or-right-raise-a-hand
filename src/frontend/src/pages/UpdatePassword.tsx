@@ -10,6 +10,10 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import MuiCard from '@mui/material/Card';
 import Alert from '@mui/material/Alert';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../shared-theme/AppTheme';
 
@@ -26,10 +30,19 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
   const email = location.state?.email || '';
 
   const [otp, setOtp] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+  };
 
   useEffect(() => {
     if (!email) {
@@ -107,24 +120,56 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                 <FormLabel htmlFor="password">Nuova Password</FormLabel>
                 <TextField
                   id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   fullWidth
                   variant="outlined"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                 />
               </FormControl>
               <FormControl>
                 <FormLabel htmlFor="confirmPassword">Conferma Password</FormLabel>
                 <TextField
                   id="confirmPassword"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   fullWidth
                   variant="outlined"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                 />
               </FormControl>
               <Button type="submit" fullWidth variant="contained">
