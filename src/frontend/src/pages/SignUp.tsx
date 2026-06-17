@@ -351,7 +351,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   required
                   fullWidth
                   id="email"
-                  placeholder="your@email.com"
+                  placeholder={t.esempioEmail}
                   name="email"
                   autoComplete="email"
                   variant="outlined"

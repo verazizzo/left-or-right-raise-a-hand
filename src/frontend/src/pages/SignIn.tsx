@@ -211,7 +211,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 id="email"
                 type="email"
                 name="email"
-                placeholder="nome@email.com"
+                placeholder={t.esempioEmail}
                 autoComplete="email"
                 autoFocus
                 required
