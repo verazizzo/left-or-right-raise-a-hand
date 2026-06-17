@@ -136,9 +136,9 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                     </Typography>
                     <Divider sx={{ mb: 3 }} />
 
-                    {/* Dimensione Testo */}
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="subtitle2" sx={{ mb: 1 }}>{t.textSize}</Typography>
+                    {/* Dimensione Testo - Icone/Selettori allineati a destra */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                      <Typography variant="subtitle2">{t.textSize}</Typography>
                       <FormControl>
                         <RadioGroup row value={fontSize} onChange={handleFontSizeChange}>
                           <FormControlLabel value="small" control={<Radio />} label={t.textSmall} />
@@ -146,23 +146,26 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                           <FormControlLabel value="large" control={<Radio />} label={t.textLarge} />
                         </RadioGroup>
                       </FormControl>
-
-                      <FormControl component="fieldset" sx={{ mt: 3, width: '100%' }}>
-                        <FormLabel component="legend" sx={{ mb: 1, color: 'text.primary', fontWeight: 500 }}>
-                          {t.viewModeTitle}
-                        </FormLabel>
-                        <Typography variant="caption" color="text.secondary">
-                          {t.viewModeDesc}
-                        </Typography>
-                        {/* L'INTERRUTTORE MAGICO */}
-                        <Switch 
-                          checked={forceMobile} 
-                          onChange={toggleForceMobile} 
-                          color="primary"
-                        />
-                      </FormControl>
                     </Box>
 
+                    {/* Modalità Mobile / Sviluppatore - Switch allineato a destra */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                      <Box sx={{ pr: 2 }}>
+                        <Typography variant="subtitle2" sx={{ color: 'text.primary', fontWeight: 500 }}>
+                          {t.viewModeTitle}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" component="p">
+                          {t.viewModeDesc}
+                        </Typography>
+                      </Box>
+                      <Switch 
+                        checked={forceMobile} 
+                        onChange={toggleForceMobile} 
+                        color="primary"
+                      />
+                    </Box>
+
+                    {/* Tema Chiaro/Scuro - Già allineato a destra */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pr: 1.4 }}>
                       <Box>
                         <Typography variant="subtitle2">{t.darkLight}</Typography>
@@ -170,7 +173,7 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                           {t.darkLightDesc}
                         </Typography>
                       </Box>
-                        <ColorModeIconDropdown />
+                      <ColorModeIconDropdown />
                     </Box>
                   </CardContent>
                 </Card>
