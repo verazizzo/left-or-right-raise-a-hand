@@ -290,7 +290,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                               onClick={handleSaveProfile}
                               disabled={isLoading || !editFirstName.trim() || !editLastName.trim()}
                             >
-                              {isLoading ? 'Salvataggio...' : t.salva}
+                              {isLoading ? t.saving : t.salva}
                             </Button>
                           </>
                         ) : (

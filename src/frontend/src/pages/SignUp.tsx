@@ -309,6 +309,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <Box
               component="form"
               onSubmit={handleSubmit}
+              noValidate
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
               <FormControl>
