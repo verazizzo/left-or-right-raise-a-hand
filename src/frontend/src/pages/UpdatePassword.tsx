@@ -135,6 +135,16 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                             onClick={handleClickShowPassword}
                             onMouseDown={handleMouseDownPassword}
                             edge="end"
+                            disableRipple 
+                            sx={{ 
+                              border: 'none !important',
+                              backgroundColor: 'transparent !important',
+                              boxShadow: 'none !important',
+                              outline: 'none !important',
+                              '&:hover': {
+                                backgroundColor: 'transparent !important',
+                              },
+                            }}
                           >
                             {showPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
@@ -163,6 +173,16 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                             onClick={handleClickShowPassword}
                             onMouseDown={handleMouseDownPassword}
                             edge="end"
+                            disableRipple 
+                            sx={{ 
+                              border: 'none !important',
+                              backgroundColor: 'transparent !important',
+                              boxShadow: 'none !important',
+                              outline: 'none !important',
+                              '&:hover': {
+                                backgroundColor: 'transparent !important',
+                              },
+                            }}
                           >
                             {showPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
