@@ -39,7 +39,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
   };
 
   // Calcoliamo il massimo basandoci sullo shap_absolute per scalare correttamente le sfumature
-  const valoriAssoluti = datiSicuri.map(c => c.shap_absolute || 0);
+  const valoriAssoluti = datiSicuri.map((c: any) => c.shap_absolute || 0);
   const maxVal = Math.max(...valoriAssoluti, 0.01);
 
   return (
