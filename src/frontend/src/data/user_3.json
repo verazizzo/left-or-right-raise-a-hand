@@ -4,73 +4,73 @@
     "channels": [
         {
             "id": "AF3",
-            "shap_absolute": 0.11435822556350152,
-            "shap_directional": -0.056129889899559464
+            "shap_left": -0.04119286281360371,
+            "shap_right": -0.083514439557145
         },
         {
             "id": "AF4",
-            "shap_absolute": 0.008459246035622543,
-            "shap_directional": -0.006440690214774732
+            "shap_left": -0.009953793968288221,
+            "shap_right": 0.0
         },
         {
             "id": "F3",
-            "shap_absolute": 0.02769906510721822,
-            "shap_directional": -0.022887348873933823
+            "shap_left": -0.007170857277409395,
+            "shap_right": -0.05170091680089528
         },
         {
             "id": "F4",
-            "shap_absolute": 0.008745595617959352,
-            "shap_directional": 0.008745595617959352
+            "shap_left": 0.004785040002561394,
+            "shap_right": 0.016006614246188943
         },
         {
             "id": "F7",
-            "shap_absolute": 0.027792012952121945,
-            "shap_directional": -0.0019882193729692543
+            "shap_left": -0.002436573095323283,
+            "shap_right": -0.0011662375486535329
         },
         {
             "id": "F8",
-            "shap_absolute": 0.0418744686481653,
-            "shap_directional": -0.011631987063545299
+            "shap_left": -0.01872386424345397,
+            "shap_right": 0.0013697877662872675
         },
         {
             "id": "FC5",
-            "shap_absolute": 0.03274795074307373,
-            "shap_directional": -0.012470193167392679
+            "shap_left": -0.025982626997492174,
+            "shap_right": 0.012302602187789728
         },
         {
             "id": "FC6",
-            "shap_absolute": 0.019361691802418694,
-            "shap_directional": 0.00782015242334226
+            "shap_left": 0.011126544707513756,
+            "shap_right": 0.0017584332356945127
         },
         {
             "id": "O1",
-            "shap_absolute": 0.0489180502273702,
-            "shap_directional": 0.03712991155383869
+            "shap_left": 0.007708488288371735,
+            "shap_right": 0.09106918754052812
         },
         {
             "id": "O2",
-            "shap_absolute": 0.12818867836826078,
-            "shap_directional": -0.1195207834766135
+            "shap_left": -0.14482088025036788,
+            "shap_right": -0.07313727272473046
         },
         {
             "id": "P7",
-            "shap_absolute": 0.006733593476251439,
-            "shap_directional": 0.006733593476251439
+            "shap_left": 0.0011961920353539188,
+            "shap_right": 0.01688549611789689
         },
         {
             "id": "P8",
-            "shap_absolute": 0.04191560869546211,
-            "shap_directional": -0.004869861224131456
+            "shap_left": -0.020554435999790448,
+            "shap_right": 0.02388519253124337
         },
         {
             "id": "T7",
-            "shap_absolute": 0.026359531503125457,
-            "shap_directional": 0.013107080486948322
+            "shap_left": 0.006530557012888657,
+            "shap_right": 0.025164040189391043
         },
         {
             "id": "T8",
-            "shap_absolute": 0.058165814742233604,
-            "shap_directional": -0.024576019132281576
+            "shap_left": -0.022355896428249925,
+            "shap_right": -0.02864624408967295
         }
     ],
     "features": [

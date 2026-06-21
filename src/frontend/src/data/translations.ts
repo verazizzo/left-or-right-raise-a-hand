@@ -124,6 +124,10 @@ export const translations = {
     aboutSubtitle4: "Explainable AI (SHAP)", 
     aboutContent4: "Per comprendere a fondo le motivazioni dietro le predizioni ottenute è stata condotta l'analisi SHAP. Questo potente strumento permette di scomporre le decisioni del modello per capire con assoluta trasparenza quale specifica finestra temporale, quale canale EEG e quale singola feature abbiano pesato di più nel riconoscere l'intenzione di movimento dell'utente.",
     // FRASI TOPOPLOT E SHAPBARCHART
+    titoloTopoplotLeft: "Mappa Corticale per Task Sinistra",
+    descrTopoplotLeft: "La distribuzione spaziale dell'importanza SHAP tra i canali EEG per il task del braccio sinistro.",
+    titoloTopoplotRight: "Mappa Corticale per Task Destra",
+    descrTopoplotRight: "La distribuzione spaziale dell'importanza SHAP tra i canali EEG per il task del braccio destro.",    
     valore: "Valore SHAP",
     labelShapBar: "Impatto Medio sul Modello (Valore SHAP)",
     labelsopra: "Braccio Destro",
@@ -185,7 +189,8 @@ export const translations = {
     helpRisposta4_1_desc: "Il colore indica la direzione verso cui il sensore sta spingendo la predizione, basandosi sul segno positivo o negativo del valore SHAP.",
     helpRisposta4_2_titolo: "L'intensità: ",
     helpRisposta4_2_desc: "L'intensità della macchia di colore indica l'importanza assoluta di quel sensore. Più il colore è marcato, maggiore è l'influenza matematica che quella precisa zona cerebrale ha avuto sul risultato finale dell'algoritmo.",
-  },
+    helpRisposta4_3: "I due grafici mostrano l'impatto predittivo del modello isolato per specifico task: il primo analizza esclusivamente le epoche di immaginazione motoria del braccio sinistro, il secondo quelle del braccio destro. La scala bicolore permette di distinguere l'attivazione dei canali coerenti con il task richiesto rispetto a quelli che spingono verso la classe opposta, evidenziando così la presenza di potenziale rumore biocinetico o artefatti cognitivi."
+},
 
 
   en: {
@@ -311,6 +316,10 @@ export const translations = {
     aboutSubtitle4: "Explainable AI (SHAP)", 
     aboutContent4: "To fully understand the reasoning behind the obtained predictions, a SHAP analysis was conducted. This powerful tool allows breaking down the model's decisions to understand with absolute transparency which specific time window, which EEG channel, and which single feature weighed the most in recognizing the user's movement intention.",
     // FRASI TOPOPLOT E SHAPBARCHART
+    titoloTopoplotLeft: "Cortical Map for Left Task",
+    descrTopoplotLeft: "The spatial distribution of SHAP importance across EEG channels for the left arm task.",
+    titoloTopoplotRight: "Cortical Map for Right Task",
+    descrTopoplotRight: "The spatial distribution of SHAP importance across EEG channels for the right arm task.",    
     valore: "SHAP Value",
     labelShapBar: "Average Model Impact (SHAP Value)",
     labelsopra: "Right Arm",
@@ -372,7 +381,7 @@ export const translations = {
     helpRisposta4_1_desc: "The color indicates the direction in which the sensor is driving the prediction, based on the positive or negative sign of the SHAP value.",
     helpRisposta4_2_titolo: "The intensity: ",
     helpRisposta4_2_desc: "The intensity of the color patch indicates the absolute importance of that sensor. The more pronounced the color, the greater the mathematical influence that specific brain area had on the algorithm's final result.",
-
+    helpRisposta4_3: "The two plots display the model's predictive impact isolated by specific tasks: the first exclusively considers the epochs where the user imagines left arm movement, while the second focuses on the right arm epochs. The divergent color scale discriminates between channel activations consistent with the target task and those driving toward the opposite class, thereby highlighting the presence of potential biokinetic noise or cognitive artifacts."
     
   },
 
@@ -500,6 +509,10 @@ export const translations = {
     aboutSubtitle4: "IA Explicable (SHAP)", 
     aboutContent4: "Para comprender a fondo las motivaciones detrás de las predicciones obtenidas, se llevó a cabo el análisis SHAP. Esta poderosa herramienta permite desglosar las decisiones del modelo para comprender con absoluta transparencia qué ventana temporal específica, qué canal EEG y qué característica individual tuvieron el mayor peso para reconocer la intención de movimiento del usuario.",
     // FRASI TOPOPLOT E SHAPBARCHART
+    titoloTopoplotLeft: "Mapa cortical para la Tarea Izquierda",
+    descrTopoplotLeft: "La distribución espacial de la importancia SHAP entre los canales EEG para la tarea del brazo izquierdo.",
+    titoloTopoplotRight: "Mapa cortical para la Tarea Derecha",
+    descrTopoplotRight: "La distribución espacial de la importancia SHAP entre los canales EEG para la tarea del brazo derecho.",
     valore: "Valor SHAP",
     labelShapBar: "Impacto Promedio en el Modelo (Valor SHAP)",
     labelsopra: "Brazo Derecho",
@@ -561,7 +574,7 @@ export const translations = {
     helpRisposta4_1_desc: "El color indica la dirección hacia la cual el sensor está empujando la predicción, basándose en el signo positivo o negativo del valor SHAP.",
     helpRisposta4_2_titolo: "La intensidad: ",
     helpRisposta4_2_desc: "La intensidad de la mancha de color indica la importancia absoluta de ese sensor. Cuanto más marcado sea el color, mayor será la influencia matemática que esa zona cerebral precisa ha tenido en el resultado final del algoritmo.",
-    
+    helpRisposta4_3: "Los dos gráficos muestran el impacto predictivo del modelo aislado por tarea específica: el primero analiza exclusivamente las épocas en las que el usuario imagina el movimiento del brazo izquierdo, y el segundo las del brazo derecho. La escala de color divergente permite discriminar la activación de los canales coherentes con la tarea objetivo frente a aquellos que empujan hacia la clase opuesta, evidenciando así la presencia de potencial ruido biocinético o artefactos cognitivos."
   },
 
 };

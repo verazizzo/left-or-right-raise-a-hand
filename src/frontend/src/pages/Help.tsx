@@ -178,6 +178,10 @@ export default function Help(props: { disableCustomTheme?: boolean }) {
                           </li>
                         </ul>
                       </Typography>
+                      <Typography variant="body2" sx={{ mb: 2 }}>
+                        {t.helpRisposta4_3}
+                      </Typography>
+
                     </AccordionDetails>
                   </Accordion>
 

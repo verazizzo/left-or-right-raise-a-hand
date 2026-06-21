@@ -127,7 +127,7 @@ def train_SVM(df, is_real):
 
         # 5. SHAP ANALYSIS 
 
-        df_shap_utente = shap_analysis_svm(best_svm, x_test_outer_s, x_train_outer_s, feature_names, anon_user, is_real)
+        df_shap_utente = shap_analysis_svm(best_svm, x_test_outer_s, x_train_outer_s, y_test_outer, feature_names, anon_user, is_real)
         if df_shap_utente is not None:
             shap_dfs_totali.append(df_shap_utente)
 
@@ -185,9 +185,10 @@ def train_SVM(df, is_real):
         # 1. Esporta i file per la Dashboard fingendo che sia un paziente normale
         esporta_json_dashboard(df_globale, dir_globale, "GLOBALE", is_real)
         
-        # 2. Esporta il Topoplot MNE (se SHAP_Value_Dir è presente - ad es. per SVM)
-        if 'SHAP_Value_Dir' in df_globale.columns:
-            genera_topoplot_statico_mne(df_globale['SHAP_Value_Dir'].values, df_globale['Feature_Name'].values, dir_globale, "GLOBALE")
+        # 2. Esporta i due Topoplot MNE Statici (Left e Right con scala RdBu_r classica)
+        if 'SHAP_Dir_Left' in df_globale.columns and 'SHAP_Dir_Right' in df_globale.columns:
+            genera_topoplot_statico_mne(df_globale['SHAP_Dir_Left'].values, df_globale['Feature_Name'].values, dir_globale, "GLOBALE", "Left")
+            genera_topoplot_statico_mne(df_globale['SHAP_Dir_Right'].values, df_globale['Feature_Name'].values, dir_globale, "GLOBALE", "Right")
 
         # 3. CALCOLO E STAMPA DEI GRAFICI A BARRE SEABORN (Canali, Feature, Finestre)
         import matplotlib.pyplot as plt
@@ -196,18 +197,31 @@ def train_SVM(df, is_real):
         # Specifica quale colonna usare per l'importanza (SVM usa SHAP_Value_Abs, XGBoost usa SHAP_Value)
         col_importanza = 'SHAP_Value_Abs' if 'SHAP_Value_Abs' in df_globale.columns else 'SHAP_Value'
 
-        channel_imp_glob = df_globale.groupby('Channel')[col_importanza].sum().sort_values(ascending=False)
+        # Usiamo le colonne direzionali e prendiamo l'assoluto della somma netta
+        channel_imp_glob_left = df_globale.groupby('Channel')['SHAP_Dir_Left'].sum().abs().sort_values(ascending=False)
+        channel_imp_glob_right = df_globale.groupby('Channel')['SHAP_Dir_Right'].sum().abs().sort_values(ascending=False)
+        
         feature_imp_glob = df_globale.groupby('FeatureType')[col_importanza].sum().sort_values(ascending=False)
         window_imp_glob = df_globale.groupby('Window')[col_importanza].sum().sort_values(ascending=False)
 
-        # Plot 1: Channel Importance GLOBALE
+        # Plot 1L: Canali Globale LEFT (Blu)
         plt.figure(figsize=(10, 6))
-        sns.barplot(x=channel_imp_glob.values, y=channel_imp_glob.index, hue=channel_imp_glob.index, palette="viridis", legend=False)
-        plt.title(f"Channel Importance GLOBALE (Tutti gli Utenti)", fontsize=14)
-        plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
+        sns.barplot(x=channel_imp_glob_left.values, y=channel_imp_glob_left.index, hue=channel_imp_glob_left.index, palette="Blues_r", legend=False)
+        plt.title(f"Channel Importance GLOBALE LEFT (Tutti gli Utenti)", fontsize=14)
+        plt.xlabel("Mean Absolute SHAP Value (Left Class)")
         plt.ylabel("EEG Channel")
         plt.tight_layout()
-        plt.savefig(f'{dir_globale}/shap_1_channels.png', dpi=300)
+        plt.savefig(f'{dir_globale}/shap_1_channels_left.png', dpi=300)
+        plt.close()
+
+        # Plot 1R: Canali Globale RIGHT (Rosso)
+        plt.figure(figsize=(10, 6))
+        sns.barplot(x=channel_imp_glob_right.values, y=channel_imp_glob_right.index, hue=channel_imp_glob_right.index, palette="Reds_r", legend=False)
+        plt.title(f"Channel Importance GLOBALE RIGHT (Tutti gli Utenti)", fontsize=14)
+        plt.xlabel("Mean Absolute SHAP Value (Right Class)")
+        plt.ylabel("EEG Channel")
+        plt.tight_layout()
+        plt.savefig(f'{dir_globale}/shap_1_channels_right.png', dpi=300)
         plt.close()
 
         # Plot 2: Feature Importance GLOBALE

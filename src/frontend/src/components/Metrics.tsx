@@ -62,8 +62,8 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
   // C. Topoplot
   const topoplotData = userData.channels.map((ch: any) => ({
     id: ch.id,
-    shap_absolute: ch.shap_absolute,
-    shap_directional: ch.shap_directional,
+    shap_left: ch.shap_left,     // Nuovo!
+    shap_right: ch.shap_right,   // Nuovo!
     description: descrizioniCanali[ch.id]?.[language] || "Descrizione non disponibile"
   }));
 
@@ -187,14 +187,29 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
         {isGlobal ? t.topoglobale : `${t.topo} ${displayName}`}
       </Typography>
       <Grid container spacing={2} columns={12}>
+
+        {/* TOPOPLOT TASK LEFT */}
         <Grid size={{ xs: 12, md: stacked ? 12 : 6 }}>
             <Topoplot 
-              title={t.titoloTopoplot}
-              subtitle={t.descrTopoplot}
+              title={`${t.titoloTopoplot} (Left)`}
+              subtitle={t.descrTopoplot || "Mappa attivazione per la mano sinistra"}
               channelsData={topoplotData} 
-              userId={userData.user_id} // Gestito in automatico!
+              userId={userData.user_id}
+              targetClass="left" // <--- PASSATO COME PROP
             />
         </Grid>
+
+        {/* TOPOPLOT TASK RIGHT */}
+        <Grid size={{ xs: 12, md: stacked ? 12 : 6 }}>
+            <Topoplot 
+              title={`${t.titoloTopoplot} (Right)`}
+              subtitle={t.descrTopoplot || "Mappa attivazione per la mano destra"}
+              channelsData={topoplotData} 
+              userId={userData.user_id}
+              targetClass="right" // <--- PASSATO COME PROP
+            />
+        </Grid>
+
       </Grid>
     </Box>
   );

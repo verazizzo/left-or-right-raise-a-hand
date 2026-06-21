@@ -6,21 +6,24 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 
-// Assicurati che l'importazione abbia ?url alla fine!
+// Assicurati che l'importazione abbia ?url alla fine se richiesto dal tuo bundler!
 import Testa from '../assets/solo_testa.png';
 import Cervello from '../assets/solo_cervello2.png';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 
-
 export type TopoplotProps = {
   title: string;
   subtitle?: string;
-  channelsData: { id: string; shap_absolute: number; shap_directional?: number; description: string }[];
+  // Aggiornato con le nuove chiavi del JSON
+  channelsData: { id: string; shap_left: number; shap_right: number; description?: string }[];
+  userId?: string;
+  // NUOVA PROP: Indica al componente quale lato leggere
+  targetClass: 'left' | 'right'; 
 };
 
-export default function Topoplot({ title, subtitle, channelsData, userId }: any) {
+export default function Topoplot({ title, subtitle, channelsData, userId, targetClass }: TopoplotProps) {
   const { language, forceMobile } = useSettings();
   const t = translations[language];
 
@@ -38,28 +41,29 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
     'C3':  { cx: 185, cy: 255 },  'Cz':  { cx: 250, cy: 255 },  'C4':  { cx: 315, cy: 255 },
   };
 
-  // Calcoliamo il massimo basandoci sullo shap_absolute per scalare correttamente le sfumature
-  const valoriAssoluti = datiSicuri.map((c: any) => c.shap_absolute || 0);
-  const maxVal = Math.max(...valoriAssoluti, 0.01);
+  // IL SEGRETO DELLA COMPARABILITÀ: Troviamo il massimo assoluto tra TUTTI I VALORI (sia left che right)
+  // così la scala dei colori sarà identica per entrambi i grafici.
+  const tuttiIValori = datiSicuri.flatMap((c: any) => [Math.abs(c.shap_left || 0), Math.abs(c.shap_right || 0)]);
+  const maxVal = Math.max(...tuttiIValori, 0.01);
 
   return (
     <Card variant="outlined" sx={{ width: '100%', height: '100%' }}>
       <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         
         <Stack sx={{ mb: 2 }}>
+          {/* TITOLO DINAMICO */}
           <Typography component="h2" variant="h6" sx={{ fontWeight: 600 }}>
-            {title}
+            {targetClass === 'left' ? t.titoloTopoplotLeft || 'Task: Left' : t.titoloTopoplotRight || 'Task: Right'}
           </Typography>
-          {subtitle && (
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
-              {subtitle}
-            </Typography>
-          )}
+          
+          {/* SOTTOTITOLO DINAMICO */}
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
+            {targetClass === 'left' ? t.descrTopoplotLeft : t.descrTopoplotRight}
+          </Typography>
         </Stack>
         
         <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
           
-          {/* CONTAINER PRINCIPALE (Senza padding interno per non disallineare le maschere) */}
           <Box 
             sx={{ 
               position: 'relative', width: '100%', maxWidth: 380, aspectRatio: '1 / 1',
@@ -80,12 +84,10 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
               }}
             />
 
-            {/* LIVELLO 1: HEATMAPS MASCHERATE AL MILLIMETRO */}
+            {/* LIVELLO 1: HEATMAPS MASCHERATE */}
             <Box
               sx={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 2,
-                // LA VERA MAGIA: Usiamo l'SVG del cervello come "stampino" invisibile!
-                // Tutto ciò che fuoriesce dalla forma del cervello viene tagliato via.
                 WebkitMaskImage: `url("${Cervello}")`,
                 WebkitMaskSize: 'contain',
                 WebkitMaskPosition: 'center',
@@ -99,22 +101,18 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
               <Box component="svg" viewBox="0 0 500 500" sx={{ width: '100%', height: '100%' }}>
                 <defs>
                    {datiSicuri.map((ch: any) => {
-                    const shapDir = ch.shap_directional || 0;
-                    const absVal = Math.abs(ch.shap_absolute);
+                    // LEGGIAMO IL VALORE GIUSTO IN BASE ALLA PROP targetClass
+                    const shapVal = targetClass === 'left' ? (ch.shap_left || 0) : (ch.shap_right || 0);
+                    const absVal = Math.abs(shapVal);
                     
-                    // 1. Calcoliamo un valore di "chiarezza" (0 = scuro, 1 = chiaro)
-                    // Più il valore è alto, più la 'chiarezza' deve essere bassa (vicino a 0)
                     const ratio = Math.min(absVal / maxVal, 1);
-                    const lightness = 0.7 - ratio; // 1 (chiaro) quando ratio è 0, 0 (scuro) quando ratio è 1
+                    const lightness = 0.7 - ratio;
 
-                    // 2. Definiamo i colori base
-                    // Rosso scuro: 178, 24, 43 / Blu scuro: 33, 102, 172
-                    const baseR = shapDir >= 0 ? 178 : 33;
-                    const baseG = shapDir >= 0 ? 24 : 102;
-                    const baseB = shapDir >= 0 ? 43 : 172;
+                    // Colori: Rosso per positivo (Destra), Blu per negativo (Sinistra)
+                    const baseR = shapVal >= 0 ? 178 : 33;
+                    const baseG = shapVal >= 0 ? 24 : 102;
+                    const baseB = shapVal >= 0 ? 43 : 172;
 
-                    // 3. Interpoliamo linearmente verso il bianco (255) in base alla "chiarezza"
-                    // Quando 'lightness' è alta (poco importante), il colore si sposta verso il bianco
                     const r = Math.floor(baseR + (255 - baseR) * lightness);
                     const g = Math.floor(baseG + (255 - baseG) * lightness);
                     const b = Math.floor(baseB + (255 - baseB) * lightness);
@@ -133,14 +131,12 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                         const coords = coordinateCanali[ch.id];
                         if (!coords) return null;
                         
-                        // 1. Definisci il raggio basato su SHAP_ABSOLUTE (importanza totale)
-                        // Il raggio ora varia tra 40 (minimo) e 120 (massimo per i più importanti)
-                        const val = Math.abs(ch.shap_absolute); 
-                        const radius = 40 + (val / maxVal) * 80; 
-
-                        // 2. Definisci l'opacità basata su SHAP_ABSOLUTE
-                        // I canali poco importanti (basso SHAP) svaniranno quasi del tutto
-                        const opacity = 0.2 + (val / maxVal) * 0.9;
+                        // LEGGIAMO DI NUOVO IL VALORE IN BASE AL TASK
+                        const shapVal = targetClass === 'left' ? (ch.shap_left || 0) : (ch.shap_right || 0);
+                        const absVal = Math.abs(shapVal); 
+                        
+                        const radius = 40 + (absVal / maxVal) * 80; 
+                        const opacity = 0.2 + (absVal / maxVal) * 0.9;
 
                         return (
                         <circle
@@ -168,7 +164,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
               }}
             />
 
-            {/* LIVELLO 3: PUNTINI E TESTI - FIX DARK MODE AUTOMATICO */}
+            {/* LIVELLO 3: PUNTINI E TESTI TOOLTIP */}
             <Box
               component="svg"
               viewBox="0 0 500 500"
@@ -179,7 +175,8 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                   const coords = coordinateCanali[ch.id];
                   if (!coords) return null;
                   
-                  const displayValue = ch.shap_absolute !== undefined ? ch.shap_absolute : ch.shap_directional;
+                  // Mostriamo l'effettivo valore direzionale con il segno nel tooltip
+                  const displayValue = targetClass === 'left' ? ch.shap_left : ch.shap_right;
 
                   return (
                     <Tooltip
@@ -193,36 +190,27 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                             color: 'text.primary',
                             boxShadow: 4,
                             border: '1px solid',
-                            // 'divider' è il bordo standard di MUI che si schiarisce o scurisce col tema
                             borderColor: 'divider',
                             p: 0,
                             borderRadius: 1.5,
-                            // 2. LA TUA INTUIZIONE: Limitiamo la larghezza dinamicamente
                             maxWidth: forceMobile ? 160 : 300,
                           }
                         },
                         arrow: {
                           sx: {
                             color: 'background.paper',
-                            "&::before": { 
-                              border: '1px solid', 
-                              borderColor: 'divider' 
-                            }
+                            "&::before": { border: '1px solid', borderColor: 'divider' }
                           }
                         }
                       }}
                       title={
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                          {/* Intestazione del Tooltip (Usa 'background.default' che è il grigio di sfondo dei pannelli) */}
                           <Box 
                             sx={{ 
                               px: forceMobile ? 1 : 1.5, 
                               py: forceMobile ? 0.4 : 0.6,
-                              borderBottom: '1px solid', 
-                              borderColor: 'divider', 
-                              bgcolor: 'background.paper', 
-                              borderTopLeftRadius: '6px', 
-                              borderTopRightRadius: '6px' 
+                              borderBottom: '1px solid', borderColor: 'divider', bgcolor: 'background.paper', 
+                              borderTopLeftRadius: '6px', borderTopRightRadius: '6px' 
                             }}
                           >
                             <Typography variant="body2" sx={{ fontWeight: forceMobile ? '0.65rem' : 400 }}>
@@ -230,19 +218,19 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
                             </Typography>
                           </Box>
                           
-                          {/* Corpo del Tooltip */}
                           <Box sx={{ p: forceMobile ? 1 : 1.5 }}>
                             <Typography variant="body2" sx={{mb: forceMobile ? 0.5 : 1, fontWeight: 400, fontSize: forceMobile ? '0.8rem' : '0.875rem' }}>
                               {t.valore}: {displayValue?.toFixed(4)}
                             </Typography>
-                            <Typography variant="body2" sx={{ fontSize: forceMobile ? '0.8rem' : '0.875rem', lineHeight: 1.2 }}>
-                              {ch.description}
-                            </Typography>
+                            {ch.description && (
+                                <Typography variant="body2" sx={{ fontSize: forceMobile ? '0.8rem' : '0.875rem', lineHeight: 1.2 }}>
+                                  {ch.description}
+                                </Typography>
+                            )}
                           </Box>
                         </Box>
                       }
                     >
-                      {/* Trigger del tooltip con hitbox espansa */}
                       <g style={{ cursor: 'default', outline: 'none' }}>
                         <circle cx={coords.cx} cy={coords.cy} r={forceMobile ? "35" : "25"} fill="transparent" />
                         <circle cx={coords.cx} cy={coords.cy} r={forceMobile ? "9" : "6"} fill="#0f172a" stroke="#ffffff" strokeWidth={forceMobile ? "3" : "2"} />
@@ -267,91 +255,40 @@ export default function Topoplot({ title, subtitle, channelsData, userId }: any)
             </Box>
           </Box>
 
-          {/* =======================================================
-              NUOVA BARRA LATERALE (LEGENDA SHAP) - LAYOUT AGGIORNATO
-          ======================================================= */}
+          {/* BARRA LATERALE (LEGENDA SHAP) */}
           <Box 
             sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', // Mette scritte e barra in verticale
-              alignItems: 'center', // Centra la barra rispetto alle scritte
-              height: '100%', 
-              maxHeight: 380, // Stessa altezza massima del cervello
-              p: 1,
-              ml: 5
+              display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', maxHeight: 380, p: 1, ml: 5
             }}
           >
-            
-            {/* ETICHETTA DESCRITTIVA SOPRA LA BARRA */}
-            <Typography 
-              variant="caption" 
-              sx={{ 
-                color: 'text.secondary', 
-                fontWeight: 600, 
-                mb: 0, // Spazio sotto la scritta
-                textAlign: 'center',
-                letterSpacing: 0.5
-              }}
-            >
-              {t.labelsopra}
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, mb: 0, textAlign: 'center', letterSpacing: 0.5 }}>
+              {t.labelsopra || 'Destra'}
             </Typography>
 
-            {/* CONTENITORE INTERNO (ORIZZONTALE) PER BARRA E NUMERI */}
-            {/* flexGrow: 1 permette alla barra di occupare lo spazio centrale */}
             <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, width: '100%', justifyContent: 'center' }}>
-                
-                {/* 1. Sfumatura Colori (Rosso -> Bianco -> Blu) - BARRA ACCORCIATA */}
                 <Box 
                 sx={{ 
-                    width: 24, 
-                    // Altezza ridotta per lasciare spazio alle scritte sopra e sotto
-                    height: '95%', 
+                    width: 24, height: '95%', 
                     background: 'linear-gradient(to bottom, rgb(178, 24, 43) 0%, #ffffff 50%, rgb(33, 102, 172) 100%)',
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    borderRadius: 1
+                    border: '1px solid', borderColor: 'divider', borderRadius: 1
                 }} 
                 />
                 
-                {/* 2. Valori Numerici - ALLINEATI CON L'ALTEZZA DELLA BARRA */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '95%', ml: 1.5, py: 0.5 }}>
-                
-                {/* TOP: Positivo */}
                 <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.primary' }}>
                     +{maxVal.toFixed(3)}
                 </Typography>
-
-                {/* MIDDLE: Zero */}
-                <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                    
-                </Typography>
-
-                {/* BOTTOM: Negativo */}
+                <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary' }} />
                 <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.primary' }}>
                     -{maxVal.toFixed(3)}
                 </Typography>
-
                 </Box>
             </Box>
 
-            {/* ETICHETTA DESCRITTIVA SOTTO LA BARRA */}
-            <Typography 
-              variant="caption" 
-              sx={{ 
-                color: 'text.secondary', 
-                fontWeight: 600, 
-                mt: 0, // Spazio sopra la scritta
-                textAlign: 'center',
-                letterSpacing: 0.5
-              }}
-            >
-              {t.labelsotto}
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, mt: 0, textAlign: 'center', letterSpacing: 0.5 }}>
+              {t.labelsotto || 'Sinistra'}
             </Typography>
-
           </Box>
-
-
-
 
         </Box>
       </CardContent>

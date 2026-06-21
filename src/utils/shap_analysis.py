@@ -9,8 +9,8 @@ import os
 
 
 
-def genera_topoplot_statico_mne(mean_directional_shap, feature_names, save_dir, user_id):
-    """ Disegna e salva fisicamente la foto PNG del topoplot scientifico RdBu_r usando MNE Python """
+def genera_topoplot_statico_mne(mean_directional_shap, feature_names, save_dir, user_id, task_name=""):
+    """ Disegna e salva fisicamente la foto PNG del topoplot scientifico bicolore (RdBu_r) """
     emotiv_channels = ['AF3', 'F7', 'F3', 'FC5', 'T7', 'P7', 'O1', 'O2', 'P8', 'T8', 'FC6', 'F4', 'F8', 'AF4']
     channel_importance = {ch: 0.0 for ch in emotiv_channels}
     
@@ -32,29 +32,33 @@ def genera_topoplot_statico_mne(mean_directional_shap, feature_names, save_dir, 
     limite = np.max(np.abs(data_to_plot))
     if limite == 0: limite = 1 
     
-    # Generazione della mappa topografica 2D
+    # Generazione della mappa topografica 2D bicolore (Pura con i segni originali)
     im, _ = mne.viz.plot_topomap(
         data_to_plot, info, axes=ax, show=False, cmap='RdBu_r',          
-        vlim=(-limite, limite), contours=0, extrapolate='box', names=emotiv_channels
+        vlim=(-limite, limite), contours=0, extrapolate='head', names=emotiv_channels
     )
-    plt.title(f"Mappa SHAP MNE - Utente: {user_id}", fontsize=14)
     
-    # Barra laterale dei colori (Colorbar)
+    titolo = f"Mappa SHAP - Utente: {user_id}"
+    if task_name:
+        titolo += f" | Task: {task_name}"
+    plt.title(titolo, fontsize=14)
+    
+    # Barra laterale dei colori
     from mpl_toolkits.axes_grid1 import make_axes_locatable
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad=0.2)
-    plt.colorbar(im, cax=cax, label="Riposo (Blu) <--- SHAP ---> Movimento (Rosso)")
+    plt.colorbar(im, cax=cax, label="Spinta verso Sinistra (Blu) <-- SHAP --> Spinta verso Destra (Rosso)")
     
-    plot_path = f"{save_dir}/topoplot_{user_id}.png"
+    plot_path = f"{save_dir}/topoplot_{user_id}_{task_name}.png"
     plt.savefig(plot_path, bbox_inches='tight', dpi=300)
     plt.close(fig)
-    print(f"[FOTO OK] Topoplot statico MNE salvato correttamente in: {plot_path}")
+    print(f"[FOTO OK] Topoplot statico MNE ({task_name}) salvato in: {plot_path}")
 
 
 def esporta_json_dashboard(shap_df, save_dir, user_id, is_real):
     """ Salva la struttura JSON formattata per popolare i grafici React della Dashboard """
-    channel_imp_abs = shap_df.groupby('Channel')['SHAP_Value_Abs'].sum()
-    channel_imp_dir = shap_df.groupby('Channel')['SHAP_Value_Dir'].sum()
+    channel_imp_left = shap_df.groupby('Channel')['SHAP_Dir_Left'].sum()
+    channel_imp_right = shap_df.groupby('Channel')['SHAP_Dir_Right'].sum()
     feature_imp_abs = shap_df.groupby('FeatureType')['SHAP_Value_Abs'].sum()
     window_imp_abs = shap_df.groupby('Window')['SHAP_Value_Abs'].sum()
 
@@ -64,9 +68,9 @@ def esporta_json_dashboard(shap_df, save_dir, user_id, is_real):
         "channels": [
             {
                 "id": ch,
-                "shap_absolute": float(channel_imp_abs.get(ch, 0)),
-                "shap_directional": float(channel_imp_dir.get(ch, 0)),
-            } for ch in channel_imp_abs.index if ch != "Session"
+                "shap_left": float(channel_imp_left.get(ch, 0.0)),
+                "shap_right": float(channel_imp_right.get(ch, 0.0)),
+            } for ch in channel_imp_left.index if ch != "Session"
         ],
         "features": [
             {
@@ -87,7 +91,7 @@ def esporta_json_dashboard(shap_df, save_dir, user_id, is_real):
         json.dump(struttura_json, f, indent=4, ensure_ascii=False)
     print(f"[JSON OK] Dati per la Dashboard React salvati in: {json_path}")
 
-def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_names, user_id, is_real):
+def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, y_test, feature_names, user_id, is_real):
     np.random.seed(42)
 
     if is_real:
@@ -104,14 +108,38 @@ def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_n
     if isinstance(shap_vals_svm, list):
         shap_vals_svm = shap_vals_svm[1]
 
-    # Calculate mean absolute SHAP values for each feature across all test samples
+    # Calculate mean absolute SHAP values for each feature across all test samples (Features and Windows)
     mean_abs_shap_svm = np.abs(shap_vals_svm).mean(axis=0)
-    mean_directional_shap_svm = shap_vals_svm.mean(axis=0)
+    # mean_directional_shap_svm = shap_vals_svm.mean(axis=0)
+
+    # Separazione per epoche
+    idx_left = (y_test == 0)
+    idx_right = (y_test == 1)
+
+    shap_vals_left = shap_vals_svm[idx_left]
+    shap_vals_right = shap_vals_svm[idx_right]
+
+    # 1. Medie direzionali pure per i Topoplot (con il segno)
+    mean_dir_left = shap_vals_left.mean(axis=0) if len(shap_vals_left) > 0 else np.zeros(len(feature_names))
+    mean_dir_right = shap_vals_right.mean(axis=0) if len(shap_vals_right) > 0 else np.zeros(len(feature_names))
+    
+    # 2. Medie assolute per classe per i grafici a barre sdoppiati dei canali
+    mean_abs_left = np.abs(shap_vals_left).mean(axis=0) if len(shap_vals_left) > 0 else np.zeros(len(feature_names))
+    mean_abs_right = np.abs(shap_vals_right).mean(axis=0) if len(shap_vals_right) > 0 else np.zeros(len(feature_names))
+
+    # Generazione dei due Topoplot bicolore separati
+    if len(shap_vals_left) > 0:
+        genera_topoplot_statico_mne(mean_dir_left, feature_names, save_dir, user_id, "Left")
+    if len(shap_vals_right) > 0:
+        genera_topoplot_statico_mne(mean_dir_right, feature_names, save_dir, user_id, "Right")
 
     shap_df_svm = pd.DataFrame({
         'Feature_Name': feature_names,
-        'SHAP_Value_Abs': mean_abs_shap_svm,       
-        'SHAP_Value_Dir': mean_directional_shap_svm
+        'SHAP_Value_Abs': mean_abs_shap_svm,   # Per Seaborn (Grafici a barre globali)
+        'SHAP_Abs_Left': mean_abs_left,        # Per il grafico a barre Left
+        'SHAP_Abs_Right': mean_abs_right,      # Per il grafico a barre Right
+        'SHAP_Dir_Left': mean_dir_left,        # Per il JSON e Topoplot Globale
+        'SHAP_Dir_Right': mean_dir_right       # Per il JSON e Topoplot Globale
     })
 
     try:
@@ -123,21 +151,35 @@ def shap_analysis_svm(best_svm, x_test_scaled_svm, x_train_scaled_svm, feature_n
     esporta_json_dashboard(shap_df_svm, save_dir, user_id, is_real)
 
     # 2. STAMPA LA FOTO DEL TOPOPLOT CON MNE PYTHON (Aggiunta inserita)
-    genera_topoplot_statico_mne(mean_directional_shap_svm, feature_names, save_dir, user_id)
+    # genera_topoplot_statico_mne(mean_directional_shap_svm, feature_names, save_dir, user_id)
 
     # Gropuing by categories to get overall importance
-    channel_imp_svm = shap_df_svm.groupby('Channel')['SHAP_Value_Abs'].sum().sort_values(ascending=False)
+    # Raggruppiamo la colonna DIREZIONALE (la stessa del JSON e Topoplot) 
+    # e applichiamo .abs() solo alla fine per avere la lunghezza della barra
+    channel_imp_left = shap_df_svm.groupby('Channel')['SHAP_Dir_Left'].sum().abs().sort_values(ascending=False)
+    channel_imp_right = shap_df_svm.groupby('Channel')['SHAP_Dir_Right'].sum().abs().sort_values(ascending=False)
+    
     feature_imp_svm = shap_df_svm.groupby('FeatureType')['SHAP_Value_Abs'].sum().sort_values(ascending=False)
     window_imp_svm = shap_df_svm.groupby('Window')['SHAP_Value_Abs'].sum().sort_values(ascending=False)
 
-    # Plot 1: Channel Importance (SVM)
+    # Plot 1L: Canali Left (Sfumature di blu per coerenza visiva)
     plt.figure(figsize=(10, 6))
-    sns.barplot(x=channel_imp_svm.values, y=channel_imp_svm.index, hue=channel_imp_svm.index, palette="viridis", legend=False)
-    plt.title(f"Channel Importance - SVM (User: {user_id})", fontsize=14)
-    plt.xlabel("Mean Absolute SHAP Value (Predictive Impact)")
+    sns.barplot(x=channel_imp_left.values, y=channel_imp_left.index, hue=channel_imp_left.index, palette="Blues_r", legend=False)
+    plt.title(f"Channel Importance LEFT - SVM (User: {user_id})", fontsize=14)
+    plt.xlabel("Mean Absolute SHAP Value (Left Class)")
     plt.ylabel("EEG Channel")
     plt.tight_layout()
-    plt.savefig(f'{save_dir}/channels_{user_id}.png', dpi=300)
+    plt.savefig(f'{save_dir}/channels_left_{user_id}.png', dpi=300)
+    plt.close()
+
+    # Plot 1R: Canali Right (Sfumature di rosso per coerenza visiva)
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x=channel_imp_right.values, y=channel_imp_right.index, hue=channel_imp_right.index, palette="Reds_r", legend=False)
+    plt.title(f"Channel Importance RIGHT - SVM (User: {user_id})", fontsize=14)
+    plt.xlabel("Mean Absolute SHAP Value (Right Class)")
+    plt.ylabel("EEG Channel")
+    plt.tight_layout()
+    plt.savefig(f'{save_dir}/channels_right_{user_id}.png', dpi=300)
     plt.close()
 
     # Plot 2: Feature Importance (SVM)

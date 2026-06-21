@@ -88,7 +88,7 @@ df_real = df[df['Session'] == 1]
 df_imm = df[df['Session'] == 0]
 unique_user = df_imm['User'].unique() 
 
-print(df_imm.head(20))
+# print(df_imm.head(20))
 
 
 #results_real = train_SVM(df_real, True)
