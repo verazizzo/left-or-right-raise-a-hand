@@ -21,6 +21,13 @@ CANALI DA TOGLIERE (MOVIMENTI OCULARI): AF3, AF4, F7 e F8
 FEATURE IMPORTANTI: Alpha, Beta 1 2 3, 
 
 
+COSE DA FARE GUARDANDO LA TEORIA:
+CONTROLLARE LEGGIBILITA : topoplot in versione mobile è troppo piccolo
+AFFORDANCE : togliere effetto di movimento alle carte in About
+REQUIREMENTS : fare documento strutturato in cui si elenco i requisiti 
+
+
+
 
 
 

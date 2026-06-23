@@ -62,7 +62,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
           </Typography>
         </Stack>
         
-        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
+        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2 }}>
           
           <Box 
             sx={{ 
@@ -255,39 +255,29 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
             </Box>
           </Box>
 
-          {/* BARRA LATERALE (LEGENDA SHAP) */}
+          {/* NUOVA BARRA INFERIORE ORIZZONTALE (LEGENDA SHAP) */}
           <Box 
             sx={{ 
-              display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', maxHeight: 380, p: 1, ml: 5
+              display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 380, mt: 4 
             }}
           >
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, mb: 0, textAlign: 'center', letterSpacing: 0.5 }}>
-              {t.labelsopra || 'Destra'}
-            </Typography>
-
-            <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, width: '100%', justifyContent: 'center' }}>
-                <Box 
-                sx={{ 
-                    width: 24, height: '95%', 
-                    background: 'linear-gradient(to bottom, rgb(178, 24, 43) 0%, #ffffff 50%, rgb(33, 102, 172) 100%)',
-                    border: '1px solid', borderColor: 'divider', borderRadius: 1
-                }} 
-                />
-                
-                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '95%', ml: 1.5, py: 0.5 }}>
-                <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.primary' }}>
-                    +{maxVal.toFixed(3)}
-                </Typography>
-                <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary' }} />
-                <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.primary' }}>
-                    -{maxVal.toFixed(3)}
-                </Typography>
-                </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5, px: 0.5 }}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, letterSpacing: 0.5 }}>
+                {t.labelsotto || 'Sinistra'} (-{maxVal.toFixed(3)})
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, letterSpacing: 0.5 }}>
+                {t.labelsopra || 'Destra'} (+{maxVal.toFixed(3)})
+              </Typography>
             </Box>
 
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, mt: 0, textAlign: 'center', letterSpacing: 0.5 }}>
-              {t.labelsotto || 'Sinistra'}
-            </Typography>
+            <Box 
+              sx={{ 
+                width: '100%', height: 24, 
+                // Gradiente cambiato da verticale (to bottom) a orizzontale (to right)
+                background: 'linear-gradient(to right, rgb(33, 102, 172) 0%, #ffffff 50%, rgb(178, 24, 43) 100%)',
+                border: '1px solid', borderColor: 'divider', borderRadius: 1
+              }} 
+            />
           </Box>
 
         </Box>

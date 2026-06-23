@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Tipi di font e impostazioni supportate
 export type FontSizeOption = 'small' | 'medium' | 'large';
-export type LanguageOption = 'it' | 'en' | 'es';
+export type LanguageOption = 'it' | 'en' | 'es' | 'ar';
 export type ViewModeOption = 'web' | 'mobile';
 export type ModeOption = 'light' | 'dark';
 
@@ -33,7 +33,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const browserLang = navigator.language.split('-')[0];
     
     // Verifica se la lingua del browser è supportata (it, en, es)
-    if (['it', 'en', 'es'].includes(browserLang)) {
+    if (['it', 'en', 'es', 'ar'].includes(browserLang)) {
       return browserLang as LanguageOption;
     }
 
@@ -95,6 +95,14 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       return next;
     });
   };
+
+  // --- NUOVA MAGIA PER RTL (ARABO) ---
+  // Imposta la direzione dell'HTML in base alla lingua
+  useEffect(() => {
+    const isRtl = language === 'ar';
+    document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+  }, [language]);
 
   // --- LA MAGIA PER IL FONT SIZE ---
   // Questo useEffect "ascolta" ogni volta che cambia fontSize e aggiorna la radice dell'HTML.

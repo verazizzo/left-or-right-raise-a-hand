@@ -65,7 +65,7 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
   }, [navigate]);
 
   const handleLanguageChange = (event: SelectChangeEvent) => {
-    setLanguage(event.target.value as 'it' | 'en' | 'es');
+    setLanguage(event.target.value as 'it' | 'en' | 'es' | 'ar');
   };
 
   const handleFontSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,6 +121,7 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                         <MenuItem value="it">ɪᴛ - Italiano</MenuItem>
                         <MenuItem value="en">ᴇɴ - English</MenuItem>
                         <MenuItem value="es">ᴇs - Español</MenuItem>
+                        <MenuItem value="ar">ᴀʀ - العربية (Arabic)</MenuItem>
                       </Select>
                     </FormControl>
                   </CardContent>

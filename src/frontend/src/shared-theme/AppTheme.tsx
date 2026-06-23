@@ -7,44 +7,35 @@ import { feedbackCustomizations } from './customizations/feedback';
 import { navigationCustomizations } from './customizations/navigation';
 import { surfacesCustomizations } from './customizations/surfaces';
 import { colorSchemes, typography, shadows, shape } from './themePrimitives';
-
-// IMPORTA IL CONTESTO! (Assicurati che il percorso sia giusto in base alle tue cartelle)
 import { useSettings } from '../context/SettingsContext';
 
 interface AppThemeProps {
   children: React.ReactNode;
-  /**
-   * This is for the docs site. You can ignore it or remove it.
-   */
   disableCustomTheme?: boolean;
   themeComponents?: ThemeOptions['components'];
 }
 
 export default function AppTheme(props: AppThemeProps) {
   const { children, disableCustomTheme, themeComponents } = props;
-
-  // PRENDI LA VARIABILE DAL CONTESTO
-  const { forceMobile, mode } = useSettings();
+  
+  // ESTRAIAMO LA LINGUA PER APPLICARE LA MATEMATICA PERFETTA
+  const { forceMobile, mode, language } = useSettings();
+  const isRtl = language === 'ar';
 
   const theme = React.useMemo(() => {
     return disableCustomTheme
       ? {}
       : createTheme({
-        // PASSAGGIO FONDAMENTALE: Passiamo la modalità (light/dark)
           colorSchemes: {
             light: colorSchemes.light,
             dark: colorSchemes.dark,
           },
-          defaultColorScheme: mode, // Imposta il tema scelto dall'utente/sistema
-
-        // --- ECCO IL TRUCCO DEI BREAKPOINTS ---
+          defaultColorScheme: mode,
           breakpoints: {
             values: forceMobile
-              ? { xs: 0, sm: 600, md: 10000, lg: 10000, xl: 10000 } // Tutto diventa "xs" (mobile)
-              : { xs: 0, sm: 600, md: 900, lg: 1200, xl: 1536 },    // Misure standard MUI
+              ? { xs: 0, sm: 600, md: 10000, lg: 10000, xl: 10000 }
+              : { xs: 0, sm: 600, md: 900, lg: 1200, xl: 1536 },
           },
-          // --------------------------------------
-          // For more details about CSS variables configuration, see https://mui.com/material-ui/customization/css-theme-variables/configuration/
           cssVariables: {
             colorSchemeSelector: 'data-mui-color-scheme',
             cssVarPrefix: 'template',
@@ -54,14 +45,9 @@ export default function AppTheme(props: AppThemeProps) {
           shape,
           components: {
 
-          
-          // ------ VISIONE TELEFONO
-
           MuiCssBaseline: {
             styleOverrides: forceMobile ? `
-              body {
-                background-color: #8d9498 !important; 
-              }
+              body { background-color: #8d9498 !important; }
 
               #root {
                 width: 100%;
@@ -73,38 +59,43 @@ export default function AppTheme(props: AppThemeProps) {
                 clip-path: inset(0) !important;
               }
 
-              /* REGOLE MATEMATICHE E OTTICHE SOLO PER PC */
               @media (min-width: 431px) {
                 
                 #root {
-                  /* Ancoriamo il telefono alle misure fisiche del monitor (vw).
-                     Quando la barra di scorrimento scompare, IL TELEFONO NON SI SPOSTA DI 1 MILLIMETRO! */
+                  /* @noflip */
                   margin-left: calc(50vw - 215px) !important;
+                  /* @noflip */
+                  margin-right: auto !important;
                 }
 
                 .MuiAppBar-root {
-                  /* Agganciamo la AppNavbar esattamente sopra il finto telefono */
                   max-width: 430px !important;
+                  /* @noflip */
                   left: calc(50vw - 215px) !important;
+                  /* @noflip */
                   right: auto !important;
                 }
 
-                /* LA MAGIA OTTICA: Una "maschera" che taglia via l'eccesso del monitor! 
-                   Il menu e lo sfondo nero sono letteralmente INVISIBILI fuori dal telefono. */
                 .MuiDrawer-root.MuiModal-root {
-                  clip-path: inset(0 calc(50vw - 215px) 0 calc(50vw - 215px)) !important;
+                  /* La maschera calcolata rigorosamente sulle distanze assolute:
+                     inset(top right bottom left) */
+                  /* @noflip */
+                  clip-path: inset(0 calc(100% - 50vw - 215px) 0 calc(50vw - 215px)) !important;
                 }
 
-                /* Il pannello bianco si aggancia esattamente al bordo destro del finto telefono.
-                   Da qui inizierà la sua animazione! */
                 .MuiDrawer-paper {
-                  right: calc(50vw - 215px) !important;
-                  left: auto !important;
+                  /* LA MATEMATICA PERFETTA:
+                     In Arabo (RTL) il menu si attacca a sinistra: 50vw - 215px.
+                     In Italiano (LTR) il menu si attacca a destra: 50vw - 45px.
+                     Ignoriamo completamente il lato "right" per non subire l'influenza della scrollbar! */
+                  /* @noflip */
+                  left: ${isRtl ? 'calc(50vw - 215px)' : 'calc(50vw - 45px)'} !important;
+                  /* @noflip */
+                  right: auto !important;
                 }
               }
             ` : ``, 
           },
-            // ---------------- FINO QUA LA VISIONE TELEFONO ------------------------------------
             ...inputsCustomizations,
             ...dataDisplayCustomizations,
             ...feedbackCustomizations,
@@ -113,7 +104,8 @@ export default function AppTheme(props: AppThemeProps) {
             ...themeComponents,
           },
         });
-  }, [disableCustomTheme, themeComponents, forceMobile, mode]);
+  }, [disableCustomTheme, themeComponents, forceMobile, mode, isRtl]); // Ricalcola in tempo reale se cambi lingua
+
   if (disableCustomTheme) {
     return <React.Fragment>{children}</React.Fragment>;
   }

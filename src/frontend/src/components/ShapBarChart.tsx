@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
+import Box from '@mui/material/Box';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
@@ -26,6 +27,7 @@ export default function ShapBarChart({
 
   const { language, forceMobile } = useSettings();
   const t = translations[language];
+  const isRtl = language === 'ar';
 
   // --- 1. IL SENSORE DEL MOUSE (Tornato alla divisione a metà) ---
   const [isRightHalf, setIsRightHalf] = React.useState(false);
@@ -34,7 +36,11 @@ export default function ShapBarChart({
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left; 
     
-    setIsRightHalf(x > rect.width / 2);
+    const percentage = x / rect.width;
+    
+    // Se siamo oltre il 50% della larghezza, il tooltip deve stare a sinistra.
+    // Questo è vero in qualsiasi lingua.
+    setIsRightHalf(percentage > 0.5);
   };
 
 // Palette "Colorblind-Safe" (basata su Okabe-Ito e Paul Tol)
@@ -73,96 +79,107 @@ export default function ShapBarChart({
           )}
         </Stack>
 
-        <BarChart
-          layout="horizontal"
-          borderRadius={4}
-          
-          yAxis={[
-            {
-              scaleType: 'band',
-              data: labels,
-              categoryGapRatio: 0.3,
-              width: 90,
-              colorMap: {
-                type: 'ordinal',
-                colors: chartColors,
-              }
-            },
-          ]}
-          
-          xAxis={[
-            {
-              label: t.labelShapBar,
-            },
-          ]}
-          
-          series={[
-            {
-              id: 'shap-values',
-              // Nascondiamo completamente la label sinistra di default ("Page Views" / "Valore SHAP")
-              // perché ce la ricreiamo noi a destra esattamente come la vuoi
-              label: '', 
-              data: values,
-              valueFormatter: (value, context) => {
-                if (value === null) return '';
-                const formattedValue = value.toFixed(4);
-                if (descriptions && context && context.dataIndex !== undefined) {
-                  // Creiamo l'intera stringa nella colonna di destra:
-                  // 1. Valore SHAP: 0.1113
-                  // 2. A capo (\n)
-                  // 3. Descrizione: Onde Beta...
-                  return `${t.valore}: ${formattedValue}\n\n${descriptions[context.dataIndex]}`;
-                }
-                return formattedValue;
+        <Box dir={isRtl ? 'rtl' : 'ltr'} sx={{ width: '100%' }}>
+          <BarChart
+            layout="horizontal"
+            borderRadius={4}
+            yAxis={[
+              {
+                scaleType: 'band',
+                data: labels,
+                categoryGapRatio: 0.3,
+                width: 90,
+                colorMap: {
+                  type: 'ordinal',
+                  colors: chartColors,
+                },
+                // In Arabo, sposta l'asse a destra
+                position: isRtl ? 'right' : 'left',
+                tickLabelStyle: {
+                  textAnchor: 'end', // Allinea il testo correttamente
+                  // Usiamo un transform per traslare il testo lontano dall'asse
+                  // In RTL trasliamo verso SINISTRA per allontanarlo dall'asse di destra
+                  transform: 'none',
+                },
               },
-            },
-          ]}
-          height={350}
+            ]}
+            
+            xAxis={[
+              {
+                label: t.labelShapBar,
+                reverse: isRtl,
+              },
+            ]}
+            
+            series={[
+              {
+                id: 'shap-values',
+                // Nascondiamo completamente la label sinistra di default ("Page Views" / "Valore SHAP")
+                // perché ce la ricreiamo noi a destra esattamente come la vuoi
+                label: '', 
+                data: values,
+                valueFormatter: (value, context) => {
+                  if (value === null) return '';
+                  const formattedValue = value.toFixed(4);
+                  if (descriptions && context && context.dataIndex !== undefined) {
+                    // Creiamo l'intera stringa nella colonna di destra:
+                    // 1. Valore SHAP: 0.1113
+                    // 2. A capo (\n)
+                    // 3. Descrizione: Onde Beta...
+                    return `${t.valore}: ${formattedValue}\n\n${descriptions[context.dataIndex]}`;
+                  }
+                  return formattedValue;
+                },
+              },
+            ]}
+            height={350}
+            
+            margin={{ left: 10, right: 20, top: 10, bottom: 20 }} 
+            grid={{ vertical: true }} 
+            hideLegend 
+            
+            sx={{
+              // 1. ELIMINIAMO IL QUADRATINO COLORATO
+              '& .MuiChartsTooltip-markCell': {
+                display: 'none !important',
+              },
+
+              // 2. ELIMINIAMO LA COLONNA SINISTRA (Quella grigia)
+              // L'abbiamo svuotata mettendo label: '', ma ora la cancelliamo proprio
+              // così la nostra colonna destra prende tutto lo spazio!
+              '& .MuiChartsTooltip-labelCell': {
+                display: 'none !important',
+              },
+
+              // --- 3. IL MOVIMENTO DINAMICO DEL TOOLTIP ---
+              '& .MuiChartsTooltip-root': {
+                // Se forceMobile è VERO: scatta a sinistra appena superi la metà
+                // Se forceMobile è FALSO (PC): rimane sempre a destra
+                marginLeft: forceMobile 
+                  ? (isRightHalf ? '-170px !important' : '10px !important') 
+                  : '10px !important',
+                
+                // ANIMAZIONE RIMOSSA: ora il cambio è brutale e istantaneo
+              },
+
+              // 2. DIMENSIONI DINAMICHE: Si rimpicciolisce solo quando serve!
+              '& .MuiChartsTooltip-valueCell': {
+                whiteSpace: 'pre-wrap !important', 
+                
+                // Se siamo nel telefono limite a 160px, altrimenti liberi a 300px
+                maxWidth: forceMobile ? '180px !important' : '300px !important', 
+                
+                // Riduciamo margini e font solo sul telefono per compattarlo
+                padding: forceMobile ? '6px 8px !important' : '12px !important', 
+                fontSize: forceMobile ? '0.80rem !important' : '0.875rem !important',
+                
+                lineHeight: '1.4 !important', 
+                textAlign: 'left !important',
+              },
+            }}
+          />
           
-          margin={{ left: 10, right: 20, top: 10, bottom: 20 }} 
-          grid={{ vertical: true }} 
-          hideLegend 
-          
-          sx={{
-            // 1. ELIMINIAMO IL QUADRATINO COLORATO
-            '& .MuiChartsTooltip-markCell': {
-              display: 'none !important',
-            },
-
-            // 2. ELIMINIAMO LA COLONNA SINISTRA (Quella grigia)
-            // L'abbiamo svuotata mettendo label: '', ma ora la cancelliamo proprio
-            // così la nostra colonna destra prende tutto lo spazio!
-            '& .MuiChartsTooltip-labelCell': {
-              display: 'none !important',
-            },
-
-            // --- 3. IL MOVIMENTO DINAMICO DEL TOOLTIP ---
-            '& .MuiChartsTooltip-root': {
-              // Se forceMobile è VERO: scatta a sinistra appena superi la metà
-              // Se forceMobile è FALSO (PC): rimane sempre a destra
-              marginLeft: forceMobile 
-                ? (isRightHalf ? '-170px !important' : '10px !important') 
-                : '10px !important',
-              
-              // ANIMAZIONE RIMOSSA: ora il cambio è brutale e istantaneo
-            },
-
-            // 2. DIMENSIONI DINAMICHE: Si rimpicciolisce solo quando serve!
-            '& .MuiChartsTooltip-valueCell': {
-              whiteSpace: 'pre-wrap !important', 
-              
-              // Se siamo nel telefono limite a 160px, altrimenti liberi a 300px
-              maxWidth: forceMobile ? '180px !important' : '300px !important', 
-              
-              // Riduciamo margini e font solo sul telefono per compattarlo
-              padding: forceMobile ? '6px 8px !important' : '12px !important', 
-              fontSize: forceMobile ? '0.80rem !important' : '0.875rem !important',
-              
-              lineHeight: '1.4 !important', 
-              textAlign: 'left !important',
-            },
-          }}
-        />
+        </Box>
       </CardContent>
     </Card>
   );

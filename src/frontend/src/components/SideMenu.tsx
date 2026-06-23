@@ -20,8 +20,6 @@ import OptionsMenu from './OptionsMenu';
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 
-
-
 interface UserData {
   name: string;
   surname: string;
@@ -75,6 +73,9 @@ export default function SideMenu() {
   const { language } = useSettings();
   const t = translations[language];
 
+  // VARIABILE PER GESTIRE L'EMAIL E L'ALLINEAMENTO
+  const isRtl = language === 'ar';
+
   const [open, setOpen] = React.useState(() => {
     const savedState = localStorage.getItem('sidebar_open');
     return savedState === null ? true : savedState === 'true';
@@ -84,11 +85,9 @@ export default function SideMenu() {
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user_profile');
-
     if (!savedUser) {
       return;
     }
-
     setUser(JSON.parse(savedUser));
   }, []);
 
@@ -113,7 +112,7 @@ export default function SideMenu() {
         },
       }}
     >
-      {/* SEZIONE 1: HEADER (Altezza fissa bloccata a 68px) */}
+      {/* SEZIONE 1: HEADER */}
       <Box
         sx={{
           display: 'flex',
@@ -124,7 +123,6 @@ export default function SideMenu() {
           minHeight: 68, 
         }}
       >
-        
         <IconButton onClick={toggleDrawer}>
           {open ? <ChevronLeftIcon /> : <MenuIcon />}
         </IconButton>
@@ -157,27 +155,25 @@ export default function SideMenu() {
         <MenuContent open={open} />
       </Box>
       
-      {/* SEZIONE 3: FOOTER UTENTE (Bloccato verticalmente e orizzontalmente) */}
+      {/* SEZIONE 3: FOOTER UTENTE */}
       <Stack
         direction="row"
         sx={{
           p: 1.5, 
           alignItems: 'center',
-          // Rimosso il justifyContent dinamico: ora resta sempre allineato a sinistra!
           borderTop: '1px solid',
           borderColor: 'divider',
           minHeight: 64,
-          overflow: 'hidden', // Evita che il testo "sbordi" mentre la barra si stringe
+          overflow: 'hidden',
         }}
       >
-        {/* AVATAR FISSO: Questo blocco non si restringe mai (flexShrink: 0) */}
+        {/* AVATAR FISSO */}
         <Box sx={{ flexShrink: 0, display: 'flex' }}>
           {open ? (
             <Avatar
               sizes="small"
               sx={{ width: 36, height: 36, bgcolor: 'primary.main', color: 'primary.contrastText' }}
             >
-              {/* Estrae la prima lettera del nome e del cognome */}
               {user.name.charAt(0).toUpperCase()}
             </Avatar>
           ) : (
@@ -196,31 +192,51 @@ export default function SideMenu() {
           )}
         </Box>
 
-        {/* CONTENITORE TESTO E 3 PUNTINI: Sfuma fluidamente quando si chiude */}
+        {/* CONTENITORE TESTO E 3 PUNTINI */}
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             flexGrow: 1,
             minWidth: 0,
-            ml: 1.5, // Spazio fisso dall'avatar
-            opacity: open ? 1 : 0, // Effetto dissolvenza
-            visibility: open ? 'visible' : 'hidden', // Evita click accidentali a barra chiusa
-            transition: 'opacity 0.2s ease', // Animazione fluida
+            ml: 1.5, 
+            opacity: open ? 1 : 0, 
+            visibility: open ? 'visible' : 'hidden', 
+            transition: 'opacity 0.2s ease', 
           }}
         >
-          {/* Testo */}
-          <Box sx={{ mr: 'auto', minWidth: 0 }}>
-            <Typography variant="body2" noWrap sx={{ fontWeight: 500, lineHeight: '16px' }}>
+          {/* Box per i Testi */}
+          <Box sx={{ mr: 'auto', minWidth: 0, overflow: 'hidden', width: '100%' }}>
+            
+            {/* Nome (con fix per la G tagliata: lineHeight 1.2 e pb 0.2) */}
+            <Typography variant="body2" noWrap sx={{ fontWeight: 500, lineHeight: 1.2, pb: 0.2 }}>
               {user.name} {user.surname}
             </Typography>
-            <Typography variant="caption" noWrap sx={{ color: 'text.secondary', display: 'block' }}>
-              {user.email}
-            </Typography>
+            
+            {/* Email protetta in LTR */}
+            <Box sx={{ display: 'flex', justifyContent: isRtl ? 'flex-end' : 'flex-start', width: '100%' }}>
+              <Typography 
+                variant="caption" 
+                noWrap 
+                style={{ direction: 'ltr', textAlign: 'left' }} 
+                sx={{ 
+                  color: 'text.secondary',
+                  display: 'block',
+                  maxWidth: '100%',
+                  lineHeight: 1.2, // Fix anche per l'email
+                  pb: 0.2
+                }}
+              >
+                {user.email}
+              </Typography>
+            </Box>
+
           </Box>
           
           {/* Menu 3 puntini */}
-          <OptionsMenu />
+          <Box sx={{ flexShrink: 0, ml: 1 }}>
+            <OptionsMenu />
+          </Box>
         </Box>
         
       </Stack>
