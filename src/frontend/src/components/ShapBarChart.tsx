@@ -108,7 +108,13 @@ export default function ShapBarChart({
               {
                 label: t.labelShapBar,
                 reverse: isRtl,
-              },
+                labelStyle: {
+                  // In RTL (asse a destra), trasliamo leggermente l'etichetta verso sinistra 
+                  // per compensare visivamente la larghezza della colonna Y (90px)
+                  transform: `${isRtl ? 'translateX(30px)' : 'translateX(-30px)'} translateY(10px)`,
+                
+                },
+              },              
             ]}
             
             series={[
@@ -134,11 +140,11 @@ export default function ShapBarChart({
             ]}
             height={350}
             
-            margin={{ left: 10, right: 20, top: 10, bottom: 20 }} 
+            margin={{ left: isRtl ? 10 : -10, right: isRtl ? -10: 10, top: 10, bottom: 20 }} 
             grid={{ vertical: true }} 
             hideLegend 
             
-            sx={{
+            sx={{              
               // 1. ELIMINIAMO IL QUADRATINO COLORATO
               '& .MuiChartsTooltip-markCell': {
                 display: 'none !important',
@@ -151,16 +157,21 @@ export default function ShapBarChart({
                 display: 'none !important',
               },
 
-              // --- 3. IL MOVIMENTO DINAMICO DEL TOOLTIP ---
-              '& .MuiChartsTooltip-root': {
-                // Se forceMobile è VERO: scatta a sinistra appena superi la metà
-                // Se forceMobile è FALSO (PC): rimane sempre a destra
-                marginLeft: forceMobile 
-                  ? (isRightHalf ? '-170px !important' : '10px !important') 
-                  : '10px !important',
-                
-                // ANIMAZIONE RIMOSSA: ora il cambio è brutale e istantaneo
-              },
+              // SE SIAMO IN MODALITà TELEFONO
+              // I Tooltip deli grafici a barre rimangono vincolati dentro la box del grafico
+              ...(forceMobile && {
+                '& .MuiChartsLayerContainer-root': {
+                  overflow: 'visible !important',
+                },
+                '& .MuiChartsWrapper-root': {
+                  overflow: 'visible !important',
+                },
+                '& .MuiChartsTooltip-root': {
+                  position: 'absolute !important',
+                  zIndex: '9999 !important',
+                  transform: isRightHalf ? 'translateX(-110%)' : 'translateX(10px)',
+                }
+              }),
 
               // 2. DIMENSIONI DINAMICHE: Si rimpicciolisce solo quando serve!
               '& .MuiChartsTooltip-valueCell': {

@@ -17,6 +17,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import FormLabel from '@mui/material/FormLabel';
+import FontSizeDropdown from '../shared-theme/FontSizeDropdown';
+
 
 import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
@@ -138,15 +140,16 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                     <Divider sx={{ mb: 3 }} />
 
                     {/* Dimensione Testo - Icone/Selettori allineati a destra */}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                      <Typography variant="subtitle2">{t.textSize}</Typography>
-                      <FormControl>
-                        <RadioGroup row value={fontSize} onChange={handleFontSizeChange}>
-                          <FormControlLabel value="small" control={<Radio />} label={t.textSmall} />
-                          <FormControlLabel value="medium" control={<Radio />} label={t.textMedium} />
-                          <FormControlLabel value="large" control={<Radio />} label={t.textLarge} />
-                        </RadioGroup>
-                      </FormControl>
+                    {/* Sostituisci il vecchio blocco RadioGroup con questo: */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, pr: 1.4 }}>
+                      <Box>
+                        <Typography variant="subtitle2">{t.textSize}</Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {/* Opzionale: mostra il valore corrente */}
+                          {fontSize === 'small' ? t.textSmall : fontSize === 'medium' ? t.textMedium : t.textLarge}
+                        </Typography>
+                      </Box>
+                      <FontSizeDropdown />
                     </Box>
 
                     {/* Modalità Mobile / Sviluppatore - Switch allineato a destra */}

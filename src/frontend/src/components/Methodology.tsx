@@ -113,13 +113,11 @@ export default function Methodology() {
               borderRadius: 2,
               textAlign: 'left', // Forza l'allineamento a sinistra
               transition: 'transform 0.2s, box-shadow 0.2s',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: (theme) => 
+              boxShadow: (theme) => 
                   theme.palette.mode === 'dark' 
                     ? '0 8px 16px rgba(0,0,0,0.5)' 
                     : '0 8px 16px rgba(0,0,0,0.08)'
-              }
+
             }}
           >
             <CardContent sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
