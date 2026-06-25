@@ -27,6 +27,7 @@ import DashboardLogo from '../components/DashboardLogo';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -87,6 +88,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   
   const [open, setOpen] = React.useState(false);
 
+  const [loading, setLoading] = React.useState(false);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -134,6 +137,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         return;
     }
 
+    setLoading(true);
+
     const formData = new FormData(event.currentTarget);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
@@ -152,11 +157,14 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       
     } catch (err: any) {
       setApiError(err.response?.data?.message || 'Errore durante il login. Controlla le credenziali.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <AppTheme {...props}>
+      <LoadingOverlay active={loading} message="Accesso in corso..." />
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" sx={{ justifyContent: 'space-between' }}>
         

@@ -26,6 +26,7 @@ import DashboardLogo from '../components/DashboardLogo';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -96,6 +97,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
   const [surnameError, setSurnameError] = React.useState(false);
   const [surnameErrorMessage, setSurnameErrorMessage] = React.useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -241,6 +243,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       return;
     }
 
+    setLoading(true);
+
     try {
       await register(
         formData.name,
@@ -251,11 +255,14 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setSuccess(true);
     } catch (err: any) {
       setGlobalError(err.response?.data?.message || t.errDurante);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <AppTheme {...props}>
+      <LoadingOverlay active={loading} message="Registrazione in corso..." />
       <CssBaseline enableColorScheme />
       
       <SignUpContainer direction="column" sx={{ justifyContent: 'space-between' }}>
