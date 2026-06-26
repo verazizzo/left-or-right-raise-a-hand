@@ -36,13 +36,13 @@ export default function LoadingOverlay({ active, message }: LoadingOverlayProps)
         borderRadius: '15px',
         boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
         textAlign: 'center',
-        border: '3px solid #000000',
+        border: '3px solid #7a7a7a',
         maxWidth: '400px',
         width: '80%',
         // Variante DARK per il quadratino del loader
         ...theme.applyStyles('dark', {
-          backgroundColor: '#575757', // Il grigio scuro che preferisci
-          border: '3px solid #333333',
+          backgroundColor: theme.palette.background.paper, // Il grigio scuro che preferisci
+          border: theme.palette.background.default,
           boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
         }),
       })}>
