@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';                 // <-- Importa Box
 import Typography from '@mui/material/Typography'; // <-- Importa Typography
 import brainGif from '../assets/brain_loader.gif';
+import brainDarkGif from '../assets/brain_loader_dark.gif'
 
 interface LoaderProps {
   message?: string;
@@ -53,18 +54,43 @@ export default function Loader({ message = "L'attore sta avviando il caso d'uso.
           }),
         })} />
         
-        <img 
+        <Box 
+          component="img"
           src={brainGif} 
-          alt="Brain animation" 
-          style={{ 
+          alt="Brain animation light" 
+          sx={(theme) => ({ 
             position: 'absolute', 
             top: brainOffset, 
             left: brainOffset, 
             width: brainSize, 
             height: 'auto', 
-            zIndex: 1 
-          }} 
+            zIndex: 1,
+            display: 'block',
+            ...theme.applyStyles('dark', {
+              display: 'none',
+            }),
+          })} 
         />
+
+        {/* 4. CERVELLO DARK (Compare SOLO in Dark Mode) */}
+        <Box 
+          component="img"
+          src={brainDarkGif} 
+          alt="Brain animation dark" 
+          sx={(theme) => ({ 
+            position: 'absolute', 
+            top: brainOffset, 
+            left: brainOffset, 
+            width: brainSize, 
+            height: 'auto', 
+            zIndex: 1,
+            display: 'none',
+            ...theme.applyStyles('dark', {
+              display: 'block',
+            }),
+          })} 
+        />
+      
       </div>
       
       {/* Sostituito p con Typography per gestire il testo */}
