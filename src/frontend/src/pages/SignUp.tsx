@@ -262,7 +262,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
   return (
     <AppTheme {...props}>
-      <LoadingOverlay active={loading} message="Registrazione in corso..." />
+      <LoadingOverlay active={loading} message={t.caricamentoRegistrazione} />
       <CssBaseline enableColorScheme />
       
       <SignUpContainer direction="column" sx={{ justifyContent: 'space-between' }}>
@@ -302,13 +302,13 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           {success ? (
             <Alert severity="success" sx={{ mt: 1 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                Registrazione completata!
+                {t.registrazioneCompletata1}
               </Typography>
-              Abbiamo inviato un link di conferma a <strong>{formData.email}</strong>. 
-              Controlla la tua casella di posta prima di effettuare l'accesso.
+              {t.registrazioneCompletata2} <strong>{formData.email}</strong>.
+              {t.registrazioneCompletata3}
               <Box sx={{ mt: 2 }}>
                 <Link component={RouterLink} to="/login" variant="body2" sx={{ fontWeight: 'bold' }}>
-                  Vai alla pagina di Login
+                  {t.registrazioneCompletata4}
                 </Link>
               </Box>
             </Alert>

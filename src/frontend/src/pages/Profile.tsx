@@ -38,6 +38,7 @@ import { translations } from '../data/translations';
 import { useNavigate } from 'react-router-dom';
 
 import { modifyUser, getProfile, remove, changePassword } from '../api/auth';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 export default function Profile(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
@@ -61,7 +62,6 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   const [editFirstName, setEditFirstName] = useState('');
   const [editLastName, setEditLastName] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -71,6 +71,10 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const [loadingPassword, setLoadingPassword] = useState(false);
+  const [loadingNameSurname, setLoadingNameSurname] = useState(false);
+  const [loadingRemove, setLoadingRemove] = useState(false);
   
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -102,7 +106,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   };
 
   const handleSaveProfile = async () => {
-    setIsLoading(true);
+    setLoadingNameSurname(true);
     try {
       // A. Chiamata per modificare i dati sul database
       await modifyUser(editFirstName, editLastName);
@@ -128,7 +132,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
       console.error('Errore durante l’aggiornamento del profilo:', error);
       alert('Si è verificato un errore durante il salvataggio.');
     } finally {
-      setIsLoading(false);
+      setLoadingNameSurname(false);
     }
   };
 
@@ -148,7 +152,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
       return;
     }
 
-    setIsLoading(true);
+    setLoadingPassword(true);
     try {
       // 3. Chiamata API (usando la tua logica originale che richiede solo la nuova)
       await changePassword(newPassword);
@@ -163,12 +167,12 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
       // Mostriamo il banner rosso con l'errore del backend (o uno generico)
       setPasswordError(error.response?.data?.message || t.aggPassFail);
     } finally {
-      setIsLoading(false);
+      setLoadingPassword(false);
     }
   };
 
   const handleDeleteAccount = async () => {
-    setIsLoading(true); 
+    setLoadingRemove(true);
     try {
       console.log('Avvio eliminazione account...');
       
@@ -182,13 +186,16 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
       console.error('Errore durante l’eliminazione dell’account:', error);
       alert(error.response?.data?.message || t.eliminaFail);
     } finally {
-      setIsLoading(false);
+      setLoadingRemove(false);
       setOpenDeleteDialog(false);
     }
   };
 
   return (
     <AppTheme {...props}>
+      <LoadingOverlay active={loadingPassword} message={t.caricamentoSalvataggioPassword} />
+      <LoadingOverlay active={loadingNameSurname} message={t.caricamentoModifiche} />
+      <LoadingOverlay active={loadingRemove} message={t.caricamentoRimozione} />
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu key={firstName + lastName} />
@@ -239,7 +246,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                               size="small" // Rende la barra compatta
                               value={editFirstName}
                               onChange={(e) => setEditFirstName(e.target.value)}
-                              disabled={isLoading}
+                              disabled={loadingNameSurname}
                               // Nessuna label animata!
                             />
                           ) : (
@@ -261,7 +268,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                               size="small"
                               value={editLastName}
                               onChange={(e) => setEditLastName(e.target.value)}
-                              disabled={isLoading}
+                              disabled={loadingNameSurname}
                             />
                           ) : (
                             <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem', height: '40px', display: 'flex', alignItems: 'center' }}>
@@ -280,7 +287,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                               variant="outlined" 
                               color="inherit" 
                               onClick={handleCancelClick}
-                              disabled={isLoading}
+                              disabled={loadingNameSurname}
                             >
                               {t.annulla}
                             </Button>
@@ -288,9 +295,9 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                               variant="contained" 
                               color="primary" 
                               onClick={handleSaveProfile}
-                              disabled={isLoading || !editFirstName.trim() || !editLastName.trim()}
+                              disabled={loadingNameSurname}
                             >
-                              {isLoading ? t.saving : t.salva}
+                              {t.salva}
                             </Button>
                           </>
                         ) : (
@@ -496,7 +503,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
           <Button 
             onClick={() => setOpenDeleteDialog(false)} 
             color="inherit" 
-            disabled={isLoading}
+            disabled={loadingRemove}
             variant="outlined"
           >
             {t.annulla}
@@ -505,10 +512,10 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
             onClick={handleDeleteAccount} 
             color="error" 
             variant="contained" 
-            disabled={isLoading}
+            disabled={loadingRemove}
             autoFocus
           >
-            {isLoading ? 'Eliminazione in corso...' : t.siElimina}
+            {t.siElimina}
           </Button>
         </DialogActions>
       </Dialog>

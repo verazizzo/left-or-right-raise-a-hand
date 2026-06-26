@@ -5,6 +5,10 @@ export const translations = {
     //FRASI SIGN IN - SIGN UP
     accedi: "Accedi",
     registrati: "Registrati",
+    registrazioneCompletata1: "Registrazione completata!",
+    registrazioneCompletata2: "Abbiamo inviato un link di conferma a",
+    registrazioneCompletata3: " Controlla la tua casella di posta prima di effettuare l'accesso.",
+    registrazioneCompletata4: "Vai alla pagina di Login",
     nome: "Nome",
     cognome: "Cognome",
     email: "Email",
@@ -189,7 +193,14 @@ export const translations = {
     helpRisposta4_1_desc: "Il colore indica la direzione verso cui il sensore sta spingendo la predizione, basandosi sul segno positivo o negativo del valore SHAP.",
     helpRisposta4_2_titolo: "L'intensità: ",
     helpRisposta4_2_desc: "L'intensità della macchia di colore indica l'importanza assoluta di quel sensore. Più il colore è marcato, maggiore è l'influenza matematica che quella precisa zona cerebrale ha avuto sul risultato finale dell'algoritmo.",
-    helpRisposta4_3: "I due grafici mostrano l'impatto predittivo del modello isolato per specifico task: il primo analizza esclusivamente le epoche di immaginazione motoria del braccio sinistro, il secondo quelle del braccio destro. La scala bicolore permette di distinguere l'attivazione dei canali coerenti con il task richiesto rispetto a quelli che spingono verso la classe opposta, evidenziando così la presenza di potenziale rumore biocinetico o artefatti cognitivi."
+    helpRisposta4_3: "I due grafici mostrano l'impatto predittivo del modello isolato per specifico task: il primo analizza esclusivamente le epoche di immaginazione motoria del braccio sinistro, il secondo quelle del braccio destro. La scala bicolore permette di distinguere l'attivazione dei canali coerenti con il task richiesto rispetto a quelli che spingono verso la classe opposta, evidenziando così la presenza di potenziale rumore biocinetico o artefatti cognitivi.",
+    // FRASI DI CARICAMENTO
+    caricamentoRegistrazione: "Registrazione in corso...",
+    caricamentoAccesso: "Accesso in corso...",
+    caricamentoCambioPassword: "Invio email in corso...",
+    caricamentoSalvataggioPassword: "Salvataggio nuova password...",
+    caricamentoModifiche: "Salvataggio modifiche in corso...",
+    caricamentoRimozione: "Rimozione account..."
 },
 
 
@@ -197,6 +208,10 @@ export const translations = {
     //FRASI SIGN IN - SIGN UP
     accedi: "Log in",
     registrati: "Sign Up",
+    registrazioneCompletata1: "Registration completed!",
+    registrazioneCompletata2: "We have sent a confirmation link to",
+    registrazioneCompletata3: " Please check your inbox before logging in.",
+    registrazioneCompletata4: "Go to Login page",
     nome: "Name",
     cognome: "Surname",
     email: "Email",
@@ -381,8 +396,14 @@ export const translations = {
     helpRisposta4_1_desc: "The color indicates the direction in which the sensor is driving the prediction, based on the positive or negative sign of the SHAP value.",
     helpRisposta4_2_titolo: "The intensity: ",
     helpRisposta4_2_desc: "The intensity of the color patch indicates the absolute importance of that sensor. The more pronounced the color, the greater the mathematical influence that specific brain area had on the algorithm's final result.",
-    helpRisposta4_3: "The two plots display the model's predictive impact isolated by specific tasks: the first exclusively considers the epochs where the user imagines left arm movement, while the second focuses on the right arm epochs. The divergent color scale discriminates between channel activations consistent with the target task and those driving toward the opposite class, thereby highlighting the presence of potential biokinetic noise or cognitive artifacts."
-    
+    helpRisposta4_3: "The two plots display the model's predictive impact isolated by specific tasks: the first exclusively considers the epochs where the user imagines left arm movement, while the second focuses on the right arm epochs. The divergent color scale discriminates between channel activations consistent with the target task and those driving toward the opposite class, thereby highlighting the presence of potential biokinetic noise or cognitive artifacts.",
+    //FRASI DI CARICAMENTO
+    caricamentoRegistrazione: "Registration in progress...",
+    caricamentoAccesso: "Logging in...",
+    caricamentoCambioPassword: "Sending email...",
+    caricamentoSalvataggioPassword: "Saving new password...",
+    caricamentoModifiche: "Saving changes...",
+    caricamentoRimozione: "Removing account..."
   },
 
 
@@ -390,6 +411,10 @@ export const translations = {
     //FRASI SIGN IN - SIGN UP
     accedi: "Iniciar Sesión",
     registrati: "Registrarse",
+    registrazioneCompletata1: "¡Registro completado!",
+    registrazioneCompletata2: "Hemos enviado un enlace de confirmación a",
+    registrazioneCompletata3: " Por favor, revisa tu bandeja de entrada antes de iniciar sesión.",
+    registrazioneCompletata4: "Ir a la página de inicio de sesión",
     nome: "Nombre",
     cognome: "Apellido",
     email: "Correo electrónico",
@@ -574,7 +599,14 @@ export const translations = {
     helpRisposta4_1_desc: "El color indica la dirección hacia la cual el sensor está empujando la predicción, basándose en el signo positivo o negativo del valor SHAP.",
     helpRisposta4_2_titolo: "La intensidad: ",
     helpRisposta4_2_desc: "La intensidad de la mancha de color indica la importancia absoluta de ese sensor. Cuanto más marcado sea el color, mayor será la influencia matemática que esa zona cerebral precisa ha tenido en el resultado final del algoritmo.",
-    helpRisposta4_3: "Los dos gráficos muestran el impacto predictivo del modelo aislado por tarea específica: el primero analiza exclusivamente las épocas en las que el usuario imagina el movimiento del brazo izquierdo, y el segundo las del brazo derecho. La escala de color divergente permite discriminar la activación de los canales coherentes con la tarea objetivo frente a aquellos que empujan hacia la clase opuesta, evidenciando así la presencia de potencial ruido biocinético o artefactos cognitivos."
+    helpRisposta4_3: "Los dos gráficos muestran el impacto predictivo del modelo aislado por tarea específica: el primero analiza exclusivamente las épocas en las que el usuario imagina el movimiento del brazo izquierdo, y el segundo las del brazo derecho. La escala de color divergente permite discriminar la activación de los canales coherentes con la tarea objetivo frente a aquellos que empujan hacia la clase opuesta, evidenciando así la presencia de potencial ruido biocinético o artefactos cognitivos.",
+    //FRASI DI CARICAMENTO
+    caricamentoRegistrazione: "Registro en curso...",
+    caricamentoAccesso: "Iniciando sesión...",
+    caricamentoCambioPassword: "Enviando correo electrónico...",
+    caricamentoSalvataggioPassword: "Guardando nueva contraseña...",
+    caricamentoModifiche: "Guardando cambios...",
+    caricamentoRimozione: "Eliminando cuenta..."
   },
 
 
@@ -582,6 +614,10 @@ export const translations = {
     // FRASI SIGN IN - SIGN UP
     accedi: "تسجيل الدخول",
     registrati: "تسجيل",
+    registrazioneCompletata1: "اكتمل التسجيل!",
+    registrazioneCompletata2: "لقد أرسلنا رابط تأكيد إلى",
+    registrazioneCompletata3: "يرجى التحقق من صندوق الوارد الخاص بك قبل تسجيل الدخول.",
+    registrazioneCompletata4: "الانتقال إلى صفحة تسجيل الدخول",
     nome: "الاسم",
     cognome: "اللقب",
     email: "البريد الإلكتروني",
@@ -781,7 +817,14 @@ export const translations = {
     helpRisposta4_1_desc: "يشير اللون إلى الاتجاه الذي يدفع إليه المستشعر التنبؤ، بناءً على العلامة الإيجابية أو السلبية لقيمة SHAP.",
     helpRisposta4_2_titolo: "الكثافة: ",
     helpRisposta4_2_desc: "تشير كثافة بقعة اللون إلى الأهمية المطلقة لذلك المستشعر. كلما كان اللون أوضح، زاد التأثير الرياضي لتلك المنطقة الدماغية المحددة على النتيجة النهائية للخوارزمية.",
-    helpRisposta4_3: "يُظهر الرسمان البيانيان التأثير التنبؤي للنموذج المعزول لمهمة معينة: الأول يحلل حصريًا حقب التخيل الحركي للذراع اليسرى، والثاني حقب الذراع اليمنى. يتيح المقياس ذو اللونين التمييز بين تنشيط القنوات المتوافقة مع المهمة المطلوبة مقارنة بتلك التي تدفع نحو الفئة المقابلة، وبالتالي تسليط الضوء على وجود ضوضاء حركية حيوية محتملة أو تشوهات معرفية."
+    helpRisposta4_3: "يُظهر الرسمان البيانيان التأثير التنبؤي للنموذج المعزول لمهمة معينة: الأول يحلل حصريًا حقب التخيل الحركي للذراع اليسرى، والثاني حقب الذراع اليمنى. يتيح المقياس ذو اللونين التمييز بين تنشيط القنوات المتوافقة مع المهمة المطلوبة مقارنة بتلك التي تدفع نحو الفئة المقابلة، وبالتالي تسليط الضوء على وجود ضوضاء حركية حيوية محتملة أو تشوهات معرفية.",
+    // FRASI DI CARICAMENTO
+    caricamentoRegistrazione: "جاري التسجيل...",
+    caricamentoAccesso: "جاري تسجيل الدخول...",
+    caricamentoCambioPassword: "جاري إرسال البريد الإلكتروني...",
+    caricamentoSalvataggioPassword: "جاري حفظ كلمة المرور الجديدة...",
+    caricamentoModifiche: "جاري حفظ التغييرات...",
+    caricamentoRimozione: "جاري حذف الحساب..."
 }
 
 

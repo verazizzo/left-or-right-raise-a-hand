@@ -14,6 +14,7 @@ import Alert from '@mui/material/Alert';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
+import LoadingOverlay from './LoadingOverlay';
 
 interface ForgotPasswordProps {
   open: boolean;
@@ -28,7 +29,8 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [loading, setLoading] = React.useState(false);
 
   const handleCloseModal = () => {
     setEmail('');
@@ -40,7 +42,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
-    setIsLoading(true);
+    setLoading(true);
 
     try {
       await forgotPassword(email);
@@ -50,7 +52,8 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
 
     } catch (err: any) {
       setError(err.response?.data?.message || "Errore durante l'invio. Riprova.");
-      setIsLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,6 +62,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
       open={open}
       onClose={handleCloseModal}
     >
+      <LoadingOverlay active={loading} message={t.caricamentoCambioPassword} />
       <form onSubmit={handleSubmit}>
         
         <DialogTitle>{t.finestraTitolo}</DialogTitle>
@@ -83,20 +87,20 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
             fullWidth
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            disabled={isLoading || !!message}
+            disabled={loading || !!message}
           />
         </DialogContent>
         
         <DialogActions sx={{ pb: 3, px: 3 }}>
-          <Button onClick={handleCloseModal} disabled={isLoading}>
+          <Button onClick={handleCloseModal} disabled={loading}>
             {t.annulla}
           </Button>
           <Button 
             variant="contained" 
             type="submit" 
-            disabled={isLoading || !!message || !email.trim()}
+            disabled={loading || !!message || !email.trim()}
           >
-            {isLoading ? t.invioincorso : t.continua }
+            {t.continua}
           </Button>
         </DialogActions>
 

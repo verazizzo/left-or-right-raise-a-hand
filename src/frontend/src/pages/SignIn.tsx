@@ -164,7 +164,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
   return (
     <AppTheme {...props}>
-      <LoadingOverlay active={loading} message="Accesso in corso..." />
+      <LoadingOverlay active={loading} message={t.caricamentoAccesso} />
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" sx={{ justifyContent: 'space-between' }}>
         

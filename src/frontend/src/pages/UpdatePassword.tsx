@@ -19,6 +19,7 @@ import AppTheme from '../shared-theme/AppTheme';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex', flexDirection: 'column', alignSelf: 'center',
@@ -40,6 +41,8 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const [loading, setLoading] = useState(false);
   
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -72,10 +75,13 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
       return;
     }
 
+    setLoading(true);
+
     try {
       await resetPasswordOtp(email, otp, password);
       
       setSuccess(true);
+      setLoading(false);
       setTimeout(() => navigate('/login'), 3000);
 
     } catch (err: any) {
@@ -85,6 +91,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
 
   return (
     <AppTheme {...props}>
+      <LoadingOverlay active={loading} message={t.caricamentoSalvataggioPassword} />
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Card variant="outlined">
