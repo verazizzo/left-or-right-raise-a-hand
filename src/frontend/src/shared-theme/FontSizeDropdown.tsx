@@ -31,6 +31,7 @@ export default function FontSizeDropdown() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
+        disableScrollLock={true}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         slotProps={{ paper: { variant: 'outlined', sx: { my: 1 } } }}

@@ -8,7 +8,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useColorScheme } from '@mui/material/styles';
 
+import { useSettings } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+
 export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
+  const { language } = useSettings();
+  const t = translations[language];
   const { mode, systemMode, setMode } = useColorScheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -63,6 +68,7 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
         open={open}
         onClose={handleClose}
         onClick={handleClose}
+        disableScrollLock={true}
         slotProps={{
           paper: {
             variant: 'outlined',
@@ -76,13 +82,13 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem selected={mode === 'system'} onClick={handleMode('system')}>
-          System
+          {t.sistema}
         </MenuItem>
         <MenuItem selected={mode === 'light'} onClick={handleMode('light')}>
-          Light
+          {t.giorno}
         </MenuItem>
         <MenuItem selected={mode === 'dark'} onClick={handleMode('dark')}>
-          Dark
+          {t.notte}
         </MenuItem>
       </Menu>
     </React.Fragment>

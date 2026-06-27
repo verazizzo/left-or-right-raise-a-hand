@@ -119,6 +119,7 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                         value={language}
                         onChange={handleLanguageChange}
                         size="small"
+                        MenuProps={{ disableScrollLock: true }}
                       >
                         <MenuItem value="it">ɪᴛ - Italiano</MenuItem>
                         <MenuItem value="en">ᴇɴ - English</MenuItem>

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 // 1. IMPORTA TUTTE LE VERSIONI DEI LOGHI
 import iconaChiara from '../assets/logo_sfum_3sfum.svg'; 
-import iconaScura from '../assets/logo_sfum_3sfum.svg'; 
+import iconaScura from '../assets/logo_sfum_1.svg'; 
 
 import testoChiaro from '../assets/titolo_sfum_3sfum.svg'; 
 import testoScuro from '../assets/titolo_sfum_3sfum.svg'; 

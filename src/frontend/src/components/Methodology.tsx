@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import { useColorScheme } from '@mui/material/styles';
 
 import MemoryRoundedIcon from '@mui/icons-material/MemoryRounded';
 import QueryStatsRoundedIcon from '@mui/icons-material/QueryStatsRounded';
@@ -13,10 +14,20 @@ import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 
 import Caschetto from '../assets/caschetto.svg';
+import CaschettoScuro from '../assets/caschetto_scuro.svg';
+
 
 export default function Methodology() {
   const { language, forceMobile } = useSettings();
   const t = translations[language];
+
+  const { mode, systemMode } = useColorScheme();
+  const resolvedMode = (systemMode || mode) as 'light' | 'dark';
+  
+  // Decidi l'immagine in base al tema resolved
+  const caschettoImage = resolvedMode === 'dark' ? CaschettoScuro : Caschetto;
+
+
   const steps = [
     {
       title: t.aboutSubtitle1,
@@ -73,7 +84,7 @@ export default function Methodology() {
           }}
         >
           <img 
-            src={Caschetto} 
+            src={caschettoImage} 
             alt="Setup dell'esperimento EEG" 
             style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: '350px'}}
           />

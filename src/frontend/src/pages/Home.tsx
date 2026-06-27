@@ -60,7 +60,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', position: 'relative', minHeight: '100vh' }}>
         
         <SideMenu />
         <AppNavbar />
@@ -68,7 +68,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
         {/* CONTAINER SVG DI SFONDO */}
         <Box
           sx={(theme) => ({
-            position: 'fixed',
+            position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
@@ -93,7 +93,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
 
         <Box
           component="main"
-          sx={{ flexGrow: 1, overflow: 'auto', position: 'relative', zIndex: 1 }}
+          sx={{ flexGrow: 1, position: 'relative', zIndex: 1 }}
         >
           <Stack spacing={2} sx={{ mx: 3, pb: 5, mt: { xs: 1, md: 0 } }}>
             <Header />

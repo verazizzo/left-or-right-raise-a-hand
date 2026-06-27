@@ -47,7 +47,10 @@ export default function AppTheme(props: AppThemeProps) {
 
           MuiCssBaseline: {
             styleOverrides: forceMobile ? `
-              body { background-color: #8d9498 !important; }
+              body { background-color: #8d9498 !important;
+              overflow-y: scroll !important; /* La barra non sparirà mai, niente salti! */
+              margin: 0 !important;
+              padding: 0 !important;}
 
               #root {
                 width: 100%;
@@ -57,6 +60,16 @@ export default function AppTheme(props: AppThemeProps) {
                 background-color: var(--template-palette-background-default, #ffffff);
                 box-shadow: 0px 0px 50px rgba(0,0,0,0.5); 
                 clip-path: inset(0) !important;
+                scrollbar-gutter: stable !important;
+              }
+
+              /* === AGGIUNGI QUI IL TRUCCO PER NASCONDERE LA BARRA === */
+              #root, main {
+                scrollbar-width: none !important;
+                -ms-overflow-style: none !important; 
+              }
+              #root::-webkit-scrollbar, main::-webkit-scrollbar {
+                display: none !important;
               }
 
               @media (min-width: 431px) {

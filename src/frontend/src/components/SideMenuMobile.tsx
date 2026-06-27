@@ -26,6 +26,38 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
 
   const [user, setUser] = useState<UserData | null>(null);
 
+useEffect(() => {
+    const rootEl = document.getElementById('root');
+
+    if (open) {
+      // 📱 QUANDO APRI: Blocca lo scroll per il finto telefono
+      document.body.style.setProperty('overflow', 'hidden', 'important');
+      if (rootEl) {
+        rootEl.style.setProperty('overflow', 'hidden', 'important');
+      }
+    } else {
+      // 💻 QUANDO CHIUDI (o su PC): Rimuovi la forzatura inline!
+      // In questo modo su PC scompare la seconda barra, 
+      // e su Mobile torna a comandare l'AppTheme.tsx
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('overflow-y');
+      if (rootEl) {
+        rootEl.style.removeProperty('overflow');
+        rootEl.style.removeProperty('overflow-y');
+      }
+    }
+
+    // Cleanup quando cambi pagina
+    return () => {
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('overflow-y');
+      if (rootEl) {
+        rootEl.style.removeProperty('overflow');
+        rootEl.style.removeProperty('overflow-y');
+      }
+    };
+  }, [open]);
+
   useEffect(() => {
     const savedUser = localStorage.getItem('user_profile');
     if (!savedUser) return;
