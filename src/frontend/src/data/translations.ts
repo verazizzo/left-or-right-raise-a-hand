@@ -7,7 +7,7 @@ export const translations = {
     registrati: "Registrati",
     registrazioneCompletata1: "Registrazione completata!",
     registrazioneCompletata2: "Abbiamo inviato un link di conferma a",
-    registrazioneCompletata3: " Controlla la tua casella di posta prima di effettuare l'accesso.",
+    registrazioneCompletata3: "Controlla la tua casella di posta prima di effettuare l'accesso.",
     registrazioneCompletata4: "Vai alla pagina di Login",
     nome: "Nome",
     cognome: "Cognome",
@@ -44,6 +44,8 @@ export const translations = {
     errPasswordConferma: "È necessario confermare la password.",
     errPasswordCoincidono: "Le password non coincidono.",
     errDurante: "Errore durante la registrazione. Riprova!",
+    errDuranteLogin: "Errore durante il login. Controlla le credenziali.",
+    errGenerico: "Si è verificato un errore. Riprova più tardi.",
     // FRASI MENU
     menuHome: "Home",
     menuPopulation: "Popolazione",
@@ -250,6 +252,8 @@ export const translations = {
     errPasswordConferma: "You must confirm the password.",
     errPasswordCoincidono: "Passwords do not match.",
     errDurante: "Error during registration. Try again!",
+    errDuranteLogin: "Error during login. Check your credentials.",
+    errGenerico: "An error occurred. Try again later.",
     // FRASI MENU
     menuHome: "Home",
     menuPopulation: "Population",
@@ -456,6 +460,8 @@ export const translations = {
     errPasswordConferma: "Debes confirmar la contraseña.",
     errPasswordCoincidono: "Las contraseñas no coinciden.",
     errDurante: "Error durante el registro. Inténtalo de nuevo!",
+    errDuranteLogin: "Error durante el inicio de sesión. Verifica tus credenciales.",
+    errGenerico: "Ocurrió un error. Inténtalo de nuevo más tarde.",
     // FRASI MENU
     menuHome: "Inicio",
     menuPopulation: "Población",
@@ -664,7 +670,8 @@ export const translations = {
     errPasswordConferma: "يجب تأكيد كلمة المرور.",
     errPasswordCoincidono: "كلمتا المرور غير متطابقتين.",
     errDurante: "خطأ أثناء التسجيل. حاول مرة أخرى!",
-    
+    errDuranteLogin: "خطأ أثناء تسجيل الدخول. تحقق من بيانات الاعتماد الخاصة بك.",
+    errGenerico: "حدث خطأ. حاول مرة أخرى في وقت لاحق.",
     // FRASI MENU
     menuHome: "الرئيسية",
     menuPopulation: "المجموعة",

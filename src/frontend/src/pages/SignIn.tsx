@@ -156,7 +156,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       navigate('/homepage');
       
     } catch (err: any) {
-      setApiError(err.response?.data?.message || 'Errore durante il login. Controlla le credenziali.');
+      setApiError(t.errDuranteLogin);
     } finally {
       setLoading(false);
     }

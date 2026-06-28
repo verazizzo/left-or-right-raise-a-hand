@@ -130,7 +130,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
 
     } catch (error) {
       console.error('Errore durante l’aggiornamento del profilo:', error);
-      alert('Si è verificato un errore durante il salvataggio.');
+      alert(t.errGenerico);
     } finally {
       setLoadingNameSurname(false);
     }
@@ -165,7 +165,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
     } catch (error: any) {
       console.error('Errore durante il cambio password:', error);
       // Mostriamo il banner rosso con l'errore del backend (o uno generico)
-      setPasswordError(error.response?.data?.message || t.aggPassFail);
+      setPasswordError(t.aggPassFail);
     } finally {
       setLoadingPassword(false);
     }
@@ -184,7 +184,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
       
     } catch (error: any) {
       console.error('Errore durante l’eliminazione dell’account:', error);
-      alert(error.response?.data?.message || t.eliminaFail);
+      alert(t.eliminaFail);
     } finally {
       setLoadingRemove(false);
       setOpenDeleteDialog(false);

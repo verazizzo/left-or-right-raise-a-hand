@@ -254,7 +254,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       );
       setSuccess(true);
     } catch (err: any) {
-      setGlobalError(err.response?.data?.message || t.errDurante);
+      setGlobalError(t.errDurante);
     } finally {
       setLoading(false);
     }
