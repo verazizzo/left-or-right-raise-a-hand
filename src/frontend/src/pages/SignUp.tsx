@@ -225,7 +225,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       isValid = false;
     } else if (formData.password !== formData.confirmPassword) {
       setConfirmPasswordError(true);
-      setConfirmPasswordErrorMessage(t.errCognomeObbligatorio);
+      setConfirmPasswordErrorMessage(t.errPasswordCoincidono);
       isValid = false;
     } else {
       setConfirmPasswordError(false);
