@@ -14,20 +14,17 @@ import MuiCard from '@mui/material/Card';
 import Alert from '@mui/material/Alert';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../shared-theme/AppTheme';
-import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import { register } from '../api/auth';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-
 import DashboardLogo from '../components/DashboardLogo';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 import LoadingOverlay from '../components/LoadingOverlay';
-
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -73,96 +70,28 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    surname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-  const [globalError, setGlobalError] = useState('');
-  const [success, setSuccess] = useState(false);
-
   const { language } = useSettings();
   const t = translations[language];
 
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
-  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = React.useState('');
+  // Stati per gli errori (identici al SignIn)
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
   const [surnameError, setSurnameError] = React.useState(false);
   const [surnameErrorMessage, setSurnameErrorMessage] = React.useState('');
+  const [emailError, setEmailError] = React.useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+  const [passwordError, setPasswordError] = React.useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = React.useState('');
+  
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [globalError, setGlobalError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
-
-    switch (name) {
-      case 'name':
-        if (value.trim().length > 0) {
-          setNameError(false);
-          setNameErrorMessage('');
-        }
-        break;
-
-      case 'surname':
-        if (value.trim().length > 0) {
-          setSurnameError(false);
-          setSurnameErrorMessage('');
-        }
-        break;
-
-      case 'email':
-        if (!value || !/\S+@\S+\.\S+/.test(value)) {
-          setEmailError(true);
-          setEmailErrorMessage(t.errEmailValida);
-        } else {
-          setEmailError(false);
-          setEmailErrorMessage('');
-        }
-        break;
-
-      case 'password':
-        if (!value || value.length < 6) {
-          setPasswordError(true);
-          setPasswordErrorMessage(t.errPasswordCorta);
-        } else {
-          setPasswordError(false);
-          setPasswordErrorMessage('');
-        }
-        if (formData.confirmPassword && value !== formData.confirmPassword) {
-          setConfirmPasswordError(true);
-          setConfirmPasswordErrorMessage(t.errPasswordCoincidono);
-        } else if (formData.confirmPassword && value === formData.confirmPassword) {
-          setConfirmPasswordError(false);
-          setConfirmPasswordErrorMessage('');
-        }
-        break;
-
-      case 'confirmPassword':
-        if (value !== formData.password) {
-          setConfirmPasswordError(true);
-          setConfirmPasswordErrorMessage(t.errPasswordCoincidono);
-        } else {
-          setConfirmPasswordError(false);
-          setConfirmPasswordErrorMessage('');
-        }
-        break;
-
-      default:
-        break;
-    }
-  };
+  
+  // Memorizza l'email appena registrata per mostrarla nel messaggio di successo
+  const [registeredEmail, setRegisteredEmail] = useState('');
 
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -172,10 +101,17 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     event.preventDefault();
   };
 
+  // Stessa logica del SignIn: legge direttamente dal DOM
   const validateInputs = () => {
+    const nameInput = document.getElementById('name') as HTMLInputElement;
+    const surnameInput = document.getElementById('surname') as HTMLInputElement;
+    const emailInput = document.getElementById('email') as HTMLInputElement;
+    const passwordInput = document.getElementById('password') as HTMLInputElement;
+    const confirmPasswordInput = document.getElementById('confirmPassword') as HTMLInputElement;
+
     let isValid = true;
 
-    if (!formData.name.trim()) {
+    if (!nameInput.value || !nameInput.value.trim()) {
       setNameError(true);
       setNameErrorMessage(t.errNomeObbligatorio);
       isValid = false;
@@ -184,7 +120,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setNameErrorMessage('');
     }
 
-    if (!formData.surname.trim()) {
+    if (!surnameInput.value || !surnameInput.value.trim()) {
       setSurnameError(true);
       setSurnameErrorMessage(t.errCognomeObbligatorio);
       isValid = false;
@@ -193,11 +129,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setSurnameErrorMessage('');
     }
 
-    if (!formData.email.trim()) {
-      setEmailError(true);
-      setEmailErrorMessage(t.errEmailObbligatoria);
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    if (!emailInput.value || !/\S+@\S+\.\S+/.test(emailInput.value)) {
       setEmailError(true);
       setEmailErrorMessage(t.errEmailValida);
       isValid = false;
@@ -206,11 +138,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setEmailErrorMessage('');
     }
 
-    if (!formData.password) {
-      setPasswordError(true);
-      setPasswordErrorMessage(t.errPasswordObbligatoria);
-      isValid = false;
-    } else if (formData.password.length < 6) {
+    if (!passwordInput.value || passwordInput.value.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage(t.errPasswordCorta);
       isValid = false;
@@ -219,11 +147,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setPasswordErrorMessage('');
     }
 
-    if (!formData.confirmPassword) {
-      setConfirmPasswordError(true);
-      setConfirmPasswordErrorMessage(t.errPasswordConferma);
-      isValid = false;
-    } else if (formData.password !== formData.confirmPassword) {
+    if (!confirmPasswordInput.value || passwordInput.value !== confirmPasswordInput.value) {
       setConfirmPasswordError(true);
       setConfirmPasswordErrorMessage(t.errPasswordCoincidono);
       isValid = false;
@@ -235,9 +159,14 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
+  // Stessa logica del SignIn: FormData per recuperare i valori
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setGlobalError('');
+
+    if (nameError || surnameError || emailError || passwordError || confirmPasswordError) {
+      return;
+    }
 
     if (!validateInputs()) {
       return;
@@ -245,13 +174,15 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     setLoading(true);
 
+    const formData = new FormData(event.currentTarget);
+    const name = formData.get('name') as string;
+    const surname = formData.get('surname') as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
     try {
-      await register(
-        formData.name,
-        formData.surname,
-        formData.email,
-        formData.password,
-      );
+      await register(name, surname, email, password);
+      setRegisteredEmail(email); // Salviamo l'email per il messaggio di alert
       setSuccess(true);
     } catch (err: any) {
       setGlobalError(t.errDurante);
@@ -276,9 +207,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               alignItems: 'center', 
               justifyContent: 'center',
               mb: 2 ,
-              transform: 'scale(1.5)', // <-- INGRANDISCE TUTTO DEL 50%
-              transformOrigin: 'center' // Assicura che si ingrandisca dal centro
-
+              transform: 'scale(1.5)', 
+              transformOrigin: 'center' 
             }}
           >
             <DashboardLogo redirectTo="/login" />
@@ -304,7 +234,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
                 {t.registrazioneCompletata1}
               </Typography>
-              {t.registrazioneCompletata2} <strong>{formData.email}</strong>.
+              {t.registrazioneCompletata2} <strong>{registeredEmail}</strong>.
               {t.registrazioneCompletata3}
               <Box sx={{ mt: 2 }}>
                 <Link component={RouterLink} to="/login" variant="body2" sx={{ fontWeight: 'bold' }}>
@@ -328,8 +258,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   fullWidth
                   id="name"
                   placeholder="John"
-                  value={formData.name}
-                  onChange={handleChange}
                   error={nameError}
                   helperText={nameErrorMessage}
                   color={nameError ? 'error' : 'primary'}
@@ -344,8 +272,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   fullWidth
                   id="surname"
                   placeholder="Snow"
-                  value={formData.surname}
-                  onChange={handleChange}
                   error={surnameError}
                   helperText={surnameErrorMessage}
                   color={surnameError ? 'error' : 'primary'}
@@ -362,8 +288,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   name="email"
                   autoComplete="email"
                   variant="outlined"
-                  value={formData.email}
-                  onChange={handleChange}
                   error={emailError}
                   helperText={emailErrorMessage}
                   color={emailError ? 'error' : 'primary'}
@@ -380,8 +304,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   id="password"
                   autoComplete="new-password"
                   variant="outlined"
-                  value={formData.password}
-                  onChange={handleChange}
                   error={passwordError}
                   helperText={passwordErrorMessage}
                   color={passwordError ? 'error' : 'primary'}
@@ -394,10 +316,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                             onClick={handleClickShowPassword}
                             onMouseDown={handleMouseDownPassword}
                             edge="end"
-                            // 1. Spegne l'animazione "a onda" quando clicchi
                             disableRipple 
-                            
-                            // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
                             sx={{ 
                               border: 'none !important',
                               backgroundColor: 'transparent !important',
@@ -427,8 +346,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   id="confirmPassword"
                   autoComplete="new-password"
                   variant="outlined"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
                   error={confirmPasswordError}
                   helperText={confirmPasswordErrorMessage}
                   color={confirmPasswordError ? 'error' : 'primary'}
@@ -441,10 +358,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                             onClick={handleClickShowPassword}
                             onMouseDown={handleMouseDownPassword}
                             edge="end"
-                            // 1. Spegne l'animazione "a onda" quando clicchi
                             disableRipple 
-                            
-                            // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
                             sx={{ 
                               border: 'none !important',
                               backgroundColor: 'transparent !important',
@@ -467,6 +381,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 type="submit"
                 fullWidth
                 variant="contained"
+                onClick={validateInputs}
               >
                 {t.registrati}
               </Button>

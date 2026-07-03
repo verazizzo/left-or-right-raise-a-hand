@@ -20,8 +20,8 @@ import {
   treeViewCustomizations,
 } from '../theme/customizations';
 
-import SfondoNeuroniScuro from '../assets/neurone_sfum.png';
-import SfondoNeuroniChiaro from '../assets/neurone_sfum_3sfum.png';
+import SfondoNeuroniScuro from '../assets/neurone_sfum_piu_opac.png';
+import SfondoNeuroniChiaro from '../assets/neurone_piu_opac.png';
 
 
 import { useSettings } from '../context/SettingsContext';
