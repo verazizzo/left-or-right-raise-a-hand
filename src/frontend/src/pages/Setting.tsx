@@ -121,10 +121,10 @@ export default function Settings(props: { disableCustomTheme?: boolean }) {
                         size="small"
                         MenuProps={{ disableScrollLock: true }}
                       >
-                        <MenuItem value="it">ɪᴛ - Italiano</MenuItem>
+                        <MenuItem value="ar">ᴀʀ - العربية (Arabic)</MenuItem>
                         <MenuItem value="en">ᴇɴ - English</MenuItem>
                         <MenuItem value="es">ᴇs - Español</MenuItem>
-                        <MenuItem value="ar">ᴀʀ - العربية (Arabic)</MenuItem>
+                        <MenuItem value="it">ɪᴛ - Italiano</MenuItem>
                       </Select>
                     </FormControl>
                   </CardContent>
