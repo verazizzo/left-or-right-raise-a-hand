@@ -44,6 +44,9 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
   const { language } = useSettings();
   const t = translations[language];
 
+  const [dropdownOpenA, setDropdownOpenA] = React.useState(false);
+  const [dropdownOpenB, setDropdownOpenB] = React.useState(false);
+
   // Generiamo la lista degli utenti
   const usersList = React.useMemo(() => {
     // 1. Creiamo i 30 pazienti standard
@@ -180,6 +183,11 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
                   options={usersList}
                   getOptionLabel={(option) => option.name}
                   value={usersList.find((user) => user.id === userAId) || null} 
+                  
+                  open={dropdownOpenA}
+                  onOpen={() => setDropdownOpenA(true)}
+                  onClose={() => setDropdownOpenA(false)}
+                  
                   onChange={(_event, newValue) => {
                     setUserAId(newValue ? newValue.id : ''); 
                   }}
@@ -201,7 +209,12 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
                     </Tooltip>
                   }
                   popupIcon={
-                    <Tooltip title={t.apriElenco || "Apri elenco"} arrow placement="top">
+                    <Tooltip 
+                      key={dropdownOpenA ? "chiudi" : "apri"} 
+                      title={dropdownOpenA ? t.chiudiElenco : t.apriElenco} 
+                      arrow 
+                      placement="top"
+                    >
                       <ArrowDropDownIcon />
                     </Tooltip>
                   }
@@ -223,6 +236,11 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
                   options={usersList}
                   getOptionLabel={(option) => option.name}
                   value={usersList.find((user) => user.id === userBId) || null}
+                  
+                  open={dropdownOpenB}
+                  onOpen={() => setDropdownOpenB(true)}
+                  onClose={() => setDropdownOpenB(false)}
+                  
                   onChange={(_event, newValue) => {
                     setUserBId(newValue ? newValue.id : ''); 
                   }}
@@ -244,7 +262,12 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
                     </Tooltip>
                   }
                   popupIcon={
-                    <Tooltip title={t.apriElenco || "Apri elenco"} arrow placement="top">
+                    <Tooltip 
+                      key={dropdownOpenB ? "chiudi" : "apri"} 
+                      title={dropdownOpenB ? t.chiudiElenco : t.apriElenco} 
+                      arrow 
+                      placement="top"
+                    >
                       <ArrowDropDownIcon />
                     </Tooltip>
                   }

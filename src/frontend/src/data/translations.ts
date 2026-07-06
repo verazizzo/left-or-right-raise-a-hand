@@ -97,6 +97,7 @@ export const translations = {
     selectUserPlaceholder: "Seleziona un utente dal menu per visualizzare l'analisi.",
     utenteElenco: "Utente",
     apriElenco: "Apri Elenco",
+    chiudiElenco: "Chiudi elenco",
     cancellaSelezione: "Cancella Selezione",
     // FRASI METRICSUSER.TSX
     overviewUtente: "Metriche - Analisi per ",
@@ -310,6 +311,7 @@ export const translations = {
     selectUserPlaceholder: "Select a user from the menu to view analysis.",
     utenteElenco: "User",
     apriElenco: "Open List",
+    chiudiElenco: "Close List",
     cancellaSelezione: "Clear Selection",
     // FRASI METRICSUSER.TSX
     overviewUtente: "Metrics - Analysis for ",
@@ -523,6 +525,7 @@ export const translations = {
     selectUserPlaceholder: "Selecciona un usuario del menú para ver el análisis.",
     utenteElenco: "Usuario",
     apriElenco: "Abrir Lista",
+    chiudiElenco: "Cerrar Lista",
     cancellaSelezione: "Cancelar Selección",
     // FRASI METRICSUSER.TSX
     overviewUtente: "Metricas - Análisis para ",
@@ -660,7 +663,7 @@ export const translations = {
     accediqui: "سجل دخولك هنا",
     mostraPassword: "إظهار كلمة المرور",
     nascondiPassword: "إخفاء كلمة المرور",
-    
+
     // FRASI FINESTRA PASSWORD DIMENTICATA
     finestraTitolo: "إعادة تعيين كلمة المرور",
     finestraDesc: "أدخل عنوان البريد الإلكتروني لحسابك وسنرسل لك رمزًا لإدخاله لإعادة تعيين كلمة المرور.",
@@ -741,6 +744,7 @@ export const translations = {
     selectUserPlaceholder: "اختر مستخدمًا من القائمة لعرض التحليل.",
     utenteElenco: "مستخدم",
     apriElenco: "افتح القائمة",
+    chiudiElenco: "إغلاق القائمة",
     cancellaSelezione: "مسح الاختيار",
     
     // FRASI METRICSUSER.TSX

@@ -52,6 +52,8 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+
   const { language } = useSettings();
   const t = translations[language];
 
@@ -158,7 +160,9 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
               getOptionLabel={(option) => option.name}
               value={usersList.find((user) => user.id === selectedUser) || null}
               
-              // Ho tolto "disableClearable" così ti riappare la X per cancellare la selezione
+              open={dropdownOpen}
+              onOpen={() => setDropdownOpen(true)}
+              onClose={() => setDropdownOpen(false)}
               
               onChange={(_event, newValue) => {
                 handleChange(newValue ? newValue.id : ''); 
@@ -183,7 +187,12 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
                 </Tooltip>
               }
               popupIcon={
-                <Tooltip title={t.apriElenco} arrow placement="top">
+                <Tooltip 
+                  key={dropdownOpen ? "chiudi" : "apri"} 
+                  title={dropdownOpen ? t.chiudiElenco : t.apriElenco} 
+                  arrow 
+                  placement="top"
+                >
                   <ArrowDropDownIcon />
                 </Tooltip>
               }
