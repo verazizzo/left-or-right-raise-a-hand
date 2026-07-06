@@ -91,7 +91,7 @@ export default function Methodology() {
         </Box>
 
         {/* Destra: Testo Descrittivo */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left', width: { xs: '100%', lg: '35vw' } }}>
           <Typography variant="h5" sx={{ mb: 3, fontWeight: 600, color: 'text.primary' }}>
             {t.aboutSubtitle}
           </Typography>
@@ -109,7 +109,9 @@ export default function Methodology() {
         sx={{ 
           display: 'grid', 
           gridTemplateColumns: forceMobile ? '1fr' : { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
-          gap: { xs: 2, md: 3 } // Gap ridotto leggermente per dare più spazio al testo dentro le card
+          gap: { xs: 2, md: 3 }, // Gap ridotto leggermente per dare più spazio al testo dentro le card
+          width: { xs: '100%', lg: '75vw' },
+          mx: 'auto'
         }}
       >
         {steps.map((step, index) => (
@@ -131,7 +133,8 @@ export default function Methodology() {
 
             }}
           >
-            <CardContent sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <CardContent sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', pb: 4, 
+              '&:last-child': { pb: 5 } }}>
               
               <Box
                 sx={{

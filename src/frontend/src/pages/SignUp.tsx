@@ -19,6 +19,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Tooltip from '@mui/material/Tooltip';
 
 import DashboardLogo from '../components/DashboardLogo';
 
@@ -311,24 +312,30 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                            disableRipple 
-                            sx={{ 
-                              border: 'none !important',
-                              backgroundColor: 'transparent !important',
-                              boxShadow: 'none !important',
-                              outline: 'none !important',
-                              '&:hover': {
-                                backgroundColor: 'transparent !important',
-                              },
-                            }}
+                          <Tooltip 
+                            title={showPassword ? t.nascondiPassword : t.mostraPassword} 
+                            arrow
+                            placement="top" // Appare sopra per non coprire il testo digitato
                           >
-                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                              disableRipple 
+                              sx={{ 
+                                border: 'none !important',
+                                backgroundColor: 'transparent !important',
+                                boxShadow: 'none !important',
+                                outline: 'none !important',
+                                '&:hover': {
+                                  backgroundColor: 'transparent !important',
+                                },
+                              }}
+                            >
+                              {showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </Tooltip>
                         </InputAdornment>
                       ),
                     },
@@ -353,12 +360,17 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                            disableRipple 
+                          <Tooltip 
+                            title={showPassword ? t.nascondiPassword : t.mostraPassword} 
+                            arrow
+                            placement="top"
+                          >
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                              disableRipple 
                             sx={{ 
                               border: 'none !important',
                               backgroundColor: 'transparent !important',
@@ -371,6 +383,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                           >
                             {showPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
+                        </Tooltip>
                         </InputAdornment>
                       ),
                     },

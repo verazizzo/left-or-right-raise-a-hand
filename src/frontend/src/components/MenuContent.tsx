@@ -17,7 +17,7 @@ import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded';
 // import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'; // Tante persone
 import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded'; // Una bilancia
 import Tooltip from '@mui/material/Tooltip';
-
+import Fade from '@mui/material/Fade';
 
 interface MenuContentProps {
   open?: boolean;
@@ -38,6 +38,7 @@ export default function MenuContent({ open = true }: MenuContentProps) {
   const location = useLocation();
   const { language } = useSettings();
   const t = translations[language];
+  const isRtl = language === 'ar';
   React.useEffect(() => {
     console.log("L'URL letto da React è esattamente:", location.pathname);
   }, [location]);
@@ -67,6 +68,24 @@ export default function MenuContent({ open = true }: MenuContentProps) {
               placement="right" 
               arrow 
               disableHoverListener={open} // La magia: si disattiva se la barra è aperta!
+
+              slots={{
+                transition: Fade
+              }}
+              slotProps={{
+                transition: { 
+                  timeout: 300 // Animazione rapida e pulita
+                },
+                popper: {
+                  // 1. Diciamo alla scatola di usare le regole base (LTR) 
+                  // Così la freccia viene calcolata e incollata alla perfezione!
+                  sx: { direction: 'ltr' }
+                },
+                tooltip: {
+                  // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
+                  sx: { direction: isRtl ? 'rtl' : 'ltr' }
+                }
+              }}
             >
               <ListItemButton 
                 component={Link} 
@@ -88,6 +107,23 @@ export default function MenuContent({ open = true }: MenuContentProps) {
               placement="right" 
               arrow 
               disableHoverListener={open}
+              slots={{
+                transition: Fade
+              }}
+              slotProps={{
+                transition: { 
+                  timeout: 300 // Animazione rapida e pulita
+                },
+                popper: {
+                  // 1. Diciamo alla scatola di usare le regole base (LTR) 
+                  // Così la freccia viene calcolata e incollata alla perfezione!
+                  sx: { direction: 'ltr' }
+                },
+                tooltip: {
+                  // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
+                  sx: { direction: isRtl ? 'rtl' : 'ltr' }
+                }
+              }}
             >
               <ListItemButton
                 component={Link}

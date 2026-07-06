@@ -19,6 +19,7 @@ import OptionsMenu from './OptionsMenu';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
+import Fade from '@mui/material/Fade';
 
 interface UserData {
   name: string;
@@ -81,6 +82,9 @@ export default function SideMenu() {
     return savedState === null ? true : savedState === 'true';
   });
 
+  // AGGIUNGI QUESTO: Controlla se il menu è in movimento
+  const [isAnimating, setIsAnimating] = React.useState(false);
+
   const [user, setUser] = useState<UserData | null>(null);
 
   useEffect(() => {
@@ -94,6 +98,14 @@ export default function SideMenu() {
   if (!user) return null;
 
   const toggleDrawer = () => {
+    // 1. Bendiamo il Tooltip
+    setIsAnimating(true);
+    
+    // 2. Togliamo la benda dopo 400ms (quando il bottone si è allontanato)
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 400);
+
     setOpen((prevOpen) => {
       const nextOpen = !prevOpen;
       localStorage.setItem('sidebar_open', nextOpen.toString());
@@ -123,9 +135,38 @@ export default function SideMenu() {
           minHeight: 68, 
         }}
       >
-        <IconButton onClick={toggleDrawer}>
-          {open ? <ChevronLeftIcon /> : <MenuIcon />}
-        </IconButton>
+        <Tooltip 
+          // IL TRUCCO DEFINITIVO: Distrugge e ricrea il Tooltip all'istante
+          key={open ? "menu-aperto" : "menu-chiuso"} 
+          title={open ? t.chiudiMenu : t.apriMenu} 
+          placement={isRtl ? "left" : "right"}
+          arrow 
+          disableFocusListener // IMPEDISCE al click (che dà il focus) di tenerlo aperto
+          disableTouchListener // Evita bug strani da mobile
+          // LA VERA MAGIA: Disabilita l'apparizione del fumetto finché il menu si sta muovendo!
+          disableHoverListener={isAnimating}
+          slots={{
+            transition: Fade
+          }}
+          slotProps={{
+            transition: { 
+              timeout: 300 // Animazione rapida e pulita
+            },
+            popper: {
+              // 1. Diciamo alla scatola di usare le regole base (LTR) 
+              // Così la freccia viene calcolata e incollata alla perfezione!
+              sx: { direction: 'ltr' }
+            },
+            tooltip: {
+              // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
+              sx: { direction: isRtl ? 'rtl' : 'ltr' }
+            }
+          }}
+        >
+          <IconButton onClick={toggleDrawer}>
+            {open ? <ChevronLeftIcon /> : <MenuIcon />}
+          </IconButton>
+        </Tooltip>
       </Box>
       
       <Divider />
@@ -179,7 +220,27 @@ export default function SideMenu() {
           ) : (
             <OptionsMenu 
               customTrigger={
-                <Tooltip title={t.profilo} placement="right" arrow>
+                <Tooltip 
+                  title={t.profilo} 
+                  placement="right" 
+                  arrow
+                  slots={{
+                    transition: Fade
+                  }}
+                  slotProps={{
+                    transition: { 
+                      timeout: 300 // Animazione rapida e pulita
+                    },
+                    popper: {
+                      // 1. Diciamo alla scatola di usare le regole base (LTR) 
+                      // Così la freccia viene calcolata e incollata alla perfezione!
+                      sx: { direction: 'ltr' }
+                    },
+                    tooltip: {
+                      // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
+                      sx: { direction: isRtl ? 'rtl' : 'ltr' }
+                    }
+                  }}>
                   <Avatar
                     sizes="small"
                     sx={{ width: 36, height: 36, bgcolor: 'primary.main', color: 'primary.contrastText' }}

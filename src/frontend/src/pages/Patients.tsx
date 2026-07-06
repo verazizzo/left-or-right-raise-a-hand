@@ -175,7 +175,7 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
               clearText=""
               openText=""
               closeText=""
-              /*
+              
               // 2. Avvolgiamo le icone nei nostri Tooltip di Material UI
               clearIcon={
                 <Tooltip title={t.cancellaSelezione} arrow placement="top">
@@ -186,7 +186,7 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
                 <Tooltip title={t.apriElenco} arrow placement="top">
                   <ArrowDropDownIcon />
                 </Tooltip>
-              }*/
+              }
 
             />
 

@@ -10,9 +10,11 @@ import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import { Box, IconButton } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Fade from '@mui/material/Fade';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -25,6 +27,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
   
   const { language, forceMobile } = useSettings();
   const t = translations[language];
+  const isRtl = language === 'ar';
 
   // --- RADAR PER LO SCHERMO ---
   const theme = useTheme();
@@ -72,9 +75,36 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
           {customTrigger}
         </Box>
       ) : (
-        <IconButton onClick={handleClick} size="small" sx={{ ml: -1 }}>
-          <MoreVertRoundedIcon />
-        </IconButton>
+        <Tooltip 
+          title={t.profilo}
+          placement={
+            isMobileLayout 
+              ? (isRtl ? 'right' : 'left') 
+              : (isRtl ? 'left' : 'right')
+          }
+          arrow
+          slots={{
+            transition: Fade
+          }}
+          slotProps={{
+            transition: { 
+              timeout: 300 // Animazione rapida e pulita
+            },
+            popper: {
+              // 1. Diciamo alla scatola di usare le regole base (LTR) 
+              // Così la freccia viene calcolata e incollata alla perfezione!
+              sx: { direction: 'ltr' }
+            },
+            tooltip: {
+              // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
+              sx: { direction: isRtl ? 'rtl' : 'ltr' }
+            }
+          }}
+        >
+          <IconButton onClick={handleClick} size="small" sx={{ ml: -1 }}>
+            <MoreVertRoundedIcon />
+          </IconButton>
+        </Tooltip>
       )}
       
       <Menu
@@ -87,21 +117,32 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
         // PC (isMobileLayout falso): Si aggancia SOPRA l'icona (vertical: 'top')
         // Mobile (isMobileLayout vero): Si aggancia SOTTO l'icona (vertical: 'bottom')
         anchorOrigin={{ 
-          horizontal: 'right', 
+          horizontal: isMobileLayout 
+            ? (isRtl ? 'left' : 'right') 
+            : (isRtl ? 'right' : 'left'), 
           vertical: isMobileLayout ? 'bottom' : 'top' 
         }}
         
         // PC: Nasce dal basso verso l'alto
         // Mobile: Nasce dall'alto verso il basso
         transformOrigin={{ 
-          horizontal: 'right', 
+          horizontal: isMobileLayout 
+            ? (isRtl ? 'left' : 'right') 
+            : (isRtl ? 'right' : 'left'),
           vertical: isMobileLayout ? 'top' : 'bottom' 
         }}
         slotProps={{
           paper: {
             sx: {
-              // ECCO LA MAGIA PER LA LARGHEZZA PRECISA
-              width: '120px', // Cambia questo valore con i pixel che preferisci!
+              // LARGHEZZA DINAMICA: Auto per le parole lunghe, ma con un limite minimo
+              width: 'auto',
+              minWidth: '120px',
+
+              // ECCO LA MAGIA DELL'OMBRA:
+              boxShadow: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? '0px 6px 18px rgba(0, 0, 0, 0.6)' // Ombra forte per il tema scuro
+                  : '0px 6px 18px rgba(0, 0, 0, 0.15)', // Ombra morbida ma visibile per il chiaro
             }
           }
         }}
@@ -142,6 +183,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
           onClick={handleLogout}
           sx={{
             margin: '2px 0', // Aggiunto anche qui per coerenza
+            gap: 1,
             [`& .${listItemIconClasses.root}`]: {
               ml: 'auto',
               minWidth: 0,

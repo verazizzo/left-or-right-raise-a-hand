@@ -18,6 +18,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Tooltip from '@mui/material/Tooltip';
 
 import ForgotPassword from '../components/ForgotPassword';
 import AppTheme from '../shared-theme/AppTheme';
@@ -246,27 +247,33 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                   input: {
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                          // 1. Spegne l'animazione "a onda" quando clicchi
-                          disableRipple 
-                          
-                          // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
-                          sx={{ 
-                            border: 'none !important',
-                            backgroundColor: 'transparent !important',
-                            boxShadow: 'none !important',
-                            outline: 'none !important',
-                            '&:hover': {
-                              backgroundColor: 'transparent !important',
-                            },
-                          }}
+                        <Tooltip 
+                          title={showPassword ? t.nascondiPassword : t.mostraPassword} 
+                          arrow
+                          placement="top" // Appare sopra per non coprire il testo digitato
                         >
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                            // 1. Spegne l'animazione "a onda" quando clicchi
+                            disableRipple 
+                            
+                            // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
+                            sx={{ 
+                              border: 'none !important',
+                              backgroundColor: 'transparent !important',
+                              boxShadow: 'none !important',
+                              outline: 'none !important',
+                              '&:hover': {
+                                backgroundColor: 'transparent !important',
+                              },
+                            }}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </Tooltip>
                       </InputAdornment>
                     ),
                   },

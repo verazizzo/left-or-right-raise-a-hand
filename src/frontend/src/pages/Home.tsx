@@ -21,7 +21,7 @@ import {
 } from '../theme/customizations';
 
 import SfondoNeuroniScuro from '../assets/neurone_sfum_piu_opac.png';
-import SfondoNeuroniChiaro from '../assets/neurone_piu_opac.png';
+import SfondoNeuroniChiaro from '../assets/neurone_celestini.png';
 
 
 import { useSettings } from '../context/SettingsContext';
@@ -70,7 +70,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
           sx={(theme) => ({
             position: 'absolute',
             top: 0,
-            left: 50,
+            left: 0,
             width: '100%',
             height: '100%',
             zIndex: 0, 
@@ -108,15 +108,18 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                   pl: { xs: 0, md: 5 }   // Niente margine sinistro extra su mobile
                 }}
               >
-                <Typography variant="h2" sx={{ fontWeight: 800 }}>
+                <Typography variant="h2" sx={{ fontWeight: 800, width: { xs: '100%', lg: '40vw' }}}>
                   {t.welcomeTitle1} {user.name} {t.welcomeTitle2}
                 </Typography>
-                <Typography variant="h5" sx={{ mt: 2 }}>
+                <Typography variant="h5" sx={{ mt: 2 , width: { xs: '100%', lg: '50vw' }}}>
                   {t.welcomeSubtitle}
                 </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ mt: 10, fontSize: '1.1rem' }}>
+                <Typography variant="body1" color="text.secondary" sx={{ mt: 10, fontSize: '1.1rem', width: { xs: '100%', lg: '40vw' } }}>
                   {t.welcomeDesc}
+                  <br />
+                  {t.welcomeDesc2}
                 </Typography>
+                
               </Box>
             )}
 

@@ -194,7 +194,7 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
                   clearText=""
                   openText=""
                   closeText=""
-                  /*
+                  
                   clearIcon={
                     <Tooltip title={t.cancellaSelezione || "Cancella"} arrow placement="top">
                       <CloseIcon fontSize="small" />
@@ -204,7 +204,7 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
                     <Tooltip title={t.apriElenco || "Apri elenco"} arrow placement="top">
                       <ArrowDropDownIcon />
                     </Tooltip>
-                  }*/
+                  }
                 />
               </Grid>
 
@@ -237,7 +237,7 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
                   clearText=""
                   openText=""
                   closeText=""
-                  /*
+                  
                   clearIcon={
                     <Tooltip title={t.cancellaSelezione || "Cancella"} arrow placement="top">
                       <CloseIcon fontSize="small" />
@@ -247,7 +247,7 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
                     <Tooltip title={t.apriElenco || "Apri elenco"} arrow placement="top">
                       <ArrowDropDownIcon />
                     </Tooltip>
-                  }*/
+                  }
                 />
               </Grid>
             </Grid>

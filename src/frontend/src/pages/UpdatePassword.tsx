@@ -16,6 +16,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../shared-theme/AppTheme';
+import Tooltip from '@mui/material/Tooltip';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
@@ -142,12 +143,17 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                            disableRipple 
+                          <Tooltip 
+                            title={showPassword ? t.nascondiPassword : t.mostraPassword} 
+                            arrow
+                            placement="top"
+                          >
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                              disableRipple 
                             sx={{ 
                               border: 'none !important',
                               backgroundColor: 'transparent !important',
@@ -160,6 +166,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                           >
                             {showPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
+                          </Tooltip>
                         </InputAdornment>
                       ),
                     },
@@ -180,12 +187,17 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                            disableRipple 
+                          <Tooltip 
+                            title={showPassword ? t.nascondiPassword : t.mostraPassword} 
+                            arrow
+                            placement="top"
+                          >
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                              disableRipple 
                             sx={{ 
                               border: 'none !important',
                               backgroundColor: 'transparent !important',
@@ -198,6 +210,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                           >
                             {showPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
+                          </Tooltip>
                         </InputAdornment>
                       ),
                     },
