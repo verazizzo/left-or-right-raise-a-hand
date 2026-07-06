@@ -38,6 +38,12 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
 
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
+  const [codeError, setCodeError] = useState(false);
+  const [codeErrorMessage, setCodeErrorMessage] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
   const [success, setSuccess] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -59,20 +65,44 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
     }
   }, [email, navigate]);
 
+  const validateInputs = () => {
+    let isValid = true;
+
+    if (!otp || otp.length < 8) {
+      setCodeError(true);
+      setCodeErrorMessage(t.errore8cifre);
+      isValid = false;
+    } else {
+      setCodeError(false);
+      setCodeErrorMessage('');
+    }
+
+    if (!password || password.length < 6) {
+      setPasswordError(true);
+      setPasswordErrorMessage(t.errPasswordCorta);
+      isValid = false;
+    } else {
+      setPasswordError(false);
+      setPasswordErrorMessage('');
+    }
+
+    if (!confirmPassword || password !== confirmPassword) {
+      setConfirmPasswordError(true);
+      setConfirmPasswordErrorMessage(t.errPasswordCoincidono);
+      isValid = false;
+    } else {
+      setConfirmPasswordError(false);
+      setConfirmPasswordErrorMessage('');
+    }
+
+    return isValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (otp.length !== 8) {
-      setError(t.errore8cifre);
-      return;
-    }
-    if (password.length < 6) {
-      setError(t.errPasswordCorta);
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError(t.errPasswordCoincidono);
+    if (!validateInputs()) {
       return;
     }
 
@@ -86,7 +116,8 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
       setTimeout(() => navigate('/login'), 3000);
 
     } catch (err: any) {
-      setError(err.response?.data?.message || t.erroreAggiornamento);
+      setError(t.erroreAggiornamento);
+      setLoading(false);
     }
   };
 
@@ -119,6 +150,8 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                   variant="outlined"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
+                  error={codeError}
+                  helperText={codeError ? codeErrorMessage : ''}
                   slotProps={{ htmlInput: { maxLength: 8 } }}
                   sx={{
                     '& input': {
@@ -139,6 +172,8 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                   variant="outlined"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  error={passwordError}
+                  helperText={passwordError ? passwordErrorMessage : ''}
                   slotProps={{
                     input: {
                       endAdornment: (
@@ -183,6 +218,8 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
                   variant="outlined"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  error={confirmPasswordError}
+                  helperText={confirmPasswordError ? confirmPasswordErrorMessage : ''}
                   slotProps={{
                     input: {
                       endAdornment: (
