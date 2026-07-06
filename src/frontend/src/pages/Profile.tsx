@@ -69,9 +69,12 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   // Stati per il cambio password
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
 
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [loadingNameSurname, setLoadingNameSurname] = useState(false);
@@ -137,19 +140,36 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
     }
   };
 
-  const handleChangePassword = async () => {
-    // 1. Puliamo eventuali messaggi precedenti ad ogni nuovo tentativo
-    setPasswordError('');
-    setPasswordSuccess('');
-
-    // 2. Controlli di validazione
-    if (!newPassword || newPassword.length < 6) {
-      setPasswordError(t.errPasswordCorta);
-      return;
+  const validatePassword = () => {
+    let isValid = true;
+        if (!newPassword || newPassword.length < 6) {
+      setPasswordError(true);
+      setPasswordErrorMessage(t.errPasswordCorta);
+      isValid = false;
+    } else {
+      setPasswordError(false);
+      setPasswordErrorMessage('');
     }
 
     if (newPassword !== confirmPassword) {
-      setPasswordError(t.errPasswordCoincidono);
+      setConfirmPasswordError(true);
+      setConfirmPasswordErrorMessage(t.errPasswordCoincidono);
+      isValid = false;
+    } else {
+      setConfirmPasswordError(false);
+      setConfirmPasswordErrorMessage('');
+    }
+    return isValid;
+  };
+
+
+  const handleSubmit = async () => {
+    // 1. Puliamo eventuali messaggi precedenti ad ogni nuovo tentativo
+    setPasswordErrorMessage('');
+    setPasswordSuccess('');
+
+    // 2. Validiamo le password prima di fare la chiamata API
+    if (!validatePassword()) {
       return;
     }
 
@@ -166,7 +186,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
     } catch (error: any) {
       console.error('Errore durante il cambio password:', error);
       // Mostriamo il banner rosso con l'errore del backend (o uno generico)
-      setPasswordError(t.aggPassFail);
+      setPasswordErrorMessage(t.aggPassFail);
     } finally {
       setLoadingPassword(false);
     }
@@ -320,17 +340,6 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                       {t.sicPass}
                     </Typography>
                     <Divider sx={{ mb: 3 }} />
-
-                    {passwordError && (
-                      <Alert severity="error" sx={{ mb: 3, width: '100%' }}>
-                        {passwordError}
-                      </Alert>
-                    )}
-                    {passwordSuccess && (
-                      <Alert severity="success" sx={{ mb: 3, width: '100%' }}>
-                        {passwordSuccess}
-                      </Alert>
-                    )}
                     
                     {/* Stessa logica: label statica sopra e TextField pulito sotto */}
                     <Stack spacing={2.5}>
@@ -344,6 +353,9 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                           variant="outlined"
                           size="small"
                           value={newPassword}
+                          error={passwordError}
+                          helperText={passwordError ? passwordErrorMessage : ''} 
+                          color={passwordError ? 'error' : 'primary'}
                           onChange={(e) => setNewPassword(e.target.value)}
                           slotProps={{
                             input: {
@@ -393,6 +405,9 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                           variant="outlined"
                           size="small"
                           value={confirmPassword}
+                          error={confirmPasswordError}
+                          helperText={confirmPasswordError ? confirmPasswordErrorMessage : ''} 
+                          color={confirmPasswordError ? 'error' : 'primary'}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           slotProps={{
                             input: {
@@ -433,7 +448,7 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                       </Box>
 
                       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                        <Button variant="contained" color="primary" onClick={handleChangePassword}>
+                        <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loadingPassword}>
                           {t.aggPass}
                         </Button>
                       </Box>

@@ -147,7 +147,6 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
           }
         }}
         sx={{
-          // --- ECCO LA MAGIA DELLO STACCO! ---
           // Se mobile (scende), lo spingiamo in giù di 8px (1 in scala MUI)
           // Se PC (sale), lo spingiamo in su di -8px (-1 in scala MUI)
           mt: isMobileLayout ? 0 : -1,
