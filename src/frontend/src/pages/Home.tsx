@@ -115,7 +115,10 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                 <Typography variant="body1" color="text.secondary" sx={{ mt: 10, fontSize: '1.1rem', width: { xs: '100%', lg: '40vw' } }}>
                   {t.welcomeDesc}
                   <br />
-                  {t.welcomeDesc2}
+                  {t.welcomeDesc2} <strong>{t.welcomeDesc3}</strong>
+                  {t.welcomeDesc4} <strong>{t.welcomeDesc5}</strong>
+                  {t.welcomeDesc6} <strong>{t.welcomeDesc7}</strong>
+                  {t.welcomeDesc8}
                 </Typography>
                 
               </Box>
