@@ -136,7 +136,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
           </Typography>
 
           {error && <Alert severity="error">{error}</Alert>}
-          {success && <Alert severity="success">{t.passAggio}</Alert>}
+          {success && <Alert severity="success" sx={{bgcolor: '#66bd68 !important', color: 'white !important', '& .MuiAlert-icon': { color: 'white !important' }}}>{t.passAggio}</Alert>}
 
           {!success && (
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

@@ -340,7 +340,11 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
                       {t.sicPass}
                     </Typography>
                     <Divider sx={{ mb: 3 }} />
-                    
+                    {passwordSuccess && (
+                      <Alert severity="success" sx={{ mb: 3, width: '100%', bgcolor: '#66bd68 !important', color: 'white !important', '& .MuiAlert-icon': { color: 'white !important' }}}>
+                        {passwordSuccess}
+                      </Alert>
+                    )}
                     {/* Stessa logica: label statica sopra e TextField pulito sotto */}
                     <Stack spacing={2.5}>
                       <Box>

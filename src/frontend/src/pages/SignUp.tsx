@@ -231,7 +231,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           )}
 
           {success ? (
-            <Alert severity="success" sx={{ mt: 1 }}>
+            <Alert severity="success" sx={{ mt: 1, bgcolor: '#66bd68 !important', color: 'white !important', '& .MuiAlert-icon': { color: 'white !important' }}}>
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
                 {t.registrazioneCompletata1}
               </Typography>
