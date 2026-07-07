@@ -83,6 +83,9 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   const [isEditing, setIsEditing] = useState(false);
 
   // Stati per la Sicurezza
+  const [oldPassword, setOldPassword] = useState('');
+  const [oldPasswordError, setOldPasswordError] = useState(false);
+  const [oldPasswordErrorMessage, setOldPasswordErrorMessage] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
@@ -151,9 +154,22 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   // --- HANDLER SICUREZZA ---
   const validatePassword = () => {
     let isValid = true;
+    if (!oldPassword) {
+      setOldPasswordError(true);
+      setOldPasswordErrorMessage(t.errPasswordAttuale);
+      isValid = false;
+    } else {
+      setOldPasswordError(false);
+      setOldPasswordErrorMessage('');
+    }
+
     if (!newPassword || newPassword.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage(t.errPasswordCorta);
+      isValid = false;
+    } else if (oldPassword === newPassword) {
+      setPasswordError(true);
+      setPasswordErrorMessage(t.errPasswordIdentiche);
       isValid = false;
     } else {
       setPasswordError(false);
@@ -172,19 +188,29 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   };
 
   const handleSubmitPassword = async () => {
+    setOldPasswordError(false);
+    setPasswordError(false);
+    setConfirmPasswordError(false);
     setPasswordErrorMessage('');
     setPasswordSuccess('');
     if (!validatePassword()) return;
 
     setLoadingPassword(true);
     try {
-      await changePassword(newPassword);
+      await changePassword(oldPassword, newPassword);
       setPasswordSuccess(t.aggPassSuccess);
+      setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (error: any) {
-      console.error('Errore durante il cambio password:', error);
-      setPasswordErrorMessage(t.aggPassFail);
+      const backendMessage = error.response?.data?.message || error.message || '';
+      if (backendMessage.includes('Vecchia password errata') || backendMessage.includes('Invalid login credentials')) {
+        setOldPasswordError(true);
+        setOldPasswordErrorMessage(t.errPasswordAttuale);
+      } else {
+        setPasswordErrorMessage(t.aggPassFail);
+        setPasswordError(true);
+      }
     } finally {
       setLoadingPassword(false);
     }
@@ -441,6 +467,42 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                       <Stack spacing={2.5}>
                         <Box>
                           <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                            {t.passAttuale}
+                          </Typography>
+                          <TextField
+                            fullWidth type={showPassword ? 'text' : 'password'}
+                            variant="outlined" size="small"
+                            value={oldPassword} 
+                            error={oldPasswordError}
+                            helperText={oldPasswordError ? oldPasswordErrorMessage : ''} 
+                            color={oldPasswordError ? 'error' : 'primary'}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                            slotProps={{
+                              input: {
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
+                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple sx={{ 
+                                            border: 'none !important',
+                                            backgroundColor: 'transparent !important',
+                                            boxShadow: 'none !important',
+                                            outline: 'none !important',
+                                            '&:hover': {
+                                              backgroundColor: 'transparent !important',
+                                            },
+                                          }}>
+                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                      </IconButton>
+                                    </Tooltip>
+                                  </InputAdornment>
+                                ),
+                              },
+                            }}
+                          />
+                        </Box>
+
+                        <Box>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                             {t.nuovaPass}
                           </Typography>
                           <TextField
@@ -455,7 +517,15 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                                 endAdornment: (
                                   <InputAdornment position="end">
                                     <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
-                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple>
+                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple sx={{ 
+                                            border: 'none !important',
+                                            backgroundColor: 'transparent !important',
+                                            boxShadow: 'none !important',
+                                            outline: 'none !important',
+                                            '&:hover': {
+                                              backgroundColor: 'transparent !important',
+                                            },
+                                          }}>
                                         {showPassword ? <Visibility /> : <VisibilityOff />}
                                       </IconButton>
                                     </Tooltip>
@@ -482,7 +552,15 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                                 endAdornment: (
                                   <InputAdornment position="end">
                                     <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
-                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple>
+                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple sx={{ 
+                                            border: 'none !important',
+                                            backgroundColor: 'transparent !important',
+                                            boxShadow: 'none !important',
+                                            outline: 'none !important',
+                                            '&:hover': {
+                                              backgroundColor: 'transparent !important',
+                                            },
+                                          }}>
                                         {showPassword ? <Visibility /> : <VisibilityOff />}
                                       </IconButton>
                                     </Tooltip>

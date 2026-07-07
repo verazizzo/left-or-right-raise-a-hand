@@ -41,8 +41,8 @@ export class AuthController {
 
     @Put('change-password')
     @UseGuards(AuthGuard('jwt'))
-    async changePassword(@Req() req: any, @Body('new_password') new_password: string) {
-        return await this.authService.updatePassword(req.user.id, new_password);
+    async changePassword(@Req() req: any, @Body('old_password') old_password: string, @Body('new_password') new_password: string) {
+        return await this.authService.updatePassword(req.user.id, old_password, new_password);
     }
 
     @Delete('remove')

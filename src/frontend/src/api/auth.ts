@@ -30,8 +30,8 @@ export const resetPasswordOtp = async (email: string, otp: string, new_password:
     return response.data;
 }
 
-export const changePassword = async (new_password: string) => {
-    const response = await api.put('/auth/change-password', {new_password});
+export const changePassword = async (old_password: string, new_password: string) => {
+    const response = await api.put('/auth/change-password', {old_password, new_password});
     return response.data;
 }
 

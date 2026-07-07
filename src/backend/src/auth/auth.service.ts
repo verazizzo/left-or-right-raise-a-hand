@@ -144,7 +144,24 @@ export class AuthService {
     }
 
     // Aggiornamento della password quando l'utente è loggato
-    async updatePassword(user_id: string, new_password: string) {
+    async updatePassword(user_id: string, old_password: string, new_password: string) {
+        const { data: userAdmin, error: fetchError } = await this.supabaseAdmin.auth.admin.getUserById(user_id);
+        
+        if (fetchError || !userAdmin.user) {
+            throw new BadRequestException('Utente non trovato');
+        }
+
+        // 2. Verifichiamo se la VECCHIA password è corretta tentando un login
+        const { error: signInError } = await this.supabase.auth.signInWithPassword({
+            email: userAdmin.user.email!,
+            password: old_password,
+        });
+
+        if (signInError) {
+            // Rilanciamo un errore con un testo specifico che il frontend riconoscerà
+            throw new BadRequestException('Vecchia password errata');
+        }
+
         const { error } = await this.supabaseAdmin.auth.admin.updateUserById(user_id, {
             password: new_password
         });
