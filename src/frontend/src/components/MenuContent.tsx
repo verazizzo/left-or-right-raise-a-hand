@@ -13,9 +13,7 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
 import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded';
-// (OPZIONALI: se preferisci altre varianti)
-// import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'; // Tante persone
-import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded'; // Una bilancia
+import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded'; 
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Fade';
 
@@ -43,7 +41,6 @@ export default function MenuContent({ open = true }: MenuContentProps) {
     console.log("L'URL letto da React è esattamente:", location.pathname);
   }, [location]);
 
-  // 3. SPOSTIAMO LE LISTE QUI DENTRO E USIAMO useMemo
   const mainListItems = useMemo(() => [
     { text: t.menuHome , icon: <HomeRoundedIcon />, path: '/homepage' },
     { text: t.menuPopulation , icon: <PublicRoundedIcon />, path: '/global-analysis' },
@@ -52,7 +49,6 @@ export default function MenuContent({ open = true }: MenuContentProps) {
   ], [t]);
 
   const secondaryListItems = useMemo(() => [
-    { text: t.menuSettings , icon: <SettingsRoundedIcon />, path: '/settings' },
     { text: t.menuAbout , icon: <InfoRoundedIcon />, path: '/about' },
     { text: t.menuAiuto , icon: <HelpRoundedIcon />, path: '/help' },
   ], [t]);

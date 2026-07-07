@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { alpha, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -12,61 +12,77 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
-// Importazione elementi per la finestra di pop-up
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import WarningIcon from '@mui/icons-material/Warning';
-import Tooltip from '@mui/material/Tooltip';
 
-// Importiamo i componenti classici del layout
 import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
-
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-import { useSettings } from '../context/SettingsContext';
-import { translations } from '../data/translations';
-
-import { useNavigate } from 'react-router-dom';
-
-import { modifyUser, getProfile, remove, changePassword } from '../api/auth';
+import FontSizeDropdown from '../shared-theme/FontSizeDropdown';
+import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
 import LoadingOverlay from '../components/LoadingOverlay';
 
-export default function Profile(props: { disableCustomTheme?: boolean }) {
+import { useSettings } from '../context/SettingsContext';
+import type {FontSizeOption } from '../context/SettingsContext';
+import { translations } from '../data/translations';
+import { useNavigate } from 'react-router-dom';
+import { modifyUser, getProfile, remove, changePassword } from '../api/auth';
+
+import {
+  chartsCustomizations,
+  dataGridCustomizations,
+  datePickersCustomizations,
+  treeViewCustomizations,
+} from '../theme/customizations';
+
+const xThemeComponents = {
+  ...chartsCustomizations,
+  ...dataGridCustomizations,
+  ...datePickersCustomizations,
+  ...treeViewCustomizations,
+};
+
+export default function ProfileAndSettings(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
-  const { language, forceMobile } = useSettings();
+  
+  // --- STATI GLOBALI (Context) ---
+  const { 
+    language, setLanguage, 
+    fontSize, setFontSize, 
+    forceMobile, toggleForceMobile 
+  } = useSettings();
   const t = translations[language];
 
-  // --- 3. ATTIVIAMO IL RADAR ---
+  // --- RESPONSIVITÀ ---
   const theme = useTheme();
-  // Se lo schermo è più piccolo di 'md' (900px), scatterà a vero.
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); 
-  // La variabile definitiva: vero se c'è l'interruttore OPPURE se la finestra è piccola
   const isMobileLayout = forceMobile || isSmallScreen;
 
-  // 1. LEGGIAMO I DATI UNA SOLA VOLTA ALL'AVVIO
+  // --- STATI LOCALI (Profilo) ---
   const initialUser = JSON.parse(localStorage.getItem('user_profile') || '{}');
   
-  // 2. INIZIALIZZIAMO LO STATO DIRETTAMENTE CON I DATI REALI
   const [firstName, setFirstName] = useState(initialUser.name || '');
   const [lastName, setLastName] = useState(initialUser.surname || '');
-  
   const [editFirstName, setEditFirstName] = useState('');
   const [editLastName, setEditLastName] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-  // Stati per il cambio password
+  // Stati per la Sicurezza
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
@@ -76,29 +92,27 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
 
+  // Stati di Caricamento e Modali
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [loadingNameSurname, setLoadingNameSurname] = useState(false);
   const [loadingRemove, setLoadingRemove] = useState(false);
-  
-  const handleClickShowPassword = () => {
-    setShowPassword((prev) => !prev);
-  };
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-  };
-
-
-  // 3. IL USE-EFFECT SERVE SOLO COME CONTROLLO DI SICUREZZA (Niente più setFirstName qui!)
+  // --- EFFETTI DI SICUREZZA ---
   useEffect(() => {
     const token = localStorage.getItem('access_token');
-    // Se non ha il token o non c'è un nome salvato, lo cacciamo al login
     if (!token || !initialUser.name) {
       localStorage.clear();
       navigate('/login');
     }
   }, [navigate, initialUser.name]);
 
+  // --- HANDLER IMPOSTAZIONI GLOBALI ---
+  const handleLanguageChange = (event: SelectChangeEvent) => {
+    setLanguage(event.target.value as 'it' | 'en' | 'es' | 'ar');
+  };
+
+  // --- HANDLER PROFILO ---
   const handleEditClick = () => {
     setEditFirstName(firstName);
     setEditLastName(lastName);
@@ -112,13 +126,9 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   const handleSaveProfile = async () => {
     setLoadingNameSurname(true);
     try {
-      // A. Chiamata per modificare i dati sul database
       await modifyUser(editFirstName, editLastName);
-
-      // B. Chiamata per ottenere il profilo appena aggiornato
       const updatedProfile = await getProfile();
-
-      // C. Aggiorniamo il localStorage unendo i vecchi dati con i nuovi
+      
       const currentUserData = JSON.parse(localStorage.getItem('user_profile') || '{}');
       const newUserData = { 
         ...currentUserData, 
@@ -127,11 +137,9 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
       };
       localStorage.setItem('user_profile', JSON.stringify(newUserData));
 
-      // D. Aggiorniamo la UI con i nuovi dati confermati e chiudiamo la modifica
       setFirstName(newUserData.name);
       setLastName(newUserData.surname);
       setIsEditing(false);
-
     } catch (error) {
       console.error('Errore durante l’aggiornamento del profilo:', error);
       alert(t.errGenerico);
@@ -140,9 +148,10 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
     }
   };
 
+  // --- HANDLER SICUREZZA ---
   const validatePassword = () => {
     let isValid = true;
-        if (!newPassword || newPassword.length < 6) {
+    if (!newPassword || newPassword.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage(t.errPasswordCorta);
       isValid = false;
@@ -162,30 +171,19 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
-
-  const handleSubmit = async () => {
-    // 1. Puliamo eventuali messaggi precedenti ad ogni nuovo tentativo
+  const handleSubmitPassword = async () => {
     setPasswordErrorMessage('');
     setPasswordSuccess('');
-
-    // 2. Validiamo le password prima di fare la chiamata API
-    if (!validatePassword()) {
-      return;
-    }
+    if (!validatePassword()) return;
 
     setLoadingPassword(true);
     try {
-      // 3. Chiamata API (usando la tua logica originale che richiede solo la nuova)
       await changePassword(newPassword);
-      
-      // 4. Se va a buon fine, mostriamo il banner verde e svuotiamo i campi
       setPasswordSuccess(t.aggPassSuccess);
       setNewPassword('');
       setConfirmPassword('');
-
     } catch (error: any) {
       console.error('Errore durante il cambio password:', error);
-      // Mostriamo il banner rosso con l'errore del backend (o uno generico)
       setPasswordErrorMessage(t.aggPassFail);
     } finally {
       setLoadingPassword(false);
@@ -195,14 +193,9 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   const handleDeleteAccount = async () => {
     setLoadingRemove(true);
     try {
-      console.log('Avvio eliminazione account...');
-      
       await remove(); 
-      console.log('Account eliminato con successo dal database');
-
       localStorage.clear();
       navigate('/login');
-      
     } catch (error: any) {
       console.error('Errore durante l’eliminazione dell’account:', error);
       alert(t.eliminaFail);
@@ -213,10 +206,11 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
   };
 
   return (
-    <AppTheme {...props}>
+    <AppTheme {...props} themeComponents={xThemeComponents}>
       <LoadingOverlay active={loadingPassword} message={t.caricamentoSalvataggioPassword} />
       <LoadingOverlay active={loadingNameSurname} message={t.caricamentoModifiche} />
       <LoadingOverlay active={loadingRemove} message={t.caricamentoRimozione} />
+      
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu key={firstName + lastName} />
@@ -231,327 +225,332 @@ export default function Profile(props: { disableCustomTheme?: boolean }) {
               : alpha(theme.palette.background.default, 1),
             overflow: 'auto',
             minHeight: '100vh',
+            fontSize: fontSize === 'small' ? '0.85rem' : fontSize === 'large' ? '1.15rem' : '1rem'
           })}
         >
-          <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 1, md: 0 }}}>
+          <Stack spacing={4} sx={{ mx: 3, pb: 5, mt: { xs: 1, md: 0 }}}>
             <Header />
 
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: 2, mt: 4 }}>
-              {t.impostazioniProfilo}
-            </Typography>
+            
+            {/* MACRO-SEZIONE: IMPOSTAZIONI GENERALI*/}
+            <Box>
+              <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, color: 'text.primary' }}>
+                {t.settingsTitle}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Configura i parametri di sistema, le preferenze di accessibilità e l'interfaccia utente.
+              </Typography>
 
-            <Grid container spacing={4}>
+              <Grid container spacing={4}>
+                {/* Localizzazione / Generali */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <Card variant="outlined" sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
+                        {t.general}
+                      </Typography>
+                      <Divider sx={{ mb: 3 }} />
+
+                      <FormControl fullWidth>
+                        <Typography variant="subtitle2" sx={{ mb: 1 }}>{t.langInterface}</Typography>
+                        <Select
+                          value={language}
+                          onChange={handleLanguageChange}
+                          size="small"
+                          MenuProps={{ disableScrollLock: true }}
+                        >
+                          <MenuItem value="ar">ᴀʀ - العربية (Arabic)</MenuItem>
+                          <MenuItem value="en">ᴇɴ - English</MenuItem>
+                          <MenuItem value="es">ᴇs - Español</MenuItem>
+                          <MenuItem value="it">ɪᴛ - Italiano</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* Aspetto e Accessibilità */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <Card variant="outlined" sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
+                        {t.appearance}
+                      </Typography>
+                      <Divider sx={{ mb: 3 }} />
+
+                      {/* Dimensione Testo con Didascalia Ripristinata */}
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, pr: 1.4 }}>
+                        <Box>
+                          <Typography variant="subtitle2">{t.textSize}</Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {fontSize === 'small' ? t.textSmall : fontSize === 'medium' ? t.textMedium : t.textLarge}
+                          </Typography>
+                        </Box>
+                        <FontSizeDropdown />
+                      </Box>
+
+                      {/* Modalità Mobile / Sviluppatore con Didascalia Ripristinata */}
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                        <Box sx={{ pr: 2 }}>
+                          <Typography variant="subtitle2" sx={{ color: 'text.primary', fontWeight: 500 }}>
+                            {t.viewModeTitle}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" component="p">
+                            {t.viewModeDesc}
+                          </Typography>
+                        </Box>
+                        <Switch checked={forceMobile} onChange={toggleForceMobile} color="primary" />
+                      </Box>
+
+                      {/* Tema Chiaro/Scuro con Didascalia Ripristinata */}
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pr: 1.4 }}>
+                        <Box>
+                          <Typography variant="subtitle2">{t.darkLight}</Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {t.darkLightDesc}
+                          </Typography>
+                        </Box>
+                        <ColorModeIconDropdown />
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* Info Sistema */}
+                <Grid size={{ xs: 12 }}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
+                        {t.sysInfo}
+                      </Typography>
+                      <Divider sx={{ mb: 2 }} />
+                      <Stack direction="row" spacing={4}>
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">{t.AImodel}</Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>SVM</Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">{t.shap}</Typography>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>TreeExplainer (Python 3.10)</Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">{t.sysDb}</Typography>
+                          <Typography variant="body2" color="success.main" sx={{ fontWeight: 600 }}>{t.connected}</Typography>
+                        </Box>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Box>
+
+            <Divider sx={{ my: 2 }} />
+
+            
+           {/* MACRO-SEZIONE: IMPOSTAZIONI PROFILO                                      */}
+            <Box>
+              <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, mt: 2, color: 'text.primary' }}>
+                {t.impostazioniProfilo}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Gestisci le tue informazioni anagrafiche, le credenziali di accesso e l'integrità dell'account.
+              </Typography>
               
-              {/* === SEZIONE 1: INFORMAZIONI PERSONALI === */}
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card variant="outlined" sx={{ height: '100%' }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
-                      {t.infoPersonali}
-                    </Typography>
-                    <Divider sx={{ mb: 3 }} />
-                    
-                    <Stack spacing={3}>
-                      {/* IMPALCATURA FISSA: I titoletti non spariscono mai */}
-                      <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', sm: 'row' } }}>
-                        
-                        {/* BLOCCO NOME */}
-                        <Box sx={{ flex: 1 }}>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                            {t.nome}
-                          </Typography>
-                          {isEditing ? (
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small" // Rende la barra compatta
-                              value={editFirstName}
-                              onChange={(e) => setEditFirstName(e.target.value)}
-                              disabled={loadingNameSurname}
-                              // Nessuna label animata!
-                            />
-                          ) : (
-                            <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem', height: '40px', display: 'flex', alignItems: 'center' }}>
-                              {firstName}
+              <Grid container spacing={4}>
+                {/* Dati Anagrafici */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <Card variant="outlined" sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
+                        {t.infoPersonali}
+                      </Typography>
+                      <Divider sx={{ mb: 3 }} />
+                      
+                      <Stack spacing={3}>
+                        <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', sm: 'row' } }}>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                              {t.nome}
                             </Typography>
-                          )}
+                            {isEditing ? (
+                              <TextField
+                                fullWidth variant="outlined" size="small"
+                                value={editFirstName} onChange={(e) => setEditFirstName(e.target.value)}
+                                disabled={loadingNameSurname}
+                              />
+                            ) : (
+                              <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem', height: '40px', display: 'flex', alignItems: 'center' }}>
+                                {firstName}
+                              </Typography>
+                            )}
+                          </Box>
+
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                              {t.cognome}
+                            </Typography>
+                            {isEditing ? (
+                              <TextField
+                                fullWidth variant="outlined" size="small"
+                                value={editLastName} onChange={(e) => setEditLastName(e.target.value)}
+                                disabled={loadingNameSurname}
+                              />
+                            ) : (
+                              <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem', height: '40px', display: 'flex', alignItems: 'center' }}>
+                                {lastName}
+                              </Typography>
+                            )}
+                          </Box>
                         </Box>
 
-                        {/* BLOCCO COGNOME */}
-                        <Box sx={{ flex: 1 }}>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                            {t.cognome}
-                          </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 1 }}>
                           {isEditing ? (
-                            <TextField
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              value={editLastName}
-                              onChange={(e) => setEditLastName(e.target.value)}
-                              disabled={loadingNameSurname}
-                            />
+                            <>
+                              <Button variant="outlined" color="inherit" onClick={handleCancelClick} disabled={loadingNameSurname}>
+                                {t.annulla}
+                              </Button>
+                              <Button variant="contained" color="primary" onClick={handleSaveProfile} disabled={loadingNameSurname}>
+                                {t.salva}
+                              </Button>
+                            </>
                           ) : (
-                            <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem', height: '40px', display: 'flex', alignItems: 'center' }}>
-                              {lastName}
-                            </Typography>
+                            <Button variant="contained" color="primary" onClick={handleEditClick}>
+                              {t.modifica}
+                            </Button>
                           )}
                         </Box>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                      </Box>
+                {/* Sicurezza (Password) */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <Card variant="outlined" sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
+                        {t.sicPass}
+                      </Typography>
+                      <Divider sx={{ mb: 3 }} />
+                      {passwordSuccess && (
+                        <Alert severity="success" sx={{ mb: 3, bgcolor: '#66bd68 !important', color: 'white !important', '& .MuiAlert-icon': { color: 'white !important' } }}>
+                          {passwordSuccess}
+                        </Alert>
+                      )}
+                      
+                      <Stack spacing={2.5}>
+                        <Box>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                            {t.nuovaPass}
+                          </Typography>
+                          <TextField
+                            fullWidth type={showPassword ? 'text' : 'password'}
+                            variant="outlined" size="small"
+                            value={newPassword} error={passwordError}
+                            helperText={passwordError ? passwordErrorMessage : ''} 
+                            color={passwordError ? 'error' : 'primary'}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            slotProps={{
+                              input: {
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
+                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple>
+                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                      </IconButton>
+                                    </Tooltip>
+                                  </InputAdornment>
+                                ),
+                              },
+                            }}
+                          />
+                        </Box>
 
-                      {/* BOTTONI DINAMICI */}
-                      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 1 }}>
-                        {isEditing ? (
-                          <>
-                            <Button 
-                              variant="outlined" 
-                              color="inherit" 
-                              onClick={handleCancelClick}
-                              disabled={loadingNameSurname}
-                            >
-                              {t.annulla}
-                            </Button>
-                            <Button 
-                              variant="contained" 
-                              color="primary" 
-                              onClick={handleSaveProfile}
-                              disabled={loadingNameSurname}
-                            >
-                              {t.salva}
-                            </Button>
-                          </>
-                        ) : (
-                          <Button variant="contained" color="primary" onClick={handleEditClick}>
-                            {t.modifica}
+                        <Box>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                            {t.confermaPass}
+                          </Typography>
+                          <TextField
+                            fullWidth type={showPassword ? 'text' : 'password'}
+                            variant="outlined" size="small"
+                            value={confirmPassword} error={confirmPasswordError}
+                            helperText={confirmPasswordError ? confirmPasswordErrorMessage : ''} 
+                            color={confirmPasswordError ? 'error' : 'primary'}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            slotProps={{
+                              input: {
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
+                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple>
+                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                      </IconButton>
+                                    </Tooltip>
+                                  </InputAdornment>
+                                ),
+                              },
+                            }}
+                          />
+                        </Box>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                          <Button variant="contained" color="primary" onClick={handleSubmitPassword} disabled={loadingPassword}>
+                            {t.aggPass}
                           </Button>
-                        )}
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
+                        </Box>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-              {/* === SEZIONE 2: SICUREZZA (Cambio Password) === */}
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card variant="outlined" sx={{ height: '100%' }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }} gutterBottom>
-                      {t.sicPass}
-                    </Typography>
-                    <Divider sx={{ mb: 3 }} />
-                    {passwordSuccess && (
-                      <Alert severity="success" sx={{ mb: 3, width: '100%', bgcolor: '#66bd68 !important', color: 'white !important', '& .MuiAlert-icon': { color: 'white !important' }}}>
-                        {passwordSuccess}
-                      </Alert>
-                    )}
-                    {/* Stessa logica: label statica sopra e TextField pulito sotto */}
-                    <Stack spacing={2.5}>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                          {t.nuovaPass}
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          type={showPassword ? 'text' : 'password'}
-                          variant="outlined"
-                          size="small"
-                          value={newPassword}
-                          error={passwordError}
-                          helperText={passwordError ? passwordErrorMessage : ''} 
-                          color={passwordError ? 'error' : 'primary'}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          slotProps={{
-                            input: {
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <Tooltip 
-                                    title={showPassword ? t.nascondiPassword : t.mostraPassword} 
-                                    arrow
-                                    placement="top" // Appare sopra per non coprire il testo digitato
-                                  >
-                                    <IconButton
-                                      aria-label="toggle password visibility"
-                                      onClick={handleClickShowPassword}
-                                      onMouseDown={handleMouseDownPassword}
-                                      edge="end"
-                                      // 1. Spegne l'animazione "a onda" quando clicchi
-                                      disableRipple 
-                                      
-                                      // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
-                                      sx={{ 
-                                        border: 'none !important',
-                                        backgroundColor: 'transparent !important',
-                                        boxShadow: 'none !important',
-                                        outline: 'none !important',
-                                        '&:hover': {
-                                          backgroundColor: 'transparent !important',
-                                        },
-                                      }}
-                                    >
-                                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                  </Tooltip>
-                                </InputAdornment>
-                              ),
-                            },
-                          }}
-                        />
-                      </Box>
-
-                      <Box>
-                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                          {t.confermaPass}
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          type={showPassword ? 'text' : 'password'}
-                          variant="outlined"
-                          size="small"
-                          value={confirmPassword}
-                          error={confirmPasswordError}
-                          helperText={confirmPasswordError ? confirmPasswordErrorMessage : ''} 
-                          color={confirmPasswordError ? 'error' : 'primary'}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          slotProps={{
-                            input: {
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <Tooltip 
-                                    title={showPassword ? t.nascondiPassword : t.mostraPassword} 
-                                    arrow
-                                    placement="top" // Appare sopra per non coprire il testo digitato
-                                  >
-                                    <IconButton
-                                      aria-label="toggle password visibility"
-                                      onClick={handleClickShowPassword}
-                                      onMouseDown={handleMouseDownPassword}
-                                      edge="end"
-                                      // 1. Spegne l'animazione "a onda" quando clicchi
-                                      disableRipple 
-                            
-                                      // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
-                                      sx={{ 
-                                        border: 'none !important',
-                                        backgroundColor: 'transparent !important',
-                                        boxShadow: 'none !important',
-                                        outline: 'none !important',
-                                        '&:hover': {
-                                          backgroundColor: 'transparent !important',
-                                        },
-                                      }}
-                                    >
-                                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                  </Tooltip>
-                                </InputAdornment>
-                              ),
-                            },
-                          }}
-                        />
-                      </Box>
-
-                      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                        <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loadingPassword}>
-                          {t.aggPass}
-                        </Button>
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-
-              {/* === SEZIONE 3: ZONA PERICOLOSA (Eliminazione Account) === */}
-              <Grid size={{ xs: 12 }}>
-                <Card variant="outlined" sx={{ borderColor: 'error.main', backgroundColor: 'error.lighter' }}>
-                  <CardContent>
-                    
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: 1,
-                        fontWeight: 600, 
-                        color: 'error.main' 
-                      }} 
-                      gutterBottom
-                    >
-                      <WarningIcon /> {t.eliminaAccount}
-                    </Typography>
-                    
-                    <Divider sx={{ mb: 3, borderColor: 'error.light' }} />
-                    
-                    <Box sx={{ display: 'flex', flexDirection: isMobileLayout ? 'column' : { xs: 'column', sm: 'row' }, alignItems: isMobileLayout ? 'flex-start' : { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between', gap: isMobileLayout ? 3 : 2 }}>
-                      <Box>
+                {/* elimina account */}
+                <Grid size={{ xs: 12 }}>
+                  <Card variant="outlined" sx={{ borderColor: 'error.main', backgroundColor: 'error.lighter' }}>
+                    <CardContent>
+                      <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1, fontWeight: 600, color: 'error.main' }} gutterBottom>
+                        <WarningIcon /> {t.eliminaAccount}
+                      </Typography>
+                      <Divider sx={{ mb: 3, borderColor: 'error.light' }} />
+                      <Box sx={{ display: 'flex', flexDirection: isMobileLayout ? 'column' : { xs: 'column', sm: 'row' }, alignItems: isMobileLayout ? 'flex-start' : { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between', gap: isMobileLayout ? 3 : 2 }}>
                         <Typography variant="body2" color="text.secondary">
                           {t.eliminaAccountDescr}
                         </Typography>
+                        <Button variant="contained" color="error" onClick={() => setOpenDeleteDialog(true)} sx={{ whiteSpace: 'nowrap', fontWeight: 'bold', boxShadow: 'none', alignSelf: isMobileLayout ? 'flex-end' : 'auto' }}>
+                          {t.eliminaButton}
+                        </Button>
                       </Box>
-                      
-                      <Button 
-                        variant="contained" 
-                        color="error" 
-                        onClick={() => setOpenDeleteDialog(true)}
-                        sx={{ 
-                          whiteSpace: 'nowrap', 
-                          fontWeight: 'bold',
-                          boxShadow: 'none',
-                          alignSelf: isMobileLayout ? 'flex-end' : 'auto'
-                        }}
-                      >
-                        {t.eliminaButton}
-                      </Button>
-                      
-                    </Box>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Grid>
               </Grid>
+            </Box>
 
-            </Grid>
           </Stack>
-        </Box>
+        </Box>     
+
       </Box>
 
-      {/* === FINESTRA MODALE DI CONFERMA ELIMINAZIONE === */}
-      <Dialog
-        open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)} // Chiude se si clicca fuori dallo sfondo
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle 
-          id="alert-dialog-title" 
-          sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'error.main', fontWeight: 'bold' }}
-        >
+      
+
+      {/* --- MODALE ELIMINAZIONE --- */}
+      <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'error.main', fontWeight: 'bold' }}>
           <WarningIcon /> {t.confermaElim}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText>
             {t.confermaElimDescr1} <strong>{t.confermaElimDescr2}</strong> {t.confermaElimDescr3}
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button 
-            onClick={() => setOpenDeleteDialog(false)} 
-            color="inherit" 
-            disabled={loadingRemove}
-            variant="outlined"
-          >
+          <Button onClick={() => setOpenDeleteDialog(false)} color="inherit" variant="outlined" disabled={loadingRemove}>
             {t.annulla}
           </Button>
-          <Button 
-            onClick={handleDeleteAccount} 
-            color="error" 
-            variant="contained" 
-            disabled={loadingRemove}
-            autoFocus
-          >
+          <Button onClick={handleDeleteAccount} color="error" variant="contained" disabled={loadingRemove} autoFocus>
             {t.siElimina}
           </Button>
         </DialogActions>
       </Dialog>
-
     </AppTheme>
   );
 }

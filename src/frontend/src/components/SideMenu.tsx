@@ -136,14 +136,12 @@ export default function SideMenu() {
         }}
       >
         <Tooltip 
-          // IL TRUCCO DEFINITIVO: Distrugge e ricrea il Tooltip all'istante
           key={open ? "menu-aperto" : "menu-chiuso"} 
           title={open ? t.chiudiMenu : t.apriMenu} 
           placement={isRtl ? "left" : "right"}
           arrow 
           disableFocusListener // IMPEDISCE al click (che dà il focus) di tenerlo aperto
-          disableTouchListener // Evita bug strani da mobile
-          // LA VERA MAGIA: Disabilita l'apparizione del fumetto finché il menu si sta muovendo!
+          disableTouchListener 
           disableHoverListener={isAnimating}
           slots={{
             transition: Fade
@@ -153,12 +151,9 @@ export default function SideMenu() {
               timeout: 300 // Animazione rapida e pulita
             },
             popper: {
-              // 1. Diciamo alla scatola di usare le regole base (LTR) 
-              // Così la freccia viene calcolata e incollata alla perfezione!
               sx: { direction: 'ltr' }
             },
             tooltip: {
-              // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
               sx: { direction: isRtl ? 'rtl' : 'ltr' }
             }
           }}

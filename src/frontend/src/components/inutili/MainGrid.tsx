@@ -6,10 +6,10 @@ import ChartUserByCountry from './ChartUserByCountry';
 import CustomizedTreeView from './CustomizedTreeView';
 import CustomizedDataGrid from './CustomizedDataGrid';
 import HighlightedCard from './HighlightedCard';
-import PageViewsBarChart from './PageViewsBarChart';
-import SessionsChart from './SessionsChart';
-import StatCard from './StatCard';
-import type { StatCardProps } from './StatCard';
+import PageViewsBarChart from '../PageViewsBarChart';
+import SessionsChart from '../SessionsChart';
+import StatCard from '../StatCard';
+import type { StatCardProps } from '../StatCard';
 
 const data: StatCardProps[] = [
   {

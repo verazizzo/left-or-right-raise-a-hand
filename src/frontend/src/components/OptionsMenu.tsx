@@ -65,7 +65,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
   };
 
   const menuItems = React.useMemo(() => [
-    { text: t.profilo, path: '/profile' },
+    { text: t.impostazioni, path: '/profile' },
   ], [t.profilo, t.impostazioni]);
 
   return (
@@ -76,7 +76,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
         </Box>
       ) : (
         <Tooltip 
-          title={t.profilo}
+          title={t.impostazioni}
           placement={
             isMobileLayout 
               ? (isRtl ? 'right' : 'left') 
@@ -91,12 +91,10 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
               timeout: 300 // Animazione rapida e pulita
             },
             popper: {
-              // 1. Diciamo alla scatola di usare le regole base (LTR) 
-              // Così la freccia viene calcolata e incollata alla perfezione!
+
               sx: { direction: 'ltr' }
             },
             tooltip: {
-              // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
               sx: { direction: isRtl ? 'rtl' : 'ltr' }
             }
           }}
@@ -113,9 +111,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
         open={open}
         onClose={handleClose}
         onClick={handleClose}
-        // LA LOGICA DEFINITIVA:
-        // PC (isMobileLayout falso): Si aggancia SOPRA l'icona (vertical: 'top')
-        // Mobile (isMobileLayout vero): Si aggancia SOTTO l'icona (vertical: 'bottom')
+
         anchorOrigin={{ 
           horizontal: isMobileLayout 
             ? (isRtl ? 'left' : 'right') 
@@ -123,8 +119,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
           vertical: isMobileLayout ? 'bottom' : 'top' 
         }}
         
-        // PC: Nasce dal basso verso l'alto
-        // Mobile: Nasce dall'alto verso il basso
+
         transformOrigin={{ 
           horizontal: isMobileLayout 
             ? (isRtl ? 'left' : 'right') 
@@ -134,11 +129,9 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
         slotProps={{
           paper: {
             sx: {
-              // LARGHEZZA DINAMICA: Auto per le parole lunghe, ma con un limite minimo
               width: 'auto',
               minWidth: '120px',
 
-              // ECCO LA MAGIA DELL'OMBRA:
               boxShadow: (theme) =>
                 theme.palette.mode === 'dark'
                   ? '0px 6px 18px rgba(0, 0, 0, 0.6)' // Ombra forte per il tema scuro
@@ -147,8 +140,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
           }
         }}
         sx={{
-          // Se mobile (scende), lo spingiamo in giù di 8px (1 in scala MUI)
-          // Se PC (sale), lo spingiamo in su di -8px (-1 in scala MUI)
+
           mt: isMobileLayout ? 0 : -1,
 
           [`& .${listClasses.root}`]: {
@@ -169,7 +161,6 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
               to={item.path}
               onClick={handleClose}
               selected={location.pathname === item.path}
-              // Aggiunto il margine qui al posto dello styled
               sx={{ margin: '2px 0', color: 'inherit', textDecoration: 'none' }} 
             >
               {item.text}
