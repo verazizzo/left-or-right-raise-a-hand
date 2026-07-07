@@ -23,7 +23,7 @@ export default function Header() {
       spacing={2}
     >
       {/*<NavbarBreadcrumbs />*/}
-      <DashboardLogo />
+      {/* <DashboardLogo /> */}
     </Stack>
   );
 }
