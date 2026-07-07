@@ -101,11 +101,9 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
             {user && (
               <Box 
                 sx={{ 
-                  // ECCO LA MODIFICA: 
-                  // 100% su mobile, 80% su tablet, 65% su desktop
                   width: { xs: '100%', sm: '80%', md: '65%' }, 
-                  pt: { xs: 5, md: 10 }, // Meno margine alto su mobile
-                  pl: { xs: 0, md: 5 }   // Niente margine sinistro extra su mobile
+                  pt: { xs: 5, md: 10 }, 
+                  pl: { xs: 0, md: 5 }
                 }}
               >
                 <Typography variant="h2" sx={{ fontWeight: 800, width: { xs: '100%', lg: '40vw' }}}>

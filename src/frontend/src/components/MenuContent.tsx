@@ -5,14 +5,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
-import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded';
 import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded'; 
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Fade';
@@ -63,7 +59,7 @@ export default function MenuContent({ open = true }: MenuContentProps) {
               title={item.text} 
               placement="right" 
               arrow 
-              disableHoverListener={open} // La magia: si disattiva se la barra è aperta!
+              disableHoverListener={open} 
 
               slots={{
                 transition: Fade
@@ -73,12 +69,9 @@ export default function MenuContent({ open = true }: MenuContentProps) {
                   timeout: 300 // Animazione rapida e pulita
                 },
                 popper: {
-                  // 1. Diciamo alla scatola di usare le regole base (LTR) 
-                  // Così la freccia viene calcolata e incollata alla perfezione!
                   sx: { direction: 'ltr' }
                 },
                 tooltip: {
-                  // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
                   sx: { direction: isRtl ? 'rtl' : 'ltr' }
                 }
               }}
@@ -111,12 +104,9 @@ export default function MenuContent({ open = true }: MenuContentProps) {
                   timeout: 300 // Animazione rapida e pulita
                 },
                 popper: {
-                  // 1. Diciamo alla scatola di usare le regole base (LTR) 
-                  // Così la freccia viene calcolata e incollata alla perfezione!
                   sx: { direction: 'ltr' }
                 },
                 tooltip: {
-                  // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
                   sx: { direction: isRtl ? 'rtl' : 'ltr' }
                 }
               }}
