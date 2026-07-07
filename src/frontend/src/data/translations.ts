@@ -46,7 +46,9 @@ export const translations = {
     errPasswordConferma: "È necessario confermare la password.",
     errPasswordCoincidono: "Le password non coincidono.",
     errDurante: "Errore durante la registrazione. Riprova!",
-    errDuranteLogin: "Errore durante il login. Controlla le credenziali.",
+    errDuranteLogin: "Errore durante l'accesso. Riprova!",
+    errEmailNonConfermata: "Account registrato ma non confermato via mail. Per favore controlla la tua posta elettronica.",
+    errCredenzialiScorrette: "Email o password errati.",
     errGenerico: "Si è verificato un errore. Riprova più tardi.",
     // FRASI MENU
     menuHome: "Home",
@@ -267,7 +269,9 @@ export const translations = {
     errPasswordConferma: "You must confirm the password.",
     errPasswordCoincidono: "Passwords do not match.",
     errDurante: "Error during registration. Try again!",
-    errDuranteLogin: "Error during login. Check your credentials.",
+    errDuranteLogin: "Error during login. Please try again!",
+    errEmailNonConfermata: "Account registered but not confirmed via email. Please check your inbox.",
+    errCredenzialiScorrette: "Incorrect email or password.",
     errGenerico: "An error occurred. Try again later.",
     // FRASI MENU
     menuHome: "Home",
@@ -487,7 +491,9 @@ export const translations = {
     errPasswordConferma: "Debes confirmar la contraseña.",
     errPasswordCoincidono: "Las contraseñas no coinciden.",
     errDurante: "Error durante el registro. Inténtalo de nuevo!",
-    errDuranteLogin: "Error durante el inicio de sesión. Verifica tus credenciales.",
+    errDuranteLogin: "Error al iniciar sesión. ¡Vuelve a intentarlo!",
+    errEmailNonConfermata: "Cuenta registrada pero no confirmada por correo electrónico. Por favor, revisa tu correo.",
+    errCredenzialiScorrette: "Correo electrónico o contraseña incorrectos.",
     errGenerico: "Ocurrió un error. Inténtalo de nuevo más tarde.",
     // FRASI MENU
     menuHome: "Inicio",
@@ -709,7 +715,9 @@ export const translations = {
     errPasswordConferma: "يجب تأكيد كلمة المرور.",
     errPasswordCoincidono: "كلمتا المرور غير متطابقتين.",
     errDurante: "خطأ أثناء التسجيل. حاول مرة أخرى!",
-    errDuranteLogin: "خطأ أثناء تسجيل الدخول. تحقق من بيانات الاعتماد الخاصة بك.",
+    errDuranteLogin: "خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى!",
+    errEmailNonConfermata: "تم تسجيل الحساب ولكن لم يتم تأكيده عبر البريد الإلكتروني. يرجى التحقق من بريدك الإلكتروني.",
+    errCredenzialiScorrette: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
     errGenerico: "حدث خطأ. حاول مرة أخرى في وقت لاحق.",
     // FRASI MENU
     menuHome: "الرئيسية",

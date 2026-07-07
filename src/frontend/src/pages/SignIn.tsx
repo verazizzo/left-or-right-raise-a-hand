@@ -157,7 +157,16 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       navigate('/homepage');
       
     } catch (err: any) {
-      setApiError(t.errDuranteLogin);
+      const backendMessage = err.response?.data?.message || err.message || '';
+      if (backendMessage.includes('Email not confirmed')) {
+        setApiError(t.errEmailNonConfermata);
+      } 
+      else if (backendMessage.includes('Invalid login credentials')) {
+        setApiError(t.errCredenzialiScorrette);
+      } 
+      else {
+        setApiError(t.errDuranteLogin);
+      }
     } finally {
       setLoading(false);
     }
@@ -196,7 +205,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           </Typography>
 
           {apiError && (
-            <Alert severity="error" sx={{ width: '100%' }}>
+            <Alert severity="error" sx={{ width: '100%', alignItems: 'center' }}>
               {apiError}
             </Alert>
           )}
