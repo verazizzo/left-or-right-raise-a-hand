@@ -17,7 +17,7 @@ import GlobalAnalysis from './pages/GlobalAnalysis';
 import Home from './pages/Home';
 import Patients from './pages/Patients';
 import Comparison from './pages/Comparison';
-import Settings from './pages/Setting';
+//import Settings from './pages/Setting';
 import Profile from './pages/Profile';
 import Help from './pages/Help';
 import ScrollToTop from './components/ScrollToTop';
@@ -67,7 +67,7 @@ function AppContent() {
             <Route path="/global-analysis" element={<GlobalAnalysis />} /> 
             <Route path="/patients" element={<Patients />} /> 
             <Route path="/comparison" element={<Comparison />} /> 
-            <Route path="/settings" element={<Settings />} />
+            {/* <Route path="/settings" element={<Settings />} /> */}
             <Route path="/help" element={<Help />} />
             <Route path="/profile" element={<Profile />} />
 

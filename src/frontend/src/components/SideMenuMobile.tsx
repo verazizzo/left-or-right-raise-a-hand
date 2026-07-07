@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 
 import MenuContent from './MenuContent';
 import OptionsMenu from './OptionsMenu';
+import DashboardLogo from './DashboardLogo';
 
 import { useSettings } from '../context/SettingsContext';
 
@@ -26,7 +27,7 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
 
   const [user, setUser] = useState<UserData | null>(null);
 
-useEffect(() => {
+  useEffect(() => {
     const rootEl = document.getElementById('root');
 
     if (open) {
@@ -43,7 +44,6 @@ useEffect(() => {
       }
     }
 
-    // Cleanup quando cambi pagina
     return () => {
       document.body.style.removeProperty('overflow');
       document.body.style.removeProperty('overflow-y');
@@ -66,20 +66,38 @@ useEffect(() => {
       open={open}
       onClose={toggleDrawer(false)}
       disableScrollLock={true} 
-      // Usiamo slotProps per passare proprietà alla transizione interna (Slide)
-      
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
         [`& .${drawerClasses.paper}`]: {
           backgroundImage: 'none',
           backgroundColor: 'background.paper',
-          // Per sicurezza forziamo la posizione statica in RTL
           ...(isRtl && { left: 'auto', right: 0 })
         },
       }}
     >
       <Stack sx={{ maxWidth: '70dvw', height: '100%', width: '260px' }}>
         
+        {/* SEZIONE LOGO */}
+        <Box 
+          sx={{ 
+            p: 2, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            minHeight: 68 
+          }}
+        >
+          <DashboardLogo />
+        </Box>
+                
+        {/* SEZIONE OPZIONI */}
+        
+        <Divider />
+        <Stack sx={{ flexGrow: 1, overflowY: 'auto' }}>
+          <MenuContent />
+        </Stack>
+
+        <Divider />
         <Stack 
           direction="row" 
           sx={{ p: 2, alignItems: 'center', minHeight: 64, overflow: 'hidden' }}
@@ -97,13 +115,10 @@ useEffect(() => {
                 {user ? `${user.name} ${user.surname}` : "..."}
               </Typography>
               
-              {/* IL CONTENITORE DELL'EMAIL */}
-              {/* Spinge l'intero blocco a destra in arabo per farlo stare sotto al nome, ma mantiene il flusso interno occidentale */}
               <Box sx={{ display: 'flex', justifyContent: isRtl ? 'flex-end' : 'flex-start', width: '100%' }}>
                 <Typography 
                   variant="caption" 
                   noWrap 
-                  // Usiamo lo style nativo per bypassare al 100% il controllo del plugin RTL
                   style={{ direction: 'ltr', textAlign: 'left' }} 
                   sx={{ 
                     color: 'text.secondary',
@@ -114,7 +129,6 @@ useEffect(() => {
                   {user ? user.email : "..."}
                 </Typography>
               </Box>
-
             </Box>
             
             {/* I Tre puntini */}
@@ -122,12 +136,6 @@ useEffect(() => {
               <OptionsMenu />
             </Box>
           </Box>
-
-        </Stack>
-        
-        <Divider />
-        <Stack sx={{ flexGrow: 1, overflowY: 'auto' }}>
-          <MenuContent />
         </Stack>
         
       </Stack>

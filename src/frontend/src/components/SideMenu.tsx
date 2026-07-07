@@ -13,9 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
 import OptionsMenu from './OptionsMenu';
+import DashboardLogo from './DashboardLogo';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
@@ -74,7 +74,6 @@ export default function SideMenu() {
   const { language } = useSettings();
   const t = translations[language];
 
-  // VARIABILE PER GESTIRE L'EMAIL E L'ALLINEAMENTO
   const isRtl = language === 'ar';
 
   const [open, setOpen] = React.useState(() => {
@@ -82,7 +81,6 @@ export default function SideMenu() {
     return savedState === null ? true : savedState === 'true';
   });
 
-  // AGGIUNGI QUESTO: Controlla se il menu è in movimento
   const [isAnimating, setIsAnimating] = React.useState(false);
 
   const [user, setUser] = useState<UserData | null>(null);
@@ -98,10 +96,8 @@ export default function SideMenu() {
   if (!user) return null;
 
   const toggleDrawer = () => {
-    // 1. Bendiamo il Tooltip
     setIsAnimating(true);
     
-    // 2. Togliamo la benda dopo 400ms (quando il bottone si è allontanato)
     setTimeout(() => {
       setIsAnimating(false);
     }, 400);
@@ -124,44 +120,25 @@ export default function SideMenu() {
         },
       }}
     >
-      {/* SEZIONE 1: HEADER */}
+      {/* SEZIONE 1: HEADER (CON LOGO) */}
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: open ? 'flex-end' : 'center',
+          justifyContent: open ? 'space-between' : 'center',
           mt: 'calc(var(--template-frame-height, 0px) + 4px)',
           p: 1.5,
+          pl: open ? 2 : 1.5,
           minHeight: 68, 
         }}
       >
-        <Tooltip 
-          key={open ? "menu-aperto" : "menu-chiuso"} 
-          title={open ? t.chiudiMenu : t.apriMenu} 
-          placement={isRtl ? "left" : "right"}
-          arrow 
-          disableFocusListener // IMPEDISCE al click (che dà il focus) di tenerlo aperto
-          disableTouchListener 
-          disableHoverListener={isAnimating}
-          slots={{
-            transition: Fade
-          }}
-          slotProps={{
-            transition: { 
-              timeout: 300 // Animazione rapida e pulita
-            },
-            popper: {
-              sx: { direction: 'ltr' }
-            },
-            tooltip: {
-              sx: { direction: isRtl ? 'rtl' : 'ltr' }
-            }
-          }}
-        >
-          <IconButton onClick={toggleDrawer}>
-            {open ? <ChevronLeftIcon /> : <MenuIcon />}
-          </IconButton>
-        </Tooltip>
+        {open && (
+          <Box sx={{ display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+            <DashboardLogo />
+          </Box>
+        )}
+
+
       </Box>
       
       <Divider />
@@ -180,12 +157,19 @@ export default function SideMenu() {
             minWidth: 0,
             mr: open ? 2 : 'auto',
             justifyContent: 'center',
+            '& svg': { 
+              fontSize: '1.6rem' 
+            }
           },
           '& .MuiListItemText-root': {
             opacity: open ? 1 : 0,
             transition: 'opacity 0.2s',
             display: open ? 'block' : 'none',
           },
+          '& .MuiListItemText-primary': {
+            fontSize: '1.05rem', 
+            fontWeight: 500
+          }
         }}
       >
         <MenuContent open={open} />
@@ -203,7 +187,6 @@ export default function SideMenu() {
           overflow: 'hidden',
         }}
       >
-        {/* AVATAR FISSO */}
         <Box sx={{ flexShrink: 0, display: 'flex' }}>
           {open ? (
             <Avatar
@@ -219,22 +202,11 @@ export default function SideMenu() {
                   title={t.profilo} 
                   placement="right" 
                   arrow
-                  slots={{
-                    transition: Fade
-                  }}
+                  slots={{ transition: Fade }}
                   slotProps={{
-                    transition: { 
-                      timeout: 300 // Animazione rapida e pulita
-                    },
-                    popper: {
-                      // 1. Diciamo alla scatola di usare le regole base (LTR) 
-                      // Così la freccia viene calcolata e incollata alla perfezione!
-                      sx: { direction: 'ltr' }
-                    },
-                    tooltip: {
-                      // 2. Ma forziamo il testo interno a rispettare l'Arabo (RTL)
-                      sx: { direction: isRtl ? 'rtl' : 'ltr' }
-                    }
+                    transition: { timeout: 300 },
+                    popper: { sx: { direction: 'ltr' } },
+                    tooltip: { sx: { direction: isRtl ? 'rtl' : 'ltr' } }
                   }}>
                   <Avatar
                     sizes="small"
@@ -248,7 +220,6 @@ export default function SideMenu() {
           )}
         </Box>
 
-        {/* CONTENITORE TESTO E 3 PUNTINI */}
         <Box
           sx={{
             display: 'flex',
@@ -261,15 +232,10 @@ export default function SideMenu() {
             transition: 'opacity 0.2s ease', 
           }}
         >
-          {/* Box per i Testi */}
           <Box sx={{ mr: 'auto', minWidth: 0, overflow: 'hidden', width: '100%' }}>
-            
-            {/* Nome (con fix per la G tagliata: lineHeight 1.2 e pb 0.2) */}
             <Typography variant="body2" noWrap sx={{ fontWeight: 500, lineHeight: 1.2, pb: 0.2 }}>
               {user.name} {user.surname}
             </Typography>
-            
-            {/* Email protetta in LTR */}
             <Box sx={{ display: 'flex', justifyContent: isRtl ? 'flex-end' : 'flex-start', width: '100%' }}>
               <Typography 
                 variant="caption" 
@@ -279,22 +245,18 @@ export default function SideMenu() {
                   color: 'text.secondary',
                   display: 'block',
                   maxWidth: '100%',
-                  lineHeight: 1.2, // Fix anche per l'email
+                  lineHeight: 1.2, 
                   pb: 0.2
                 }}
               >
                 {user.email}
               </Typography>
             </Box>
-
           </Box>
-          
-          {/* Menu 3 puntini */}
           <Box sx={{ flexShrink: 0, ml: 1 }}>
             <OptionsMenu />
           </Box>
         </Box>
-        
       </Stack>
     </Drawer>
   );
