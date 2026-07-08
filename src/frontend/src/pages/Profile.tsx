@@ -151,7 +151,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
     }
   };
 
-  // --- HANDLER SICUREZZA ---
+  // HANDLER SICUREZZA
   const validatePassword = () => {
     let isValid = true;
     if (!oldPassword) {

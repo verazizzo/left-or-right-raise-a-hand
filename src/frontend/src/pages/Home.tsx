@@ -75,18 +75,16 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
             height: '100%',
             zIndex: 0, 
             
-            // Sfondo standard (Luce)
             backgroundImage: `url(${SfondoNeuroniChiaro})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             opacity: 1.0,
             
-            // === SWAP DELLO SFONDO IN MODALITÀ NOTTE ===
+
             ...theme.applyStyles('dark', {
               backgroundImage: `url(${SfondoNeuroniScuro})`,
-              // Se l'immagine scura è troppo forte, puoi abbassare leggermente l'opacità qui
-              // opacity: 0.8 
+
             })
           })}
         />

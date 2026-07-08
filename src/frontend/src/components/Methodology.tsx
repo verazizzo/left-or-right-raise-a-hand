@@ -52,7 +52,6 @@ export default function Methodology() {
   ];
 
   return (
-    // Il maxWidth ora è "100%" per prendersi tutto lo spazio che il padre gli concede
     <Box sx={{ width: '100%', maxWidth: '100%', mx: 'auto', p: { xs: 2, sm: 4 } }}>
       
 
@@ -61,12 +60,11 @@ export default function Methodology() {
         sx={{ 
           display: 'grid', 
           gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
-          gap: { xs: 4, md: 8 }, // Aumentato il gap per staccare foto e testo
+          gap: { xs: 4, md: 8 }, 
           mb: 8, 
           alignItems: 'center' 
         }}
       >
-        {/* Sinistra: Fotografia */}
         <Box 
           sx={{ 
             width: '100%', 
@@ -90,7 +88,6 @@ export default function Methodology() {
           />
         </Box>
 
-        {/* Destra: Testo Descrittivo */}
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left', width: { xs: '100%', lg: '35vw' } }}>
           <Typography variant="h5" sx={{ mb: 3, fontWeight: 600, color: 'text.primary' }}>
             {t.aboutSubtitle}
@@ -109,7 +106,7 @@ export default function Methodology() {
         sx={{ 
           display: 'grid', 
           gridTemplateColumns: forceMobile ? '1fr' : { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
-          gap: { xs: 2, md: 3 }, // Gap ridotto leggermente per dare più spazio al testo dentro le card
+          gap: { xs: 2, md: 3 },
           width: { xs: '100%', lg: '75vw' },
           mx: 'auto'
         }}
@@ -124,7 +121,7 @@ export default function Methodology() {
               flexDirection: 'column',
               backgroundColor: 'background.paper',
               borderRadius: 2,
-              textAlign: 'left', // Forza l'allineamento a sinistra
+              textAlign: 'left', 
               transition: 'transform 0.2s, box-shadow 0.2s',
               boxShadow: (theme) => 
                   theme.palette.mode === 'dark' 

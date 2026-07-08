@@ -13,7 +13,6 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 
-// Icone per rendere l'interfaccia più intuitiva
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -21,7 +20,6 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import InsightsIcon from '@mui/icons-material/Insights';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
-// Importiamo i componenti classici del layout
 import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
 import SideMenu from '../components/SideMenu';

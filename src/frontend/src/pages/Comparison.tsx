@@ -18,7 +18,6 @@ import Header from '../components/Header';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
 
-// Importiamo SOLO il nuovo componente unificato!
 import Metrics from '../components/Metrics'; 
 
 import { useSettings } from '../context/SettingsContext';
@@ -47,7 +46,6 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
   const [dropdownOpenA, setDropdownOpenA] = React.useState(false);
   const [dropdownOpenB, setDropdownOpenB] = React.useState(false);
 
-  // Generiamo la lista degli utenti
   const usersList = React.useMemo(() => {
     // 1. Creiamo i 30 pazienti standard
     const list = Array.from({ length: 30 }, (_, i) => ({
@@ -57,7 +55,7 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
 
     // 2. AGGIUNGIAMO L'UTENTE GLOBALE CON L'ID IDENTICO AL NOME DEL FILE
     list.unshift({
-      id: 'shap_GLOBALE', // <--- CORRETTO: Ora combacia esattamente con shap_GLOBALE.json!
+      id: 'shap_GLOBALE', 
       name: t.menuPopulation || 'Popolazione Globale', 
     });
 
@@ -65,12 +63,12 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
   }, [t.utenteElenco, t.menuPopulation]);
 
 
-  // --- STATI PER UTENTE A (SINISTRA) ---
+  // STATI PER UTENTE A (SINISTRA)
   const [userAId, setUserAId] = useState<string>('');
   const [userAData, setUserAData] = useState<any>(null);
   const [loadingA, setLoadingA] = useState<boolean>(false);
 
-  // --- STATI PER UTENTE B (DESTRA) ---
+  // STATI PER UTENTE B (DESTRA) 
   const [userBId, setUserBId] = useState<string>('');
   const [userBData, setUserBData] = useState<any>(null);
   const [loadingB, setLoadingB] = useState<boolean>(false);
@@ -96,7 +94,6 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
         const module = await import(`../data/${userAId}.json`);
         const data = module.default || module;
         
-        // Se stiamo caricando il globale, iniettiamo la proprietà per far attivare la logica globale a Metrics.tsx
         if (userAId === 'shap_GLOBALE') {
           data.user_id = 'global';
         }
@@ -122,7 +119,6 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
         const module = await import(`../data/${userBId}.json`);
         const data = module.default || module;
         
-        // Se stiamo caricando il globale, iniettiamo la proprietà per far attivare la logica globale a Metrics.tsx
         if (userBId === 'shap_GLOBALE') {
           data.user_id = 'global';
         }
@@ -165,7 +161,6 @@ export default function Comparison(props: { disableCustomTheme?: boolean }) {
               </Typography>
             </Box>
 
-            {/* SEZIONE SELEZIONE: Due menu a tendina affiancati */}
             <Grid container spacing={4} sx={{ justifyContent: 'center' }}>
               
               {/* AUTOCOMPLETE PAZIENTE A */}

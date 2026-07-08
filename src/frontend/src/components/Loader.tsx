@@ -93,14 +93,12 @@ export default function Loader({ message = "L'attore sta avviando il caso d'uso.
       
       </div>
       
-      {/* Sostituito p con Typography per gestire il testo */}
       <Typography sx={(theme) => ({ 
         marginTop: '24px', 
         color: '#555', 
         textAlign: 'center',
         fontWeight: '500',
         fontFamily: 'sans-serif',
-        // Variante DARK per il testo
         ...theme.applyStyles('dark', {
           color: '#e0e0e0',
         }),

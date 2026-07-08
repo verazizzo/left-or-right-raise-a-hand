@@ -13,10 +13,9 @@ import { descrizioniCanali, descrizioniFeatures, descrizioniWindows } from '../d
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 
-// Definiamo le props per il componente unificato
 interface MetricsProps {
-  userData: any; // Il JSON dell'utente (o quello globale)
-  stacked?: boolean; // Opzione per grafici impilati o affiancati (default: false)
+  userData: any;
+  stacked?: boolean; 
 }
 
 export default function Metrics({ userData, stacked = false }: MetricsProps) {
@@ -34,9 +33,7 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
     displayName = `${t.utenteElenco} ${userNumber}`;
   }
 
-  // =====================================================================
   // 2. PREPARAZIONE DATI SHAP (Identica per entrambi)
-  // =====================================================================
 
   // A. Feature
   const topShapFeatures = [...userData.features]
@@ -62,18 +59,15 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
   // C. Topoplot
   const topoplotData = userData.channels.map((ch: any) => ({
     id: ch.id,
-    shap_left: ch.shap_left,     // Nuovo!
-    shap_right: ch.shap_right,   // Nuovo!
+    shap_left: ch.shap_left,    
+    shap_right: ch.shap_right,   
     description: descrizioniCanali[ch.id]?.[language] || "Descrizione non disponibile"
   }));
 
-  // =====================================================================
   // 3. PREPARAZIONE DATI PERFORMANCE (StatCards Dinamiche)
-  // =====================================================================
   let statCardsData: StatCardProps[] = [];
 
   if (isGlobal) {
-    // --- LOGICA GLOBALE (Con grafici a linea) ---
     const userNames = Object.keys(performanceMetrics.per_user_metrics);
     const f1Scores = userNames.map(user => Number(performanceMetrics.per_user_metrics[user as keyof typeof performanceMetrics.per_user_metrics].f1_score.toFixed(3)));
     const aucScores = userNames.map(user => Number(performanceMetrics.per_user_metrics[user as keyof typeof performanceMetrics.per_user_metrics].auc_score.toFixed(3)));
@@ -86,7 +80,7 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
         value: f1_mean.toFixed(3),
         interval: t.titolof1desc || "Andamento Globale",
         trend: f1_mean >= 0.5 ? 'up' : 'down',
-        data: f1Scores, // <--- Grafico visibile
+        data: f1Scores, 
         xAxisLabels: userNames,
         chipText: '± ' + f1_std.toFixed(3),
       },
@@ -95,13 +89,12 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
         value: auc_mean.toFixed(3),
         interval: t.titoloAucdesc || "Andamento Globale",
         trend: auc_mean >= 0.5 ? 'up' : 'down',
-        data: aucScores, // <--- Grafico visibile
+        data: aucScores, 
         xAxisLabels: userNames,
         chipText: '± ' + auc_std.toFixed(3),
       }
     ];
   } else {
-    // --- LOGICA SINGOLO UTENTE (Senza grafici a linea) ---
     const userPerf = performanceMetrics.per_user_metrics[userData.user_id as keyof typeof performanceMetrics.per_user_metrics];
     if (userPerf) {
       statCardsData = [
@@ -110,7 +103,7 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
           value: userPerf.f1_score.toFixed(3),
           interval: t.performance || "Performance",
           trend: userPerf.f1_score >= performanceMetrics.global_metrics.f1_mean ? 'up' : 'down',
-          data: [], // <--- Grafico invisibile
+          data: [], 
           xAxisLabels: [],
           chipText: 'Vs Global: ' + performanceMetrics.global_metrics.f1_mean.toFixed(2),
         },
@@ -119,7 +112,7 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
           value: userPerf.auc_score.toFixed(3),
           interval: t.performance || "Performance",
           trend: userPerf.auc_score >= performanceMetrics.global_metrics.auc_mean ? 'up' : 'down',
-          data: [], // <--- Grafico invisibile
+          data: [], 
           xAxisLabels: [],
           chipText: 'Vs Global: ' + performanceMetrics.global_metrics.auc_mean.toFixed(2),
         }
@@ -127,9 +120,6 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
     }
   }
 
-  // =====================================================================
-  // RENDER DELLA PAGINA
-  // =====================================================================
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       
@@ -195,7 +185,7 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
               subtitle={t.descrTopoplot || "Mappa attivazione per la mano sinistra"}
               channelsData={topoplotData} 
               userId={userData.user_id}
-              targetClass="left" // <--- PASSATO COME PROP
+              targetClass="left" 
             />
         </Grid>
 
@@ -206,7 +196,7 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
               subtitle={t.descrTopoplot || "Mappa attivazione per la mano destra"}
               channelsData={topoplotData} 
               userId={userData.user_id}
-              targetClass="right" // <--- PASSATO COME PROP
+              targetClass="right" 
             />
         </Grid>
 

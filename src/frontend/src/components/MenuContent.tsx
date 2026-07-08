@@ -66,7 +66,7 @@ export default function MenuContent({ open = true }: MenuContentProps) {
               }}
               slotProps={{
                 transition: { 
-                  timeout: 300 // Animazione rapida e pulita
+                  timeout: 300 
                 },
                 popper: {
                   sx: { direction: 'ltr' }
@@ -101,7 +101,7 @@ export default function MenuContent({ open = true }: MenuContentProps) {
               }}
               slotProps={{
                 transition: { 
-                  timeout: 300 // Animazione rapida e pulita
+                  timeout: 300 
                 },
                 popper: {
                   sx: { direction: 'ltr' }
