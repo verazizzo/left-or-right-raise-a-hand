@@ -15,6 +15,7 @@ import Alert from '@mui/material/Alert';
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 import LoadingOverlay from './LoadingOverlay';
+import TextField from '@mui/material/TextField';
 
 interface ForgotPasswordProps {
   open: boolean;
@@ -27,21 +28,22 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
   const t = translations[language];
 
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [emailError, setEmailError] = React.useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
 
   const [loading, setLoading] = React.useState(false);
 
   const handleCloseModal = () => {
     setEmail('');
-    setMessage('');
-    setError('');
+    setEmailError(false);
+    setEmailErrorMessage('');
     handleClose();
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError('');
+    setEmailError(false);
+    setEmailErrorMessage('');
     setLoading(true);
 
     try {
@@ -51,7 +53,8 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
       navigate('/update-password', { state: { email: email } });
 
     } catch (err: any) {
-      setError(err.response?.data?.message || "Errore durante l'invio. Riprova.");
+      setEmailError(true);
+      setEmailErrorMessage(t.errEmailValida);
     } finally {
       setLoading(false);
     }
@@ -63,7 +66,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
       onClose={handleCloseModal}
     >
       <LoadingOverlay active={loading} message={t.caricamentoCambioPassword} />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         
         <DialogTitle>{t.finestraTitolo}</DialogTitle>
         
@@ -71,23 +74,26 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
           <DialogContentText>
             {t.finestraDesc}
           </DialogContentText>
-
-          {message && <Alert severity="success">{message}</Alert>}
-          {error && <Alert severity="error">{error}</Alert>}
-
-          <OutlinedInput
+          <TextField
             autoFocus
             required
             margin="dense"
             id="email"
             name="email"
-            label="Indirizzo Email"
             placeholder={t.esempioEmail}
             type="email"
             fullWidth
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={loading || !!message}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (emailError) {
+                setEmailError(false);
+                setEmailErrorMessage('');
+              }
+            }}
+            disabled={loading}
+            error={emailError}
+            helperText={emailError ? emailErrorMessage : ''} 
           />
         </DialogContent>
         
@@ -98,7 +104,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
           <Button 
             variant="contained" 
             type="submit" 
-            disabled={loading || !!message || !email.trim()}
+            disabled={loading || !!emailError || !email.trim()}
           >
             {t.continua}
           </Button>
