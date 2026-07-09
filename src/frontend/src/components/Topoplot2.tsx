@@ -22,6 +22,9 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
 
   const uniqueId = userId || Math.random().toString(36).substring(7);
 
+  // Se l'ID è 'global' (o 'globale' o 'GLOBALE'), lo forziamo alla stringa esatta del file
+  const safeUserId = (userId && userId.toLowerCase() === 'global') ? 'GLOBALE' : userId;
+
   const datiSicuri = channelsData || [];
 
   const coordinateCanali: { [key: string]: { cx: number; cy: number } } = {
@@ -41,10 +44,13 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
 
   const taskPath = isReal ? 'real' : 'imm';
   // Costruisci il nome del file come lo hai salvato
-  const fileName = `./topoplot/topoplot_${userId}_${targetClass === 'left' ? 'Left' : 'Right'}.png`;
+  const fileName = `./topoplot/topoplot_${safeUserId}_${targetClass === 'left' ? 'Left' : 'Right'}.png`;
 
   // Recupera l'immagine dall'oggetto importato
   const imageSrc = images[fileName];
+
+  console.log("1. File che il codice sta cercando:", fileName);
+  console.log("2. File che Vite ha effettivamente caricato:", Object.keys(images));
 
   return (
     <Card variant="outlined" sx={{ width: '100%', height: '100%' }}>
