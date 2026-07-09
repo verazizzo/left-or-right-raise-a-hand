@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import Divider, { dividerClasses } from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem'; // Usiamo quello nativo!
+import MenuItem from '@mui/material/MenuItem'; 
 import { paperClasses } from '@mui/material/Paper';
 import { listClasses } from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
@@ -29,7 +29,6 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
   const t = translations[language];
   const isRtl = language === 'ar';
 
-  // --- RADAR PER LO SCHERMO ---
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); 
   const isMobileLayout = forceMobile || isSmallScreen;
@@ -48,7 +47,6 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (!token) {
-      // SOSTITUITO .clear() CON LA RIMOZIONE MIRATA in modo da passare informazioni come lingua e tema
       localStorage.removeItem('access_token');
       localStorage.removeItem('user_profile');
       navigate('/login');
@@ -58,7 +56,6 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
 
   const handleLogout = () => {
     handleClose();
-    // SOSTITUITO .clear() CON LA RIMOZIONE MIRATA PER SALVARE IL TEMA E LA LINGUA
     localStorage.removeItem('access_token');
     localStorage.removeItem('user_profile');
     navigate('/login');
@@ -88,7 +85,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
           }}
           slotProps={{
             transition: { 
-              timeout: 300 // Animazione rapida e pulita
+              timeout: 300 
             },
             popper: {
 
@@ -134,8 +131,8 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
 
               boxShadow: (theme) =>
                 theme.palette.mode === 'dark'
-                  ? '0px 6px 18px rgba(0, 0, 0, 0.6)' // Ombra forte per il tema scuro
-                  : '0px 6px 18px rgba(0, 0, 0, 0.15)', // Ombra morbida ma visibile per il chiaro
+                  ? '0px 6px 18px rgba(0, 0, 0, 0.6)' 
+                  : '0px 6px 18px rgba(0, 0, 0, 0.15)', 
             }
           }
         }}
@@ -172,7 +169,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
         <MenuItem
           onClick={handleLogout}
           sx={{
-            margin: '2px 0', // Aggiunto anche qui per coerenza
+            margin: '2px 0', 
             gap: 1,
             [`& .${listItemIconClasses.root}`]: {
               ml: 'auto',

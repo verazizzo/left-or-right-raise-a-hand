@@ -148,8 +148,6 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
               sx={{ 
                 minWidth: 300, 
                 mt: 4,
-                // Questa è la regola definitiva che dice: "Qualsiasi bottone (freccia o X) 
-                // dentro la parte destra di questo Autocomplete NON deve avere bordi o sfondi"
                 '& .MuiAutocomplete-endAdornment .MuiIconButton-root': {
                   border: 'none !important',
                   backgroundColor: 'transparent !important',
@@ -175,12 +173,10 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
                 />
               )}
 
-              // 1. Disattiviamo i noiosi tooltip nativi del browser
               clearText=""
               openText=""
               closeText=""
               
-              // 2. Avvolgiamo le icone nei nostri Tooltip di Material UI
               clearIcon={
                 <Tooltip title={t.cancellaSelezione} arrow placement="top">
                   <CloseIcon fontSize="small" />

@@ -1,4 +1,4 @@
-import * as React from 'react'; // Aggiunto React per usare useState
+import * as React from 'react'; 
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -65,17 +65,13 @@ export default function StatCard({
   const [isHovered, setIsHovered] = React.useState(false);
   const [isRightHalf, setIsRightHalf] = React.useState(false);
 
-  // --- 1. IL SENSORE ORA GUARDA IL TELEFONO, NON LA SCHEDA ---
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    // Andiamo a cercare il finto telefono (il div #root)
     const rootElement = document.getElementById('root');
     
     if (rootElement) {
       const rootRect = rootElement.getBoundingClientRect();
-      // Calcoliamo la coordinata X del mouse partendo dal bordo sinistro del telefono
       const xRelativeToPhone = event.clientX - rootRect.left; 
       
-      // Controlliamo se abbiamo superato la metà del TELEFONO (non della card!)
       setIsRightHalf(xRelativeToPhone > rootRect.width / 2);
     }
   };
@@ -83,7 +79,6 @@ export default function StatCard({
   const fallbackDays = getDaysInMonth(4, 2024);
   const chartLabels = xAxisLabels || fallbackDays.slice(0, data.length);
 
-  // Se l'etichetta inizia per "user_", prendiamo solo il numero e aggiungiamo la traduzione
   const formattedChartLabels = chartLabels.map((label) => {
     if (typeof label === 'string' && label.startsWith('user_')) {
       const userNumber = label.replace('user_', '');
@@ -96,15 +91,15 @@ export default function StatCard({
     up:
       theme.palette.mode === 'light'
         ? theme.palette.success.main
-        : theme.palette.success.light, // <-- Più luminoso nel tema scuro
+        : theme.palette.success.light, 
     down:
       theme.palette.mode === 'light'
         ? theme.palette.error.main
-        : theme.palette.error.light,   // <-- Più luminoso nel tema scuro
+        : theme.palette.error.light,   
     neutral:
       theme.palette.mode === 'light'
         ? theme.palette.grey[400]
-        : theme.palette.grey[300],     // <-- Grigio più chiaro nel tema scuro
+        : theme.palette.grey[300],    
   };
 
   const labelColors = {
@@ -123,10 +118,6 @@ export default function StatCard({
       onMouseLeave={() => setIsHovered(false)}
       onMouseMove={handleMouseMove}>
 
-      {/* --- 3. IL "CSS CECCHINO" ---
-          Questo blocco viene iniettato nella pagina SOLO quando hai il mouse
-          sopra QUESTA specifica StatCard ed è attiva la modalità mobile.
-          Ignora i blocchi di MUI e costringe il tooltip a obbedire. */}
       {isHovered && forceMobile && (
         <style>
           {`
@@ -177,7 +168,7 @@ export default function StatCard({
               showTooltip
               xAxis={{
                 scaleType: 'band',
-                data: formattedChartLabels, // Use the correct property 'data' for xAxis
+                data: formattedChartLabels, 
               }}
               sx={{
                 [`& .${lineClasses.area}`]: {

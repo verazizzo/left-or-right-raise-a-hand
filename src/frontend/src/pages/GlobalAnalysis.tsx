@@ -40,7 +40,6 @@ export default function GlobalAnalysis(props: { disableCustomTheme?: boolean }) 
 
   // Prepariamo l'oggetto per il componente Metrics.
   // Uniamo i dati del JSON e inseriamo a mano 'user_id: "global"' 
-  // così il componente capisce in automatico che deve mostrare la logica globale!
   const globalData = {
     ...shapGlobale,
     user_id: 'global'
@@ -64,7 +63,6 @@ export default function GlobalAnalysis(props: { disableCustomTheme?: boolean }) 
             minHeight: '100vh',
           })}
         >
-          {/* Lo Stack occupa tutto lo spazio fluido, senza limiti di larghezza */}
           <Stack spacing={3} sx={{ mx: 3, pb: 5, mt: { xs: 1, md: 0 } }}>
             <Header />
 
@@ -77,10 +75,7 @@ export default function GlobalAnalysis(props: { disableCustomTheme?: boolean }) 
               </Typography>
             </Box>
 
-            {/* Invochiamo Metrics passandogli i dati globali.
-                NOTA: Qui NON mettiamo "stacked={true}". 
-                Essendo una pagina a schermo intero molto larga, lasciando il valore di default (false)
-                i grafici a barre SHAP si affiancheranno splendidamente su due colonne! */}
+            {/* Invochiamo Metrics passandogli i dati globali. */}
             <Metrics userData={globalData} />
 
           </Stack>

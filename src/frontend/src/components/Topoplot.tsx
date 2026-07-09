@@ -6,7 +6,6 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 
-// Assicurati che l'importazione abbia ?url alla fine se richiesto dal tuo bundler!
 import Testa from '../assets/solo_testa.png';
 import Cervello from '../assets/solo_cervello2.png';
 
@@ -16,10 +15,8 @@ import { translations } from '../data/translations';
 export type TopoplotProps = {
   title: string;
   subtitle?: string;
-  // Aggiornato con le nuove chiavi del JSON
   channelsData: { id: string; shap_left: number; shap_right: number; description?: string }[];
   userId?: string;
-  // NUOVA PROP: Indica al componente quale lato leggere
   targetClass: 'left' | 'right'; 
 };
 
@@ -41,8 +38,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
     'C3':  { cx: 185, cy: 255 },  'Cz':  { cx: 250, cy: 255 },  'C4':  { cx: 315, cy: 255 },
   };
 
-  // IL SEGRETO DELLA COMPARABILITÀ: Troviamo il massimo assoluto tra TUTTI I VALORI (sia left che right)
-  // così la scala dei colori sarà identica per entrambi i grafici.
+
   const tuttiIValori = datiSicuri.flatMap((c: any) => [Math.abs(c.shap_left || 0), Math.abs(c.shap_right || 0)]);
   const maxVal = Math.max(...tuttiIValori, 0.01);
 
@@ -114,14 +110,12 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
               <Box component="svg" viewBox="0 0 500 500" sx={{ width: '100%', height: '100%' }}>
                 <defs>
                    {datiSicuri.map((ch: any) => {
-                    // LEGGIAMO IL VALORE GIUSTO IN BASE ALLA PROP targetClass
                     const shapVal = targetClass === 'left' ? (ch.shap_left || 0) : (ch.shap_right || 0);
                     const absVal = Math.abs(shapVal);
                     
                     const ratio = Math.min(absVal / maxVal, 1);
                     const lightness = 0.7 - ratio;
 
-                    // Colori: Rosso per positivo (Destra), Blu per negativo (Sinistra)
                     const baseR = shapVal >= 0 ? 178 : 33;
                     const baseG = shapVal >= 0 ? 24 : 102;
                     const baseB = shapVal >= 0 ? 43 : 172;
@@ -144,7 +138,6 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
                         const coords = coordinateCanali[ch.id];
                         if (!coords) return null;
                         
-                        // LEGGIAMO DI NUOVO IL VALORE IN BASE AL TASK
                         const shapVal = targetClass === 'left' ? (ch.shap_left || 0) : (ch.shap_right || 0);
                         const absVal = Math.abs(shapVal); 
                         
@@ -188,7 +181,6 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
                   const coords = coordinateCanali[ch.id];
                   if (!coords) return null;
                   
-                  // Mostriamo l'effettivo valore direzionale con il segno nel tooltip
                   const displayValue = targetClass === 'left' ? ch.shap_left : ch.shap_right;
 
                   return (
@@ -268,7 +260,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
             </Box>
           </Box>
 
-          {/* NUOVA BARRA INFERIORE ORIZZONTALE (LEGENDA SHAP) */}
+          {/* BARRA INFERIORE ORIZZONTALE (LEGENDA SHAP) */}
           <Box 
             sx={{ 
               display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 380, mt: 4 
@@ -286,7 +278,6 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
             <Box 
               sx={{ 
                 width: '100%', height: 24, 
-                // Gradiente cambiato da verticale (to bottom) a orizzontale (to right)
                 background: 'linear-gradient(to right, rgb(33, 102, 172) 0%, #ffffff 50%, rgb(178, 24, 43) 100%)',
                 border: '1px solid', borderColor: 'divider', borderRadius: 1
               }} 

@@ -29,7 +29,7 @@ export default function ShapBarChart({
   const t = translations[language];
   const isRtl = language === 'ar';
 
-  // --- 1. IL SENSORE DEL MOUSE (Tornato alla divisione a metà) ---
+  // 1. IL SENSORE DEL MOUSE
   const [isRightHalf, setIsRightHalf] = React.useState(false);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -38,28 +38,25 @@ export default function ShapBarChart({
     
     const percentage = x / rect.width;
     
-    // Se siamo oltre il 50% della larghezza, il tooltip deve stare a sinistra.
-    // Questo è vero in qualsiasi lingua.
+
     setIsRightHalf(percentage > 0.5);
   };
 
 // Palette "Colorblind-Safe" (basata su Okabe-Ito e Paul Tol)
-  // Colori studiati scientificamente per essere distinguibili in ogni forma di daltonismo
+
   const accessiblePalette = [
-    '#0072B2', // 1. Blu scuro
-    '#D55E00', // 2. Rosso/Vermiglio (Molto contrastato col blu)
-    '#009E73', // 3. Verde acqua scuro
-    '#E69F00', // 4. Arancione chiaro
-    '#CC79A7', // 5. Rosa/Prugna
-    '#56B4E9', // 6. Azzurro cielo (Diverso dal blu scuro)
-    '#F0E442', // 7. Giallo (Usare con cautela su sfondi bianchi, ma ok nei grafici)
-    '#44AA99', // 8. Ottanio/Teal
-    '#332288', // 9. Indaco scuro
-    '#999999', // 10. Grigio neutro (Perfetto per le baseline)
+    '#0072B2', 
+    '#D55E00', 
+    '#009E73', 
+    '#E69F00',
+    '#CC79A7',
+    '#56B4E9',
+    '#F0E442', 
+    '#44AA99',
+    '#332288', 
+    '#999999', 
   ];
 
-  // Se ci sono SOLO 3 barre peschiamo il 1°, il 6° e il 10° colore per staccarli bene.
-  // Altrimenti prendiamo i colori di fila.
   const chartColors = labels.length === 3 
     ? [accessiblePalette[0], accessiblePalette[1], accessiblePalette[2]] 
     : accessiblePalette.slice(0, labels.length);
@@ -96,9 +93,7 @@ export default function ShapBarChart({
                 // In Arabo, sposta l'asse a destra
                 position: isRtl ? 'right' : 'left',
                 tickLabelStyle: {
-                  textAnchor: 'end', // Allinea il testo correttamente
-                  // Usiamo un transform per traslare il testo lontano dall'asse
-                  // In RTL trasliamo verso SINISTRA per allontanarlo dall'asse di destra
+                  textAnchor: 'end',
                   transform: 'none',
                 },
               },
@@ -109,8 +104,6 @@ export default function ShapBarChart({
                 label: t.labelShapBar,
                 reverse: isRtl,
                 labelStyle: {
-                  // In RTL (asse a destra), trasliamo leggermente l'etichetta verso sinistra 
-                  // per compensare visivamente la larghezza della colonna Y (90px)
                   transform: `${isRtl ? 'translateX(30px)' : 'translateX(-30px)'} translateY(10px)`,
                 
                 },
@@ -120,8 +113,7 @@ export default function ShapBarChart({
             series={[
               {
                 id: 'shap-values',
-                // Nascondiamo completamente la label sinistra di default ("Page Views" / "Valore SHAP")
-                // perché ce la ricreiamo noi a destra esattamente come la vuoi
+ 
                 label: '', 
                 data: values,
                 valueFormatter: (value, context) => {
@@ -145,20 +137,14 @@ export default function ShapBarChart({
             hideLegend 
             
             sx={{              
-              // 1. ELIMINIAMO IL QUADRATINO COLORATO
               '& .MuiChartsTooltip-markCell': {
                 display: 'none !important',
               },
 
-              // 2. ELIMINIAMO LA COLONNA SINISTRA (Quella grigia)
-              // L'abbiamo svuotata mettendo label: '', ma ora la cancelliamo proprio
-              // così la nostra colonna destra prende tutto lo spazio!
               '& .MuiChartsTooltip-labelCell': {
                 display: 'none !important',
               },
 
-              // SE SIAMO IN MODALITà TELEFONO
-              // I Tooltip deli grafici a barre rimangono vincolati dentro la box del grafico
               ...(forceMobile && {
                 '& .MuiChartsLayerContainer-root': {
                   overflow: 'visible !important',
@@ -173,14 +159,11 @@ export default function ShapBarChart({
                 }
               }),
 
-              // 2. DIMENSIONI DINAMICHE: Si rimpicciolisce solo quando serve!
               '& .MuiChartsTooltip-valueCell': {
                 whiteSpace: 'pre-wrap !important', 
                 
-                // Se siamo nel telefono limite a 160px, altrimenti liberi a 300px
                 maxWidth: forceMobile ? '180px !important' : '300px !important', 
                 
-                // Riduciamo margini e font solo sul telefono per compattarlo
                 padding: forceMobile ? '6px 8px !important' : '12px !important', 
                 fontSize: forceMobile ? '0.80rem !important' : '0.875rem !important',
                 
