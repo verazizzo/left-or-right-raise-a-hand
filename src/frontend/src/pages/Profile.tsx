@@ -69,10 +69,10 @@ function ThemeStatusText() {
   return (
     <Typography variant="caption" color="text.secondary">
       {t.darkLightDesc}
-      {' '}
+      {/*{' '}
       <strong>{t.attuale}</strong>
       {' '}
-      {mode === 'system' ? t.sistema : (mode === 'dark' ? t.notte : t.giorno)}
+      {mode === 'system' ? t.sistema : (mode === 'dark' ? t.notte : t.giorno)}*/}
     </Typography>
   );
 }
@@ -329,7 +329,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                         <Box>
                           <Typography variant="subtitle2">{t.textSize}</Typography>
                           <Typography variant="caption" color="text.secondary">
-                            {t.descDimensione}<strong>{t.attuale}</strong>{' '}{fontSize === 'small' ? t.textSmall : fontSize === 'medium' ? t.textMedium : t.textLarge}
+                            {t.descDimensione}{/*<strong>{t.attuale}</strong>{' '}{fontSize === 'small' ? t.textSmall : fontSize === 'medium' ? t.textMedium : t.textLarge}*/}
                           </Typography>
                         </Box>
                         <FontSizeDropdown />
@@ -342,7 +342,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                             {t.viewModeTitle}
                           </Typography>
                           <Typography variant="caption" color="text.secondary" component="p">
-                            {t.viewModeDesc}<strong>{t.attuale}</strong>{' '}{forceMobile ? t.attivata : t.disattivata}
+                            {t.viewModeDesc}{/*<strong>{t.attuale}</strong>{' '}{forceMobile ? t.attivata : t.disattivata}*/}
                           </Typography>
                         </Box>
                         <Switch checked={forceMobile} onChange={toggleForceMobile} color="primary" />
