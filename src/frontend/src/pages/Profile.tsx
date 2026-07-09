@@ -101,6 +101,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   const [editFirstName, setEditFirstName] = useState('');
   const [editLastName, setEditLastName] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
 
   // Stati per la Sicurezza
   const [oldPassword, setOldPassword] = useState('');
@@ -171,6 +172,21 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
     }
   };
 
+  const handleCancelPasswordClick = () => {
+    setIsEditingPassword(false);
+    setOldPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    // Resetta anche gli eventuali errori rimasti appesi
+    setOldPasswordError(false);
+    setPasswordError(false);
+    setConfirmPasswordError(false);
+    setPasswordErrorMessage('');
+    setOldPasswordErrorMessage('');
+    setConfirmPasswordErrorMessage('');
+    setPasswordSuccess('');
+  };
+
   // HANDLER SICUREZZA
   const validatePassword = () => {
     let isValid = true;
@@ -222,6 +238,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
+      setIsEditingPassword(false);
     } catch (error: any) {
       const backendMessage = error.response?.data?.message || error.message || '';
       if (backendMessage.includes('Vecchia password errata') || backendMessage.includes('Invalid login credentials')) {
@@ -454,7 +471,15 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                               <Button variant="outlined" color="inherit" onClick={handleCancelClick} disabled={loadingNameSurname}>
                                 {t.annulla}
                               </Button>
-                              <Button variant="contained" color="primary" onClick={handleSaveProfile} disabled={loadingNameSurname}>
+                              <Button variant="contained" color="primary" onClick={handleSaveProfile} 
+                                  disabled={
+                                    loadingNameSurname || 
+                                    editFirstName.trim() === '' || 
+                                    editLastName.trim() === '' || 
+                                    // AGGIUNTA: Disabilita se non è cambiato nulla rispetto a prima
+                                    (editFirstName.trim() === firstName && editLastName.trim() === lastName)
+                                  }
+                              >
                                 {t.salva}
                               </Button>
                             </>
@@ -482,120 +507,165 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                           {passwordSuccess}
                         </Alert>
                       )}
-                      
-                      <Stack spacing={2.5}>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                            {t.passAttuale}
-                          </Typography>
-                          <TextField
-                            fullWidth type={showPassword ? 'text' : 'password'}
-                            variant="outlined" size="small"
-                            value={oldPassword} 
-                            error={oldPasswordError}
-                            helperText={oldPasswordError ? oldPasswordErrorMessage : ''} 
-                            color={oldPasswordError ? 'error' : 'primary'}
-                            onChange={(e) => setOldPassword(e.target.value)}
-                            slotProps={{
-                              input: {
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
-                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple sx={{ 
-                                            border: 'none !important',
-                                            backgroundColor: 'transparent !important',
-                                            boxShadow: 'none !important',
-                                            outline: 'none !important',
-                                            '&:hover': {
-                                              backgroundColor: 'transparent !important',
-                                            },
-                                          }}>
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                                      </IconButton>
-                                    </Tooltip>
-                                  </InputAdornment>
-                                ),
-                              },
-                            }}
-                          />
-                        </Box>
 
-                        <Box>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                            {t.nuovaPass}
-                          </Typography>
-                          <TextField
-                            fullWidth type={showPassword ? 'text' : 'password'}
-                            variant="outlined" size="small"
-                            value={newPassword} error={passwordError}
-                            helperText={passwordError ? passwordErrorMessage : ''} 
-                            color={passwordError ? 'error' : 'primary'}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            slotProps={{
-                              input: {
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
-                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple sx={{ 
-                                            border: 'none !important',
-                                            backgroundColor: 'transparent !important',
-                                            boxShadow: 'none !important',
-                                            outline: 'none !important',
-                                            '&:hover': {
+                      {/* SE NON STIAMO MODIFICANDO: Mostra solo i pallini e il tasto "Modifica" */}
+                      {!isEditingPassword ? (
+                        <Stack spacing={3}>
+                          <Box sx={{ display: 'flex', gap: 3, flexDirection: 'column' }}>
+                            <Box>
+                              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                                Password
+                              </Typography>
+                              <Typography variant="body1" sx={{ fontWeight: 500, fontSize: '1.1rem', height: '40px', display: 'flex', alignItems: 'center', letterSpacing: '2px' }}>
+                                ••••••••
+                              </Typography>
+                            </Box>
+                          </Box>
+                          
+                          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                            <Button variant="contained" color="primary" onClick={() => { setIsEditingPassword(true); setPasswordSuccess(''); }}>
+                              {t.modifica}
+                            </Button>
+                          </Box>
+                        </Stack>
+                      ) : (
+                        /* SE STIAMO MODIFICANDO: Mostra i form e i tasti Annulla/Salva */
+                        <Stack spacing={2.5}>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                              {t.passAttuale}
+                            </Typography>
+                            <TextField
+                              fullWidth type={showPassword ? 'text' : 'password'}
+                              variant="outlined" size="small"
+                              value={oldPassword} 
+                              error={oldPasswordError}
+                              helperText={oldPasswordError ? oldPasswordErrorMessage : ''} 
+                              color={oldPasswordError ? 'error' : 'primary'}
+                              onChange={(e) => setOldPassword(e.target.value)}
+                              slotProps={{
+                                input: {
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
+                                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple sx={{ 
+                                              border: 'none !important',
                                               backgroundColor: 'transparent !important',
-                                            },
-                                          }}>
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                                      </IconButton>
-                                    </Tooltip>
-                                  </InputAdornment>
-                                ),
-                              },
-                            }}
-                          />
-                        </Box>
+                                              boxShadow: 'none !important',
+                                              outline: 'none !important',
+                                              '&:hover': {
+                                                backgroundColor: 'transparent !important',
+                                              },
+                                            }}>
+                                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                      </Tooltip>
+                                    </InputAdornment>
+                                  ),
+                                },
+                              }}
+                            />
+                          </Box>
 
-                        <Box>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                            {t.confermaPass}
-                          </Typography>
-                          <TextField
-                            fullWidth type={showPassword ? 'text' : 'password'}
-                            variant="outlined" size="small"
-                            value={confirmPassword} error={confirmPasswordError}
-                            helperText={confirmPasswordError ? confirmPasswordErrorMessage : ''} 
-                            color={confirmPasswordError ? 'error' : 'primary'}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            slotProps={{
-                              input: {
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
-                                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple sx={{ 
-                                            border: 'none !important',
-                                            backgroundColor: 'transparent !important',
-                                            boxShadow: 'none !important',
-                                            outline: 'none !important',
-                                            '&:hover': {
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                              {t.nuovaPass}
+                            </Typography>
+                            <TextField
+                              fullWidth type={showPassword ? 'text' : 'password'}
+                              variant="outlined" size="small"
+                              value={newPassword} error={passwordError}
+                              helperText={passwordError ? passwordErrorMessage : ''} 
+                              color={passwordError ? 'error' : 'primary'}
+                              onChange={(e) => setNewPassword(e.target.value)}
+                              slotProps={{
+                                input: {
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
+                                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple sx={{ 
+                                              border: 'none !important',
                                               backgroundColor: 'transparent !important',
-                                            },
-                                          }}>
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                                      </IconButton>
-                                    </Tooltip>
-                                  </InputAdornment>
-                                ),
-                              },
-                            }}
-                          />
-                        </Box>
+                                              boxShadow: 'none !important',
+                                              outline: 'none !important',
+                                              '&:hover': {
+                                                backgroundColor: 'transparent !important',
+                                              },
+                                            }}>
+                                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                      </Tooltip>
+                                    </InputAdornment>
+                                  ),
+                                },
+                              }}
+                            />
+                          </Box>
 
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                          <Button variant="contained" color="primary" onClick={handleSubmitPassword} disabled={loadingPassword}>
-                            {t.aggPass}
-                          </Button>
-                        </Box>
-                      </Stack>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                              {t.confermaPass}
+                            </Typography>
+                            <TextField
+                              fullWidth type={showPassword ? 'text' : 'password'}
+                              variant="outlined" size="small"
+                              value={confirmPassword} error={confirmPasswordError}
+                              helperText={confirmPasswordError ? confirmPasswordErrorMessage : ''} 
+                              color={confirmPasswordError ? 'error' : 'primary'}
+                              onChange={(e) => setConfirmPassword(e.target.value)}
+                              slotProps={{
+                                input: {
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      <Tooltip title={showPassword ? t.nascondiPassword : t.mostraPassword} arrow placement="top">
+                                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" disableRipple sx={{ 
+                                              border: 'none !important',
+                                              backgroundColor: 'transparent !important',
+                                              boxShadow: 'none !important',
+                                              outline: 'none !important',
+                                              '&:hover': {
+                                                backgroundColor: 'transparent !important',
+                                              },
+                                            }}>
+                                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                      </Tooltip>
+                                    </InputAdornment>
+                                  ),
+                                },
+                              }}
+                            />
+                          </Box>
+
+                          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 1 }}>
+                            
+                            <Button 
+                              variant="outlined" 
+                              color="inherit" 
+                              onClick={handleCancelPasswordClick} 
+                              disabled={loadingPassword}
+                            >
+                              {t.annulla}
+                            </Button>
+                            
+                            <Button 
+                              variant="contained" 
+                              color="primary" 
+                              onClick={handleSubmitPassword} 
+                              disabled={
+                                loadingPassword || 
+                                oldPassword.trim() === '' || 
+                                newPassword.trim() === '' || 
+                                confirmPassword.trim() === ''
+                              }
+                            >
+                              {t.salva}
+                            </Button>
+                          </Box>
+                        </Stack>
+                      )}
+
+
                     </CardContent>
                   </Card>
                 </Grid>
