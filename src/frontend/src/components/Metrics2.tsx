@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import StatCard from './StatCard';
 import type { StatCardProps } from './StatCard';
 import ShapBarChart from './ShapBarChart';
-import Topoplot from './Topoplot';
+import Topoplot from './Topoplot2';
 
 import performanceMetrics from '../data/performance_metrics.json';
 import { descrizioniCanali, descrizioniFeatures, descrizioniWindows } from '../data/shapDescriptions';
@@ -207,22 +207,20 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
         {/* TOPOPLOT TASK LEFT */}
         <Grid size={{ xs: 12, md: stacked ? 12 : 6 }}>
             <Topoplot 
-              title={`${t.titoloTopoplot} (Left)`}
-              subtitle={t.descrTopoplot || "Mappa attivazione per la mano sinistra"}
-              channelsData={topoplotData} 
               userId={userData.user_id}
-              targetClass="left" // <--- PASSATO COME PROP
+              isReal={false} // O false, a seconda di come distingui i dati
+              targetClass="left"
+              channelsData={topoplotData} // Passi i dati qui
             />
         </Grid>
 
         {/* TOPOPLOT TASK RIGHT */}
         <Grid size={{ xs: 12, md: stacked ? 12 : 6 }}>
             <Topoplot 
-              title={`${t.titoloTopoplot} (Right)`}
-              subtitle={t.descrTopoplot || "Mappa attivazione per la mano destra"}
-              channelsData={topoplotData} 
               userId={userData.user_id}
-              targetClass="right" // <--- PASSATO COME PROP
+              isReal={false}
+              targetClass="right"
+              channelsData={topoplotData} // Passi i dati qui
             />
         </Grid>
 

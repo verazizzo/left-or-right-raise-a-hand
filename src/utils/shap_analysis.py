@@ -28,29 +28,33 @@ def genera_topoplot_statico_mne(mean_directional_shap, feature_names, save_dir, 
     montage = mne.channels.make_standard_montage('standard_1020')
     info.set_montage(montage)
     
-    fig, ax = plt.subplots(figsize=(7, 7))
+    fig= plt.figure(figsize=(7, 7))
+    ax = fig.add_axes([0, 0.15, 1, 0.87])
     limite = np.max(np.abs(data_to_plot))
     if limite == 0: limite = 1 
     
     # Generazione della mappa topografica 2D bicolore (Pura con i segni originali)
     im, _ = mne.viz.plot_topomap(
         data_to_plot, info, axes=ax, show=False, cmap='RdBu_r',          
-        vlim=(-limite, limite), contours=0, extrapolate='head', names=emotiv_channels
+        vlim=(-limite, limite), contours=0, extrapolate='head'
     )
     
-    titolo = f"Mappa SHAP - Utente: {user_id}"
-    if task_name:
-        titolo += f" | Task: {task_name}"
-    plt.title(titolo, fontsize=14)
+    #titolo = f"Mappa SHAP - Utente: {user_id}"
+    #if task_name:
+    #    titolo += f" | Task: {task_name}"
+    #plt.title(titolo, fontsize=14)
     
     # Barra laterale dei colori
     from mpl_toolkits.axes_grid1 import make_axes_locatable
     divider = make_axes_locatable(ax)
-    cax = divider.append_axes("right", size="5%", pad=0.2)
-    plt.colorbar(im, cax=cax, label="Spinta verso Sinistra (Blu) <-- SHAP --> Spinta verso Destra (Rosso)")
+    #cax = divider.append_axes("bottom", size="5%", pad=0.2)
+    cax = fig.add_axes([0.05, 0.04, 0.9, 0.05])
+    cb = plt.colorbar(im, cax=cax, orientation='horizontal')
+    cb.ax.tick_params(labelsize=14)
+    #plt.colorbar(im, cax=cax, label="Spinta verso Sinistra (Blu) <-- SHAP --> Spinta verso Destra (Rosso)")
     
     plot_path = f"{save_dir}/topoplot_{user_id}_{task_name}.png"
-    plt.savefig(plot_path, bbox_inches='tight', dpi=300)
+    plt.savefig(plot_path, dpi=300, bbox_inches=None)
     plt.close(fig)
     print(f"[FOTO OK] Topoplot statico MNE ({task_name}) salvato in: {plot_path}")
 

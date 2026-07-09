@@ -23,7 +23,7 @@ import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
-import Metrics from '../components/Metrics';
+import Metrics from '../components/Metrics2';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';

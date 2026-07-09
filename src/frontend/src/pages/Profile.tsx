@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha, useTheme, useColorScheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -57,6 +57,26 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
+// AGGIUNGI QUESTO MICRO-COMPONENTE PRIMA DI ProfileAndSettings
+function ThemeStatusText() {
+  const { mode } = useColorScheme();
+  const { language } = useSettings();
+  const t = translations[language];
+
+  // Se mode non è ancora caricato, non mostriamo nulla per evitare sfarfallii
+  if (!mode) return null; 
+
+  return (
+    <Typography variant="caption" color="text.secondary">
+      {t.darkLightDesc}
+      {' '}
+      <strong>{t.attuale}</strong>
+      {' '}
+      {mode === 'system' ? t.sistema : (mode === 'dark' ? t.notte : t.giorno)}
+    </Typography>
+  );
+}
+
 export default function ProfileAndSettings(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
   
@@ -64,7 +84,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   const { 
     language, setLanguage, 
     fontSize, setFontSize, 
-    forceMobile, toggleForceMobile 
+    forceMobile, toggleForceMobile,
   } = useSettings();
   const t = translations[language];
 
@@ -309,7 +329,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                         <Box>
                           <Typography variant="subtitle2">{t.textSize}</Typography>
                           <Typography variant="caption" color="text.secondary">
-                            {fontSize === 'small' ? t.textSmall : fontSize === 'medium' ? t.textMedium : t.textLarge}
+                            {t.descDimensione}<strong>{t.attuale}</strong>{' '}{fontSize === 'small' ? t.textSmall : fontSize === 'medium' ? t.textMedium : t.textLarge}
                           </Typography>
                         </Box>
                         <FontSizeDropdown />
@@ -322,7 +342,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                             {t.viewModeTitle}
                           </Typography>
                           <Typography variant="caption" color="text.secondary" component="p">
-                            {t.viewModeDesc}
+                            {t.viewModeDesc}<br /><strong>{t.attuale}</strong>{' '}{forceMobile ? t.attivata : t.disattivata}
                           </Typography>
                         </Box>
                         <Switch checked={forceMobile} onChange={toggleForceMobile} color="primary" />
@@ -332,9 +352,8 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pr: 1.4 }}>
                         <Box>
                           <Typography variant="subtitle2">{t.darkLight}</Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {t.darkLightDesc}
-                          </Typography>
+                          {/* USIAMO IL NUOVO COMPONENTE QUI */}
+                          <ThemeStatusText />
                         </Box>
                         <ColorModeIconDropdown />
                       </Box>

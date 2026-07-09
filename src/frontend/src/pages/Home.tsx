@@ -21,7 +21,7 @@ import {
 } from '../theme/customizations';
 
 import SfondoNeuroniScuro from '../assets/neurone_sfum_piu_opac.png';
-import SfondoNeuroniChiaro from '../assets/neurone_celestini.png';
+import SfondoNeuroniChiaro from '../assets/neurone_piu_opac.png';
 
 
 import { useSettings } from '../context/SettingsContext';
@@ -109,7 +109,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                 <Typography variant="h2" sx={{ fontWeight: 800, width: { xs: '100%', lg: '40vw' }}}>
                   {t.welcomeTitle1} {user.name} {t.welcomeTitle2}
                 </Typography>
-                <Typography variant="h5" sx={{ mt: 2 , width: { xs: '100%', lg: '50vw' }}}>
+                <Typography variant="h5" sx={{ mt: 2 , width: { xs: '100%', lg: '40vw' }}}>
                   {t.welcomeSubtitle}
                 </Typography>
                 <Typography variant="body1" color="text.secondary" sx={{ mt: 10, fontSize: '1.1rem', width: { xs: '100%', lg: '40vw' } }}>

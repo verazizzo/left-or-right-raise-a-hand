@@ -31,7 +31,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
   const uniqueId = userId || Math.random().toString(36).substring(7);
 
   const coordinateCanali: { [key: string]: { cx: number; cy: number } } = {
-    'AF3': { cx: 215, cy: 115 },  'AF4': { cx: 285, cy: 115 },
+    'AF3': { cx: 215, cy: 115 },  'AF4': { cx: 285, cy: 80 },
     'F7':  { cx: 145, cy: 165 },  'F8':  { cx: 355, cy: 165 },
     'F3':  { cx: 210, cy: 185 },  'F4':  { cx: 290, cy: 185 },
     'FC5': { cx: 160, cy: 235 },  'FC6': { cx: 340, cy: 235 },
@@ -57,8 +57,21 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
           </Typography>
           
           {/* SOTTOTITOLO DINAMICO */}
-          <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
-            {targetClass === 'left' ? t.descrTopoplotLeft : t.descrTopoplotRight}
+          <Typography 
+            variant="caption" 
+            sx={{ color: 'text.secondary', fontSize: '0.85rem', display: 'block', lineHeight: 1.5 }}
+          >
+            {/* 1. TITOLO PRINCIPALE IN GRASSETTO */}
+            <strong>
+              {targetClass === 'left' ? t.descrTopoplotLeft : t.descrTopoplotRight}
+            </strong>
+            
+            <br />
+            
+            {/* 2. DESCRIZIONE TECNICA PIÙ PICCOLA E GRIGIA */}
+            <span style={{ fontSize: '0.9em', color: 'gray' }}>
+              {targetClass === 'left' ? t.descrTopoplotLeft2 : t.descrTopoplotRight2}
+            </span>
           </Typography>
         </Stack>
         

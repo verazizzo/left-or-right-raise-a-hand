@@ -11,7 +11,7 @@ import { translations } from '../data/translations';
 
 export type ShapBarChartProps = {
   title: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   labels: string[];         
   values: number[];         
   descriptions?: string[];  
