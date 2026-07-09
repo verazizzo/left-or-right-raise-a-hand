@@ -20,6 +20,7 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Tooltip from '@mui/material/Tooltip';
+import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
 
 import DashboardLogo from '../components/DashboardLogo';
 
@@ -231,16 +232,38 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           )}
 
           {success ? (
-            <Alert severity="success" sx={{ mt: 1, bgcolor: '#66bd68 !important', color: 'white !important', '& .MuiAlert-icon': { color: 'white !important' }}}>
+            <Alert icon={<MarkEmailUnreadIcon fontSize="inherit" />} severity="success" 
+                sx={(theme) => ({ 
+                  mt: 1, 
+                  '& .MuiAlert-icon': { 
+                    // 1. Metti qui il colore per il tema CHIARO (di default)
+                    color: '#b79c4c !important', 
+                    mt: '4px', 
+                    
+                    // 2. Aggiungi l'eccezione per il tema SCURO
+                    ...theme.applyStyles('dark', {
+                      color: '#e6c86e !important', 
+                    }),
+                  }
+                })}
+              >
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
                 {t.registrazioneCompletata1}
               </Typography>
-              {t.registrazioneCompletata2} <strong>{registeredEmail}</strong>.
+              {t.registrazioneCompletata2} <strong>{registeredEmail}</strong>.<br />
               {t.registrazioneCompletata3}
               <Box sx={{ mt: 2 }}>
-                <Link component={RouterLink} to="/login" variant="body2" sx={{ fontWeight: 'bold' }}>
-                  {t.registrazioneCompletata4}
+                <Typography>
+                {t.registrazioneCompletata4}{' '}
+                <Link
+                  component={RouterLink}
+                  to="/login"
+                  variant="body2"
+                  sx={{ alignSelf: 'center', color: '#0070e0' }}
+                >
+                  {t.accediqui}
                 </Link>
+                </Typography>
               </Box>
             </Alert>
           ) : (
@@ -401,19 +424,22 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             </Box>
           )}
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Typography sx={{ textAlign: 'center' }}>
-              {t.giaaccount}{' '}
-              <Link
-                component={RouterLink}
-                to="/login"
-                variant="body2"
-                sx={{ alignSelf: 'center', color: '#0070e0' }}
-              >
-                {t.accediqui}
-              </Link>
-            </Typography>
-          </Box>
+          {/* AGGIUNGI !success && PER NASCONDERE QUESTO BLOCCO DOPO LA REGISTRAZIONE */}
+          {!success && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Typography sx={{ textAlign: 'center' }}>
+                {t.giaaccount}{' '}
+                <Link
+                  component={RouterLink}
+                  to="/login"
+                  variant="body2"
+                  sx={{ alignSelf: 'center', color: '#0070e0' }}
+                >
+                  {t.accediqui}
+                </Link>
+              </Typography>
+            </Box>
+          )}
         </Card>
       </SignUpContainer>
     </AppTheme>

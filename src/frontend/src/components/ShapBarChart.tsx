@@ -3,8 +3,11 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { BarChart } from '@mui/x-charts/BarChart';
 import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
@@ -14,7 +17,8 @@ export type ShapBarChartProps = {
   subtitle?: React.ReactNode;
   labels: string[];         
   values: number[];         
-  descriptions?: string[];  
+  descriptions?: string[];
+  showLimitSelector?: boolean;  
 };
 
 export default function ShapBarChart({
@@ -23,27 +27,35 @@ export default function ShapBarChart({
   labels,
   values,
   descriptions,
+  showLimitSelector = false,
 }: ShapBarChartProps) {
 
   const { language, forceMobile } = useSettings();
   const t = translations[language];
   const isRtl = language === 'ar';
 
-  // 1. IL SENSORE DEL MOUSE
+  // 1. STATO PER IL SELETTORE DELLE FEATURE (-1 significa "Tutte")
+  // Di default impostiamo "Tutte", ma puoi cambiare il default a 5 o 10 se preferisci.
+  const [featureLimit, setFeatureLimit] = React.useState<number>(10);
+
+  // 2. TAGLIAMO GLI ARRAY IN BASE AL LIMITE SCELTO
+  const displayedLabels = featureLimit === -1 ? labels : labels.slice(0, featureLimit);
+  const displayedValues = featureLimit === -1 ? values : values.slice(0, featureLimit);
+  const displayedDescriptions = descriptions 
+    ? (featureLimit === -1 ? descriptions : descriptions.slice(0, featureLimit)) 
+    : undefined;
+
+  // IL SENSORE DEL MOUSE (rimane invariato)
   const [isRightHalf, setIsRightHalf] = React.useState(false);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left; 
-    
     const percentage = x / rect.width;
-    
-
     setIsRightHalf(percentage > 0.5);
   };
 
-// Palette "Colorblind-Safe" (basata su Okabe-Ito e Paul Tol)
-
+  // Palette "Colorblind-Safe" (basata su Okabe-Ito e Paul Tol)
   const accessiblePalette = [
     '#0072B2', 
     '#D55E00', 
@@ -57,22 +69,52 @@ export default function ShapBarChart({
     '#999999', 
   ];
 
-  const chartColors = labels.length === 3 
+  // 3. AGGIORNIAMO chartColors PER USARE LE LABEL TAGLIATE
+  // Se sono più di 10, ripartiamo dal primo colore ciclicamente usando il modulo (%)
+  const chartColors = displayedLabels.length === 3 
     ? [accessiblePalette[0], accessiblePalette[1], accessiblePalette[2]] 
-    : accessiblePalette.slice(0, labels.length);
+    : displayedLabels.map((_, index) => accessiblePalette[index % accessiblePalette.length]);
 
   return (
     <Card variant="outlined" sx={{ width: '100%', height: '100%' }} onMouseMove={handleMouseMove}>
       <CardContent>
         
-        <Stack sx={{ mb: 2 }}>
-          <Typography component="h2" variant="h6" sx={{ fontWeight: 600 }}>
-            {title}
-          </Typography>
-          {subtitle && (
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
-              {subtitle}
+        {/* INTESTAZIONE: Titolo a sinistra e Selettore a destra */}
+        <Stack 
+          direction="row" 
+          justifyContent="space-between" 
+          alignItems="flex-start" 
+          spacing={2} 
+          sx={{ mb: 2 }}
+        >
+          <Box>
+            <Typography component="h2" variant="h6" sx={{ fontWeight: 600 }}>
+              {title}
             </Typography>
+            {subtitle && (
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
+                {subtitle}
+              </Typography>
+            )}
+          </Box>
+
+          {/* NUOVO SELETTORE */}
+          {/* 2. NASCONDI IL SELETTORE SE LA PROP È FALSE */}
+          {showLimitSelector && (
+            <FormControl size="small" sx={{ minWidth: 100 }}>
+              <Select
+                value={featureLimit}
+                onChange={(e) => setFeatureLimit(Number(e.target.value))}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Numero di feature' }}
+                sx={{ fontSize: '0.875rem' }}
+              >
+                <MenuItem value={3}>Top 3</MenuItem>
+                <MenuItem value={5}>Top 5</MenuItem>
+                <MenuItem value={10}>Top 10</MenuItem>
+                <MenuItem value={-1}>{t.tutte || 'Tutte'}</MenuItem>
+              </Select>
+            </FormControl>
           )}
         </Stack>
 
@@ -83,14 +125,14 @@ export default function ShapBarChart({
             yAxis={[
               {
                 scaleType: 'band',
-                data: labels,
+                // USIAMO GLI ARRAY TAGLIATI QUI:
+                data: displayedLabels,
                 categoryGapRatio: 0.3,
                 width: 90,
                 colorMap: {
                   type: 'ordinal',
                   colors: chartColors,
                 },
-                // In Arabo, sposta l'asse a destra
                 position: isRtl ? 'right' : 'left',
                 tickLabelStyle: {
                   textAnchor: 'end',
@@ -105,7 +147,6 @@ export default function ShapBarChart({
                 reverse: isRtl,
                 labelStyle: {
                   transform: `${isRtl ? 'translateX(30px)' : 'translateX(-30px)'} translateY(10px)`,
-                
                 },
               },              
             ]}
@@ -113,66 +154,46 @@ export default function ShapBarChart({
             series={[
               {
                 id: 'shap-values',
- 
                 label: '', 
-                data: values,
+                // USIAMO GLI ARRAY TAGLIATI QUI:
+                data: displayedValues,
                 valueFormatter: (value, context) => {
                   if (value === null) return '';
                   const formattedValue = value.toFixed(4);
-                  if (descriptions && context && context.dataIndex !== undefined) {
-                    // Creiamo l'intera stringa nella colonna di destra:
-                    // 1. Valore SHAP: 0.1113
-                    // 2. A capo (\n)
-                    // 3. Descrizione: Onde Beta...
-                    return `${t.valore}: ${formattedValue}\n\n${descriptions[context.dataIndex]}`;
+                  if (displayedDescriptions && context && context.dataIndex !== undefined) {
+                    return `${t.valore}: ${formattedValue}\n\n${displayedDescriptions[context.dataIndex]}`;
                   }
                   return formattedValue;
                 },
               },
             ]}
+            // (Il resto del grafico rimane identico)
             height={350}
-            
             margin={{ left: isRtl ? 10 : -10, right: isRtl ? -10: 10, top: 10, bottom: 20 }} 
             grid={{ vertical: true }} 
             hideLegend 
-            
             sx={{              
-              '& .MuiChartsTooltip-markCell': {
-                display: 'none !important',
-              },
-
-              '& .MuiChartsTooltip-labelCell': {
-                display: 'none !important',
-              },
-
+              '& .MuiChartsTooltip-markCell': { display: 'none !important' },
+              '& .MuiChartsTooltip-labelCell': { display: 'none !important' },
               ...(forceMobile && {
-                '& .MuiChartsLayerContainer-root': {
-                  overflow: 'visible !important',
-                },
-                '& .MuiChartsWrapper-root': {
-                  overflow: 'visible !important',
-                },
+                '& .MuiChartsLayerContainer-root': { overflow: 'visible !important' },
+                '& .MuiChartsWrapper-root': { overflow: 'visible !important' },
                 '& .MuiChartsTooltip-root': {
                   position: 'absolute !important',
                   zIndex: '9999 !important',
                   transform: isRightHalf ? 'translateX(-110%)' : 'translateX(10px)',
                 }
               }),
-
               '& .MuiChartsTooltip-valueCell': {
                 whiteSpace: 'pre-wrap !important', 
-                
                 maxWidth: forceMobile ? '180px !important' : '300px !important', 
-                
                 padding: forceMobile ? '6px 8px !important' : '12px !important', 
                 fontSize: forceMobile ? '0.80rem !important' : '0.875rem !important',
-                
                 lineHeight: '1.4 !important', 
                 textAlign: 'left !important',
               },
             }}
           />
-          
         </Box>
       </CardContent>
     </Card>

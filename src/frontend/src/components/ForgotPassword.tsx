@@ -64,6 +64,15 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
     <Dialog
       open={open}
       onClose={handleCloseModal}
+      sx={{
+        '& .MuiDialog-paper': {
+          // Usa i colori della palette del template
+          backgroundColor: 'background.default', // Diventa bianco di giorno e scuro di notte
+          backgroundImage: 'none',               // FONDAMENTALE: rimuove la "patina" grigia del dark mode
+          border: '1px solid',
+          borderColor: 'divider'                 // Bordo dinamico (grigino chiaro di giorno, scuro di notte)
+        }
+      }}
     >
       <LoadingOverlay active={loading} message={t.caricamentoCambioPassword} />
       <form onSubmit={handleSubmit} noValidate>

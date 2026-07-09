@@ -342,7 +342,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                             {t.viewModeTitle}
                           </Typography>
                           <Typography variant="caption" color="text.secondary" component="p">
-                            {t.viewModeDesc}<br /><strong>{t.attuale}</strong>{' '}{forceMobile ? t.attivata : t.disattivata}
+                            {t.viewModeDesc}<strong>{t.attuale}</strong>{' '}{forceMobile ? t.attivata : t.disattivata}
                           </Typography>
                         </Box>
                         <Switch checked={forceMobile} onChange={toggleForceMobile} color="primary" />

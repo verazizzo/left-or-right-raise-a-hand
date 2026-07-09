@@ -22,10 +22,51 @@ import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 import LoadingOverlay from '../components/LoadingOverlay';
 
+import Stack from '@mui/material/Stack'; // Assicurati di avere questo import in alto
+
+// 1. Card aggiornata con le ombreggiature corrette per il tema dark
 const Card = styled(MuiCard)(({ theme }) => ({
-  display: 'flex', flexDirection: 'column', alignSelf: 'center',
-  width: '100%', padding: theme.spacing(4), gap: theme.spacing(2),
-  margin: 'auto', maxWidth: '450px', marginTop: '10vh',
+  display: 'flex',
+  flexDirection: 'column',
+  alignSelf: 'center',
+  width: '100%',
+  padding: theme.spacing(4),
+  gap: theme.spacing(2),
+  margin: 'auto',
+  boxShadow:
+    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
+  [theme.breakpoints.up('sm')]: {
+    maxWidth: '450px',
+  },
+  ...theme.applyStyles('dark', {
+    boxShadow:
+      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
+  }),
+}));
+
+// 2. Nuovo contenitore con i gradienti di sfondo (uguale al Login)
+const UpdatePasswordContainer = styled(Stack)(({ theme }) => ({
+  minHeight: '100dvh',
+  padding: theme.spacing(2),
+  overflowY: 'auto',
+  boxSizing: 'border-box',
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(4),
+  },
+  '&::before': {
+    content: '""',
+    display: 'block',
+    position: 'fixed',
+    zIndex: -1,
+    inset: 0,
+    backgroundImage:
+      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
+    backgroundRepeat: 'no-repeat',
+    ...theme.applyStyles('dark', {
+      backgroundImage:
+        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
+    }),
+  },
 }));
 
 export default function UpdatePassword(props: { disableCustomTheme?: boolean }) {
@@ -125,7 +166,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
     <AppTheme {...props}>
       <LoadingOverlay active={loading} message={t.caricamentoSalvataggioPassword} />
       <CssBaseline enableColorScheme />
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <UpdatePasswordContainer direction="column" sx={{ justifyContent: 'center' }}>
         <Card variant="outlined">
           <Typography component="h1" variant="h5" sx={{ textAlign: 'center', mb: 2 }}>
             {t.inserisciCodice}
@@ -260,7 +301,7 @@ export default function UpdatePassword(props: { disableCustomTheme?: boolean }) 
             </Box>
           )}
         </Card>
-      </Box>
+      </UpdatePasswordContainer>
     </AppTheme>
   );
 }

@@ -12,7 +12,7 @@ import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
 
 // Importiamo il nuovo componente dei grafici unificato
-import Metrics from '../components/Metrics2';
+import Metrics from '../components/Metrics';
 
 // Importiamo il JSON globale di SHAP
 import shapGlobale from '../data/shap_GLOBALE.json';

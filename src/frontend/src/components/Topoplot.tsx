@@ -28,7 +28,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
   const uniqueId = userId || Math.random().toString(36).substring(7);
 
   const coordinateCanali: { [key: string]: { cx: number; cy: number } } = {
-    'AF3': { cx: 215, cy: 115 },  'AF4': { cx: 285, cy: 80 },
+    'AF3': { cx: 215, cy: 115 },  'AF4': { cx: 285, cy: 115 },
     'F7':  { cx: 145, cy: 165 },  'F8':  { cx: 355, cy: 165 },
     'F3':  { cx: 210, cy: 185 },  'F4':  { cx: 290, cy: 185 },
     'FC5': { cx: 160, cy: 235 },  'FC6': { cx: 340, cy: 235 },
