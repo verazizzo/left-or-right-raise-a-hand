@@ -45,6 +45,25 @@ function AppContent() {
     palette: {
       mode: mode,
     },
+
+    // AGGIUNTA FONDAMENTALE PER RISOLVERE IL BUG DELLA BARRA ORIZZONTALE
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            overflowX: 'hidden', // Taglia via tutto ciò che esce a destra/sinistra
+            width: '100%',       // Assicura che il corpo non superi mai lo schermo
+            overflowY: 'scroll', // <--- AGGIUNGI QUESTO: Prenota lo spazio senza mostrare la barra inattiva
+          },
+          '#root': {
+            overflowX: 'hidden', 
+            width: '100%',
+          }
+        },
+      },
+    },
+
+
     // Se hai altri font o colori personalizzati nel tuo progetto originale, aggiungili qui!
   }), [isRtl, mode]);
 
@@ -56,7 +75,7 @@ function AppContent() {
         <CssBaseline /> 
         
         {/* Diciamo anche al contenitore principale qual è la direzione */}
-        <div className="app-container" dir={isRtl ? 'rtl' : 'ltr'}>
+        <div className="app-container" dir={isRtl ? 'rtl' : 'ltr'} style={{ overflowX: 'hidden', width: '100%' }}>
           <ScrollToTop />
           <Routes>
             <Route path="/register" element={<SignUp />} />

@@ -108,6 +108,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
         open={open}
         onClose={handleClose}
         onClick={handleClose}
+        disableScrollLock={!isMobileLayout}
 
         anchorOrigin={{ 
           horizontal: isMobileLayout 
