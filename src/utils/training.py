@@ -167,7 +167,7 @@ def train_SVM(df, is_real):
     print(f"F1-score medio ± standard deviation: {f1_mean:.4f} ± {f1_std:.4f}")
     print(f"AUC medio ± standard deviation: {auc_mean:.4f} ± {auc_std:.4f}")
 
-    # PAZIENTE BLOBALE (MEDIE DI TUTTI I UTENTI)
+    # PAZIENTE GLOBALE (MEDIE DI TUTTI I UTENTI)
     if shap_dfs_totali:
         print(f"\n[INFO] Calcolo della media globale SHAP in corso...")
         df_unito = pd.concat(shap_dfs_totali)
@@ -178,33 +178,26 @@ def train_SVM(df, is_real):
         df_globale[['Channel', 'FeatureType', 'Window']] = df_globale['Feature_Name'].str.split('_', expand=True)
 
         tipo_task = "real" if is_real else "imm"
-        # Per XGBoost ricordati di cambiare "svm" in "xgboost" nel path qui sotto
         dir_globale = f'temp/shap_plots/svm/{tipo_task}/user_GLOBALE' 
         os.makedirs(dir_globale, exist_ok=True)
 
-        # 1. Esporta i file per la Dashboard fingendo che sia un paziente normale
         esporta_json_dashboard(df_globale, dir_globale, "GLOBALE", is_real)
         
-        # 2. Esporta i due Topoplot MNE Statici (Left e Right con scala RdBu_r classica)
         if 'SHAP_Dir_Left' in df_globale.columns and 'SHAP_Dir_Right' in df_globale.columns:
             genera_topoplot_statico_mne(df_globale['SHAP_Dir_Left'].values, df_globale['Feature_Name'].values, dir_globale, "GLOBALE", "Left")
             genera_topoplot_statico_mne(df_globale['SHAP_Dir_Right'].values, df_globale['Feature_Name'].values, dir_globale, "GLOBALE", "Right")
 
-        # 3. CALCOLO E STAMPA DEI GRAFICI A BARRE SEABORN (Canali, Feature, Finestre)
         import matplotlib.pyplot as plt
         import seaborn as sns
 
-        # Specifica quale colonna usare per l'importanza (SVM usa SHAP_Value_Abs, XGBoost usa SHAP_Value)
         col_importanza = 'SHAP_Value_Abs' if 'SHAP_Value_Abs' in df_globale.columns else 'SHAP_Value'
 
-        # Usiamo le colonne direzionali e prendiamo l'assoluto della somma netta
         channel_imp_glob_left = df_globale.groupby('Channel')['SHAP_Dir_Left'].sum().abs().sort_values(ascending=False)
         channel_imp_glob_right = df_globale.groupby('Channel')['SHAP_Dir_Right'].sum().abs().sort_values(ascending=False)
         
         feature_imp_glob = df_globale.groupby('FeatureType')[col_importanza].sum().sort_values(ascending=False)
         window_imp_glob = df_globale.groupby('Window')[col_importanza].sum().sort_values(ascending=False)
 
-        # Plot 1L: Canali Globale LEFT (Blu)
         plt.figure(figsize=(10, 6))
         sns.barplot(x=channel_imp_glob_left.values, y=channel_imp_glob_left.index, hue=channel_imp_glob_left.index, palette="Blues_r", legend=False)
         plt.title(f"Channel Importance GLOBALE LEFT (Tutti gli Utenti)", fontsize=14)
@@ -214,7 +207,6 @@ def train_SVM(df, is_real):
         plt.savefig(f'{dir_globale}/shap_1_channels_left.png', dpi=300)
         plt.close()
 
-        # Plot 1R: Canali Globale RIGHT (Rosso)
         plt.figure(figsize=(10, 6))
         sns.barplot(x=channel_imp_glob_right.values, y=channel_imp_glob_right.index, hue=channel_imp_glob_right.index, palette="Reds_r", legend=False)
         plt.title(f"Channel Importance GLOBALE RIGHT (Tutti gli Utenti)", fontsize=14)
@@ -224,7 +216,6 @@ def train_SVM(df, is_real):
         plt.savefig(f'{dir_globale}/shap_1_channels_right.png', dpi=300)
         plt.close()
 
-        # Plot 2: Feature Importance GLOBALE
         plt.figure(figsize=(12, 8))
         sns.barplot(x=feature_imp_glob.values, y=feature_imp_glob.index, hue=feature_imp_glob.index, palette="mako", legend=False)
         plt.title(f"Feature Importance GLOBALE (Tutti gli Utenti)", fontsize=14)
@@ -234,7 +225,6 @@ def train_SVM(df, is_real):
         plt.savefig(f'{dir_globale}/shap_2_features.png', dpi=300)
         plt.close()
 
-        # Plot 3: Temporal Window Importance GLOBALE
         plt.figure(figsize=(8, 4))
         sns.barplot(x=window_imp_glob.values, y=window_imp_glob.index, hue=window_imp_glob.index, palette="rocket", legend=False)
         plt.title(f"Temporal Window Importance GLOBALE (Tutti gli Utenti)", fontsize=14)
@@ -245,8 +235,6 @@ def train_SVM(df, is_real):
         plt.close()
 
         print(f"[OK] Paziente GLOBALE salvato (Grafici e Dati) in {dir_globale}")
-
-
 
 
     results = {
@@ -273,19 +261,19 @@ def train_XGBoost(df, is_real):
 
     logo = LeaveOneGroupOut()
     
-    # Griglia ottimizzata per XGBoost (alberi, profondità, velocità di apprendimento)
+    
     param_grid = {
         'n_estimators': [50, 100],
-        'max_depth': [2], # Fissiamo a 2. Solo "stump" (alberi nani)
+        'max_depth': [2], 
         'learning_rate': [0.01, 0.05],
-        'reg_lambda': [10, 50], # Regolarizzazione L2 massiccia
-        'colsample_bytree': [0.1, 0.2], # Usa solo il 10% o 20% delle colonne!
-        'subsample': [0.5, 0.7], # Usa solo il 50% o 70% delle righe ad ogni albero!
-        'min_child_weight': [5, 10] # Vieta di isolare campioni singoli
+        'reg_lambda': [10, 50], 
+        'colsample_bytree': [0.1, 0.2], 
+        'subsample': [0.5, 0.7], 
+        'min_child_weight': [5, 10]
     }
     param_combinations = list(itertools.product(*param_grid.values()))
 
-    # Isoliamo un utente per il test fin dall'inizio
+    
     for outer_train_idx, outer_test_idx in logo.split(x, y, groups=groups):
         
         # 1. Separazione

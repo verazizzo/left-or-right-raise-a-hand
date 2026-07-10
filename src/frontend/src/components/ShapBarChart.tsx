@@ -36,10 +36,8 @@ export default function ShapBarChart({
   const t = translations[language];
   const isRtl = language === 'ar';
 
-  // 1. STATO PER IL SELETTORE DELLE FEATURE 
   const [featureLimit, setFeatureLimit] = React.useState<number>(10);
 
-  // 2. TAGLIAMO GLI ARRAY IN BASE AL LIMITE SCELTO
   const displayedLabels = featureLimit === -1 ? labels : labels.slice(0, featureLimit);
   const displayedValues = featureLimit === -1 ? values : values.slice(0, featureLimit);
   const displayedDescriptions = descriptions 
@@ -55,7 +53,6 @@ export default function ShapBarChart({
     setIsRightHalf(percentage > 0.5);
   };
 
-  // 16 Colori per le Feature (Incrocio tra Okabe-Ito e Paul Tol Muted/Bright)
   const featurePalette = [
     '#0072B2', 
     '#D55E00',
@@ -90,7 +87,6 @@ export default function ShapBarChart({
     <Card variant="outlined" sx={{ width: '100%', height: '100%' }} onMouseMove={handleMouseMove}>
       <CardContent>
         
-        {/* INTESTAZIONE: Titolo a sinistra e Selettore a destra */}
         <Stack 
           direction="row"  
           spacing={2} 
@@ -107,7 +103,6 @@ export default function ShapBarChart({
             )}
           </Box>
 
-          {/* 2. NASCONDI IL SELETTORE SE LA PROP È FALSE */}
           {showLimitSelector && (
             <FormControl size="small" sx={{ minWidth: 100 }}>
               <Select

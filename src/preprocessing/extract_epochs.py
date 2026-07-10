@@ -36,10 +36,8 @@ class ExtractEpochs:
                 if plot:
                     epochs.plot(block=True, n_epochs=4)
 
-                # Aggiungi i dati al dizionario
                 if user not in self.dataset:
                     self.dataset[user] = {}
-                    # Aggiungi il trial per l'utente specifico
                 self.dataset[user][session] = {
                     'epochs': epochs,
                 }
