@@ -92,11 +92,9 @@ export default function ShapBarChart({
         
         {/* INTESTAZIONE: Titolo a sinistra e Selettore a destra */}
         <Stack 
-          direction="row" 
-          justifyContent="space-between" 
-          alignItems="flex-start" 
+          direction="row"  
           spacing={2} 
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, justifyContent:"space-between", alignItems:"flex-start" }}
         >
           <Box>
             <Typography component="h2" variant="h6" sx={{ fontWeight: 600 }}>

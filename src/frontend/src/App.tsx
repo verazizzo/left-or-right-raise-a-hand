@@ -21,7 +21,6 @@ import ScrollToTop from './components/ScrollToTop';
 
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 
-// 1. CREAZIONE DELLE DUE CACHE CSS
 const cacheLtr = createCache({
   key: 'mui',
 });
@@ -31,7 +30,6 @@ const cacheRtl = createCache({
   stylisPlugins: [rtlPlugin], 
 });
 
-// 2. CREIAMO UN COMPONENTE INTERNO PER POTER USARE "useSettings"
 function AppContent() {
   const { language, mode } = useSettings();
   const isRtl = language === 'ar';
@@ -41,6 +39,24 @@ function AppContent() {
     palette: {
       mode: mode,
     },
+
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            overflowX: 'hidden',
+            width: '100%',     
+            overflowY: 'scroll', 
+          },
+          '#root': {
+            overflowX: 'hidden', 
+            width: '100%',
+          }
+        },
+      },
+    },
+
+
   }), [isRtl, mode]);
 
   return (
@@ -48,7 +64,7 @@ function AppContent() {
       <ThemeProvider theme={theme}>
         <CssBaseline /> 
         
-        <div className="app-container" dir={isRtl ? 'rtl' : 'ltr'}>
+        <div className="app-container" dir={isRtl ? 'rtl' : 'ltr'} style={{ overflowX: 'hidden', width: '100%' }}>
           <ScrollToTop />
           <Routes>
             <Route path="/register" element={<SignUp />} />
@@ -70,7 +86,6 @@ function AppContent() {
   );
 }
 
-// 3. APP PRINCIPALE CHE WRAPPA TUTTO
 export default function App() {
   return (
     <SettingsProvider>
