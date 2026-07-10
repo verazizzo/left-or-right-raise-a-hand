@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
+// Import per Tema e RTL di Material UI
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
+// import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
 
 import SignUp from './pages/SignUp';
@@ -44,8 +46,8 @@ function AppContent() {
       MuiCssBaseline: {
         styleOverrides: {
           body: {
-            overflowX: 'hidden',
-            width: '100%',     
+            overflowX: 'hidden', 
+            width: '100%',       
             overflowY: 'scroll', 
           },
           '#root': {
