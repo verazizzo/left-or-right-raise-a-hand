@@ -126,7 +126,9 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (!token || !initialUser.name) {
-      localStorage.clear();
+      // Elimina solo i dati sensibili legati all'utente
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user_profile');
       navigate('/login');
     }
   }, [navigate, initialUser.name]);
@@ -257,7 +259,9 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
     setLoadingRemove(true);
     try {
       await remove(); 
-      localStorage.clear();
+      // Salva le impostazioni rimuovendo solo i dati utente
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user_profile');
       navigate('/login');
     } catch (error: any) {
       console.error('Errore durante l’eliminazione dell’account:', error);
