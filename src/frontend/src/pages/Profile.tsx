@@ -719,7 +719,18 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
 
       
 
-      <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+      <Dialog 
+      open={openDeleteDialog}
+      onClose={() => setOpenDeleteDialog(false)}
+      sx={{
+        '& .MuiDialog-paper': {
+          backgroundColor: 'background.default',
+          backgroundImage: 'none',              
+          border: '2px solid',
+          borderColor: 'divider'               
+        }
+      }}
+      >
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'error.main', fontWeight: 'bold' }}>
           <WarningIcon /> {t.confermaElim}
         </DialogTitle>

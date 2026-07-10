@@ -68,7 +68,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
         '& .MuiDialog-paper': {
           backgroundColor: 'background.default',
           backgroundImage: 'none',              
-          border: '1px solid',
+          border: '2px solid',
           borderColor: 'divider'               
         }
       }}
