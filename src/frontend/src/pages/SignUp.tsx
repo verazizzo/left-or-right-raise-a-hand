@@ -183,7 +183,22 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setRegisteredEmail(email); 
       setSuccess(true);
     } catch (err: any) {
-      setGlobalError(t.errDurante);
+      const backendMessage = err.response?.data?.message || err.message || '';
+      const msg = backendMessage.toLowerCase();
+
+      if (
+        msg.includes('already registered') || 
+        msg.includes('already exists') ||
+        msg.includes('duplicate') || 
+        msg.includes('unique') ||
+        msg.includes('foreign key constraint') || 
+        msg.includes('user_profiles_id_fkey')
+      ) {
+        setEmailError(true);
+        setEmailErrorMessage('Email già registrata. Se non hai ancora confermato, controlla la posta, altrimenti accedi.');
+      } else {
+        setGlobalError(t.errDurante);
+      }
     } finally {
       setLoading(false);
     }
