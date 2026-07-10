@@ -507,7 +507,45 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                       </Typography>
                       <Divider sx={{ mb: 3 }} />
                       {passwordSuccess && (
-                        <Alert severity="success" sx={{ mb: 3, bgcolor: '#66bd68 !important', color: 'white !important', '& .MuiAlert-icon': { color: 'white !important' } }}>
+                        <Alert 
+                          severity="success" 
+                          onClose={() => setPasswordSuccess('')} 
+                          sx={{ 
+                            mb: 3, 
+                            bgcolor: '#66bd68 !important', 
+                            color: 'white !important', 
+                            
+                            // --- 1. ALLINEAMENTO CENTRALE FORZATO ---
+                            alignItems: 'center', 
+                            
+                            '& .MuiAlert-icon': { 
+                              color: 'white !important',
+                              py: 0 // Rimuove padding verticale dall'icona a sinistra
+                            },
+                            
+                            '& .MuiAlert-message': {
+                              py: 0 // Rimuove padding verticale dal testo
+                            },
+
+                            '& .MuiAlert-action': {
+                              pt: 0, // Rimuove il padding superiore di default che spingeva la X in basso
+                              pb: 0,
+                              alignItems: 'center',
+                            },
+                            
+                            // --- 2. STILE DELLA X ---
+                            '& .MuiAlert-action .MuiIconButton-root': {
+                              border: 'none !important',
+                              backgroundColor: 'transparent !important',
+                              boxShadow: 'none !important',
+                              outline: 'none !important',
+                              color: 'white !important',
+                              '&:hover': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.2) !important', 
+                              }
+                            }
+                          }}
+                        >
                           {passwordSuccess}
                         </Alert>
                       )}
