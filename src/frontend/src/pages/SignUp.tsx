@@ -418,6 +418,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 fullWidth
                 variant="contained"
                 onClick={validateInputs}
+                sx={{ mt: 2 }}
               >
                 {t.registrati}
               </Button>

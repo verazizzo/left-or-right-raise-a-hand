@@ -19,6 +19,7 @@ export type ShapBarChartProps = {
   values: number[];         
   descriptions?: string[];
   showLimitSelector?: boolean;  
+  paletteType?: 'features' | 'windows';
 };
 
 export default function ShapBarChart({
@@ -28,6 +29,7 @@ export default function ShapBarChart({
   values,
   descriptions,
   showLimitSelector = false,
+  paletteType = 'features'
 }: ShapBarChartProps) {
 
   const { language, forceMobile } = useSettings();
@@ -55,26 +57,40 @@ export default function ShapBarChart({
     setIsRightHalf(percentage > 0.5);
   };
 
-  // Palette "Colorblind-Safe" (basata su Okabe-Ito e Paul Tol)
-  const accessiblePalette = [
-    '#0072B2', 
-    '#D55E00', 
-    '#009E73', 
-    '#E69F00',
-    '#CC79A7',
-    '#56B4E9',
-    '#F0E442', 
-    '#44AA99',
-    '#332288', 
-    '#999999', 
+  // 2. LE NUOVE PALETTE COLORBLIND-SAFE
+  // 16 Colori per le Feature (Incrocio tra Okabe-Ito e Paul Tol Muted/Bright)
+  const featurePalette = [
+    '#0072B2', // Blu scuro
+    '#D55E00', // Vermiglio (Rosso/Arancio scuro)
+    '#009E73', // Verde smeraldo
+    '#E69F00', // Arancione
+    '#CC79A7', // Rosa
+    '#56B4E9', // Azzurro
+    '#F0E442', // Giallo
+    '#332288', // Indaco
+    '#88CCEE', // Ciano
+    '#44AA99', // Verde acqua
+    '#117733', // Verde foresta scuro
+    '#999933', // Verde oliva
+    '#DDCC77', // Sabbia
+    '#CC6677', // Rosa antico/Vino
+    '#882255', // Prugna
+    '#AA4499', // Viola
   ];
 
-  // 3. AGGIORNIAMO chartColors PER USARE LE LABEL TAGLIATE
-  // Se sono più di 10, ripartiamo dal primo colore ciclicamente usando il modulo (%)
-  const chartColors = displayedLabels.length === 3 
-    ? [accessiblePalette[0], accessiblePalette[1], accessiblePalette[2]] 
-    : displayedLabels.map((_, index) => accessiblePalette[index % accessiblePalette.length]);
+  // 3 Colori completamente diversi per le Finestre Temporali (Paul Tol High-Contrast)
+  const windowPalette = [
+    '#004488', // Blu notte
+    '#DDAA33', // Senape
+    '#BB5566', // Rosso scuro
+  ];
 
+  // 3. ASSEGNAZIONE DINAMICA DEI COLORI IN BASE ALLA PROP
+  const chartColors = paletteType === 'windows'
+    ? windowPalette.slice(0, displayedLabels.length) // Se è la finestra temporale, usa i 3 colori
+    : displayedLabels.map((_, index) => featurePalette[index % featurePalette.length]); // Altrimenti ricicla i 16 colori
+
+    
   return (
     <Card variant="outlined" sx={{ width: '100%', height: '100%' }} onMouseMove={handleMouseMove}>
       <CardContent>

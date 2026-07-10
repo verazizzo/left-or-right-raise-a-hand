@@ -172,6 +172,7 @@ export default function Metrics({ userData, stacked = false }: MetricsProps) {
               labels={shapWindowLabels}
               values={shapWindowValues}
               descriptions={shapWindowDescriptions}
+              paletteType="windows"
             />
           </Box>
         </Grid>

@@ -100,7 +100,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
               <Box 
                 sx={{ 
                   width: { xs: '100%', sm: '80%', md: '65%' }, 
-                  pt: { xs: 5, md: 10 }, 
+                  pt: { xs: 5, md: 14 }, 
                   pl: { xs: 0, md: 5 }
                 }}
               >

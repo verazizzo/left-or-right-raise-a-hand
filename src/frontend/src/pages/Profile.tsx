@@ -298,7 +298,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
             {/* MACRO-SEZIONE: IMPOSTAZIONI GENERALI*/}
             <Box>
               <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, color: 'text.primary' }}>
-                {t.settingsTitle}
+                {t.impostazionesistema}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                 Configura i parametri di sistema, le preferenze di accessibilità e l'interfaccia utente.

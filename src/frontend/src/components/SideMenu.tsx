@@ -133,7 +133,7 @@ export default function SideMenu() {
         }}
       >
         {open && (
-          <Box sx={{ display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', overflow: 'visible' }}>
             <DashboardLogo />
           </Box>
         )}

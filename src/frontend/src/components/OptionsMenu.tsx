@@ -62,8 +62,8 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
   };
 
   const menuItems = React.useMemo(() => [
-    { text: t.impostazioni, path: '/profile' },
-  ], [t.profilo, t.impostazioni]);
+    { text: t.menuSettings, path: '/profile' },
+  ], [t.profilo, t.menuSettings]);
 
   return (
     <React.Fragment>
@@ -73,7 +73,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
         </Box>
       ) : (
         <Tooltip 
-          title={t.impostazioni}
+          title={t.menuSettings}
           placement={
             isMobileLayout 
               ? (isRtl ? 'right' : 'left') 

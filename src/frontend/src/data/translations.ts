@@ -91,7 +91,7 @@ export const translations = {
     viewModeDesc: "Attiva per visualizzare l'interfaccia in versione Mobile",
     // FRASI HOME
     welcomeTitle1: "Benvenuto ",
-    welcomeTitle2: " al tuo Centro Analisi EEG",
+    welcomeTitle2: " in CORTX, il tuo Centro Analisi EEG",
     welcomeSubtitle: "Braccio destro vs sinistro: esplora la spiegabilità dell'IA applicata alla Motor Imagery",
     welcomeDesc: "Utilizza il menu laterale per navigare tra i tre livelli di analisi del sistema:  ",
     welcomeDesc2:"monitora l'andamento globale nella sezione ",
@@ -173,6 +173,7 @@ export const translations = {
     impostazioni: "Impostazioni profilo",
     esci: "Esci",
     // FRASI PROFILE.TSX
+    impostazionesistema: "Impostazioni Sistema",
     impostazioniProfilo: "Impostazioni Profilo",
     infoPersonali: "Informazioni Personali",
     modifica: "Modifica",
@@ -326,7 +327,7 @@ export const translations = {
     viewModeDesc: "Enable to view the mobile interface",
     // FRASI HOME
     welcomeTitle1: "Welcome ",
-    welcomeTitle2: " to your EEG Analysis Hub",
+    welcomeTitle2: " to CORTX, your EEG Analysis Center",
     welcomeSubtitle: "Right vs. left arm: explore AI explainability applied to Motor Imagery",
     welcomeDesc: "Use the side menu to navigate through the three system analysis levels: ",
     welcomeDesc2: "monitor the global trend in the section ",
@@ -406,6 +407,7 @@ export const translations = {
     impostazioni: "Profile settings",
     esci: "Log out",
     // FRASI PROFILE.TSX
+    impostazionesistema: "System Settings",
     impostazioniProfilo: "Profile Settings",
     infoPersonali: "Personal Information",
     modifica: "Modify",
@@ -559,7 +561,7 @@ export const translations = {
     viewModeDesc: "Activar para ver la interfaz en versión Mobile",
     // FRASI HOME 
     welcomeTitle1: "Bienvenido ",
-    welcomeTitle2: " a tu Centro de Análisis EEG",
+    welcomeTitle2: " a CORTX, tu Centro de Análisis EEG",
     welcomeSubtitle: "Brazo derecho vs. izquierdo: explora la explicabilidad de la IA aplicada a la Motor Imagery",
     welcomeDesc: "Utiliza el menú lateral para navegar entre los tres niveles de análisis del sistema: ",
     welcomeDesc2: "monitorea la tendencia global en la sección ",
@@ -639,6 +641,7 @@ export const translations = {
     impostazioni: "Perfil configuración",
     esci: "Cerrar sesión",
     // FRASI PROFILE.TSX
+    impostazionesistema: "Configuración del Sistema",
     impostazioniProfilo: "Perfil Configuración",
     infoPersonali: "Información Personal",
     modifica: "Editar",
@@ -795,7 +798,7 @@ export const translations = {
     
     // FRASI HOME
     welcomeTitle1: "مرحباً ",
-    welcomeTitle2: " في مركز تحليل EEG الخاص بك",
+    welcomeTitle2: " في CORTX، مركز تحليل EEG الخاص بك",
     welcomeSubtitle: "الذراع اليمنى مقابل اليسرى: استكشف قابلية تفسير الذكاء الاصطناعي المطبقة على التخيل الحركي",
     welcomeDesc: "استخدم القائمة الجانبية للتنقل بين المستويات الثلاثة لتحليل النظام: ",
     welcomeDesc2: "راقب الاتجاه العام في قسم ",
@@ -884,6 +887,7 @@ export const translations = {
     esci: "تسجيل الخروج",
     
     // FRASI PROFILE.TSX
+    impostazionesistema: "إعدادات النظام",
     impostazioniProfilo: "إعدادات الملف الشخصي",
     infoPersonali: "المعلومات الشخصية",
     modifica: "تعديل",
