@@ -195,7 +195,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
         msg.includes('user_profiles_id_fkey')
       ) {
         setEmailError(true);
-        setEmailErrorMessage('Email già registrata. Se non hai ancora confermato, controlla la posta, altrimenti accedi.');
+        setEmailErrorMessage(t.errEmailEsistente);
       } else {
         setGlobalError(t.errDurante);
       }
