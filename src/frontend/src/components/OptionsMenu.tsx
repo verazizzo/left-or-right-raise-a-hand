@@ -114,7 +114,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
           horizontal: isMobileLayout 
             ? (isRtl ? 'left' : 'right') 
             : (isRtl ? 'right' : 'left'), 
-          vertical: isMobileLayout ? 'bottom' : 'top' 
+          vertical: 'top' 
         }}
         
 
@@ -122,7 +122,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
           horizontal: isMobileLayout 
             ? (isRtl ? 'left' : 'right') 
             : (isRtl ? 'right' : 'left'),
-          vertical: isMobileLayout ? 'top' : 'bottom' 
+          vertical: 'bottom' 
         }}
         slotProps={{
           paper: {
@@ -139,7 +139,7 @@ export default function OptionsMenu({ customTrigger }: { customTrigger?: React.R
         }}
         sx={{
 
-          mt: isMobileLayout ? 0 : -1,
+          mt: isMobileLayout ? -1 : -1,
 
           [`& .${listClasses.root}`]: {
             padding: '4px',

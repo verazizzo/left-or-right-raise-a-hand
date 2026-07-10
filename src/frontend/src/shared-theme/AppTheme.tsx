@@ -62,7 +62,7 @@ export default function AppTheme(props: AppThemeProps) {
                 scrollbar-gutter: stable !important;
               }
 
-              /* === AGGIUNGI QUI IL TRUCCO PER NASCONDERE LA BARRA === */
+
               #root, main {
                 scrollbar-width: none !important;
                 -ms-overflow-style: none !important; 
@@ -89,17 +89,11 @@ export default function AppTheme(props: AppThemeProps) {
                 }
 
                 .MuiDrawer-root.MuiModal-root {
-                  /* La maschera calcolata rigorosamente sulle distanze assolute:
-                     inset(top right bottom left) */
                   /* @noflip */
                   clip-path: inset(0 calc(100% - 50vw - 215px) 0 calc(50vw - 215px)) !important;
                 }
 
                 .MuiDrawer-paper {
-                  /* LA MATEMATICA PERFETTA:
-                     In Arabo (RTL) il menu si attacca a sinistra: 50vw - 215px.
-                     In Italiano (LTR) il menu si attacca a destra: 50vw - 45px.
-                     Ignoriamo completamente il lato "right" per non subire l'influenza della scrollbar! */
                   /* @noflip */
                   left: ${isRtl ? 'calc(50vw - 215px)' : 'calc(50vw - 45px)'} !important;
                   /* @noflip */
