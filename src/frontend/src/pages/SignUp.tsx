@@ -75,7 +75,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const { language } = useSettings();
   const t = translations[language];
 
-  // Stati per gli errori (identici al SignIn)
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
   const [surnameError, setSurnameError] = React.useState(false);
@@ -92,7 +91,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   
-  // Memorizza l'email appena registrata per mostrarla nel messaggio di successo
   const [registeredEmail, setRegisteredEmail] = useState('');
 
   const handleClickShowPassword = () => {
@@ -103,7 +101,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     event.preventDefault();
   };
 
-  // Stessa logica del SignIn: legge direttamente dal DOM
   const validateInputs = () => {
     const nameInput = document.getElementById('name') as HTMLInputElement;
     const surnameInput = document.getElementById('surname') as HTMLInputElement;
@@ -161,7 +158,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
-  // Stessa logica del SignIn: FormData per recuperare i valori
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setGlobalError('');
@@ -184,7 +180,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     try {
       await register(name, surname, email, password);
-      setRegisteredEmail(email); // Salviamo l'email per il messaggio di alert
+      setRegisteredEmail(email); 
       setSuccess(true);
     } catch (err: any) {
       setGlobalError(t.errDurante);
@@ -236,11 +232,9 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 sx={(theme) => ({ 
                   mt: 1, 
                   '& .MuiAlert-icon': { 
-                    // 1. Metti qui il colore per il tema CHIARO (di default)
                     color: '#b79c4c !important', 
                     mt: '4px', 
                     
-                    // 2. Aggiungi l'eccezione per il tema SCURO
                     ...theme.applyStyles('dark', {
                       color: '#e6c86e !important', 
                     }),
@@ -338,7 +332,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                           <Tooltip 
                             title={showPassword ? t.nascondiPassword : t.mostraPassword} 
                             arrow
-                            placement="top" // Appare sopra per non coprire il testo digitato
+                            placement="top" 
                           >
                             <IconButton
                               aria-label="toggle password visibility"
@@ -425,7 +419,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             </Box>
           )}
 
-          {/* AGGIUNGI !success && PER NASCONDERE QUESTO BLOCCO DOPO LA REGISTRAZIONE */}
           {!success && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Typography sx={{ textAlign: 'center' }}>

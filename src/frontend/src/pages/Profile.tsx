@@ -38,7 +38,6 @@ import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 import { useSettings } from '../context/SettingsContext';
-import type {FontSizeOption } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 import { useNavigate } from 'react-router-dom';
 import { modifyUser, getProfile, remove, changePassword } from '../api/auth';
@@ -57,13 +56,11 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-// AGGIUNGI QUESTO MICRO-COMPONENTE PRIMA DI ProfileAndSettings
 function ThemeStatusText() {
   const { mode } = useColorScheme();
   const { language } = useSettings();
   const t = translations[language];
 
-  // Se mode non è ancora caricato, non mostriamo nulla per evitare sfarfallii
   if (!mode) return null; 
 
   return (
@@ -80,7 +77,6 @@ function ThemeStatusText() {
 export default function ProfileAndSettings(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
   
-  // --- STATI GLOBALI (Context) ---
   const { 
     language, setLanguage, 
     fontSize, setFontSize, 
@@ -88,12 +84,10 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   } = useSettings();
   const t = translations[language];
 
-  // --- RESPONSIVITÀ ---
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); 
   const isMobileLayout = forceMobile || isSmallScreen;
 
-  // --- STATI LOCALI (Profilo) ---
   const initialUser = JSON.parse(localStorage.getItem('user_profile') || '{}');
   
   const [firstName, setFirstName] = useState(initialUser.name || '');
@@ -103,7 +97,6 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
 
-  // Stati per la Sicurezza
   const [oldPassword, setOldPassword] = useState('');
   const [oldPasswordError, setOldPasswordError] = useState(false);
   const [oldPasswordErrorMessage, setOldPasswordErrorMessage] = useState('');
@@ -116,29 +109,24 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
 
-  // Stati di Caricamento e Modali
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [loadingNameSurname, setLoadingNameSurname] = useState(false);
   const [loadingRemove, setLoadingRemove] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  // --- EFFETTI DI SICUREZZA ---
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (!token || !initialUser.name) {
-      // Elimina solo i dati sensibili legati all'utente
       localStorage.removeItem('access_token');
       localStorage.removeItem('user_profile');
       navigate('/login');
     }
   }, [navigate, initialUser.name]);
 
-  // --- HANDLER IMPOSTAZIONI GLOBALI ---
   const handleLanguageChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value as 'it' | 'en' | 'es' | 'ar');
   };
 
-  // --- HANDLER PROFILO ---
   const handleEditClick = () => {
     setEditFirstName(firstName);
     setEditLastName(lastName);
@@ -179,7 +167,6 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
     setOldPassword('');
     setNewPassword('');
     setConfirmPassword('');
-    // Resetta anche gli eventuali errori rimasti appesi
     setOldPasswordError(false);
     setPasswordError(false);
     setConfirmPasswordError(false);
@@ -189,7 +176,6 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
     setPasswordSuccess('');
   };
 
-  // HANDLER SICUREZZA
   const validatePassword = () => {
     let isValid = true;
     if (!oldPassword) {
@@ -259,7 +245,6 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
     setLoadingRemove(true);
     try {
       await remove(); 
-      // Salva le impostazioni rimuovendo solo i dati utente
       localStorage.removeItem('access_token');
       localStorage.removeItem('user_profile');
       navigate('/login');
@@ -309,7 +294,6 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
               </Typography>
 
               <Grid container spacing={4}>
-                {/* Localizzazione / Generali */}
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Card variant="outlined" sx={{ height: '100%' }}>
                     <CardContent>
@@ -356,7 +340,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                         <FontSizeDropdown />
                       </Box>
 
-                      {/* Modalità Mobile / Sviluppatore con Didascalia Ripristinata */}
+                      {/* Modalità Mobile*/}
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                         <Box sx={{ pr: 2 }}>
                           <Typography variant="subtitle2" sx={{ color: 'text.primary', fontWeight: 500 }}>
@@ -369,11 +353,10 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                         <Switch checked={forceMobile} onChange={toggleForceMobile} color="primary" />
                       </Box>
 
-                      {/* Tema Chiaro/Scuro con Didascalia Ripristinata */}
+                      {/* Tema Chiaro/Scuro */}
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pr: 1.4 }}>
                         <Box>
                           <Typography variant="subtitle2">{t.darkLight}</Typography>
-                          {/* USIAMO IL NUOVO COMPONENTE QUI */}
                           <ThemeStatusText />
                         </Box>
                         <ColorModeIconDropdown />
@@ -413,7 +396,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
             <Divider sx={{ my: 2 }} />
 
             
-           {/* MACRO-SEZIONE: IMPOSTAZIONI PROFILO                                      */}
+           {/* MACRO-SEZIONE: IMPOSTAZIONI PROFILO */}
             <Box>
               <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, mt: 2, color: 'text.primary' }}>
                 {t.impostazioniProfilo}
@@ -480,7 +463,6 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                                     loadingNameSurname || 
                                     editFirstName.trim() === '' || 
                                     editLastName.trim() === '' || 
-                                    // AGGIUNTA: Disabilita se non è cambiato nulla rispetto a prima
                                     (editFirstName.trim() === firstName && editLastName.trim() === lastName)
                                   }
                               >
@@ -515,25 +497,23 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                             bgcolor: '#66bd68 !important', 
                             color: 'white !important', 
                             
-                            // --- 1. ALLINEAMENTO CENTRALE FORZATO ---
                             alignItems: 'center', 
                             
                             '& .MuiAlert-icon': { 
                               color: 'white !important',
-                              py: 0 // Rimuove padding verticale dall'icona a sinistra
+                              py: 0 
                             },
                             
                             '& .MuiAlert-message': {
-                              py: 0 // Rimuove padding verticale dal testo
+                              py: 0 
                             },
 
                             '& .MuiAlert-action': {
-                              pt: 0, // Rimuove il padding superiore di default che spingeva la X in basso
+                              pt: 0,
                               pb: 0,
                               alignItems: 'center',
                             },
                             
-                            // --- 2. STILE DELLA X ---
                             '& .MuiAlert-action .MuiIconButton-root': {
                               border: 'none !important',
                               backgroundColor: 'transparent !important',
@@ -550,7 +530,6 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                         </Alert>
                       )}
 
-                      {/* SE NON STIAMO MODIFICANDO: Mostra solo i pallini e il tasto "Modifica" */}
                       {!isEditingPassword ? (
                         <Stack spacing={3}>
                           <Box sx={{ display: 'flex', gap: 3, flexDirection: 'column' }}>
@@ -571,7 +550,6 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                           </Box>
                         </Stack>
                       ) : (
-                        /* SE STIAMO MODIFICANDO: Mostra i form e i tasti Annulla/Salva */
                         <Stack spacing={2.5}>
                           <Box>
                             <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
@@ -741,7 +719,6 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
 
       
 
-      {/* --- MODALE ELIMINAZIONE --- */}
       <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'error.main', fontWeight: 'bold' }}>
           <WarningIcon /> {t.confermaElim}

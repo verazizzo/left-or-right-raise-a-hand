@@ -22,9 +22,8 @@ import { useSettings } from '../context/SettingsContext';
 import { translations } from '../data/translations';
 import LoadingOverlay from '../components/LoadingOverlay';
 
-import Stack from '@mui/material/Stack'; // Assicurati di avere questo import in alto
+import Stack from '@mui/material/Stack'; 
 
-// 1. Card aggiornata con le ombreggiature corrette per il tema dark
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -44,7 +43,6 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }),
 }));
 
-// 2. Nuovo contenitore con i gradienti di sfondo (uguale al Login)
 const UpdatePasswordContainer = styled(Stack)(({ theme }) => ({
   minHeight: '100dvh',
   padding: theme.spacing(2),

@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import FormatSizeIcon from '@mui/icons-material/FormatSize'; // Icona "Aa"
+import FormatSizeIcon from '@mui/icons-material/FormatSize'; 
 import { useSettings } from '../context/SettingsContext';
 import type { FontSizeOption } from '../context/SettingsContext';
 import { translations } from '../data/translations';

@@ -22,7 +22,6 @@ import Tooltip from '@mui/material/Tooltip';
 
 import ForgotPassword from '../components/ForgotPassword';
 import AppTheme from '../shared-theme/AppTheme';
-import ColorModeSelect from '../shared-theme/ColorModeSelect';
 
 import DashboardLogo from '../components/DashboardLogo';
 
@@ -259,17 +258,15 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                         <Tooltip 
                           title={showPassword ? t.nascondiPassword : t.mostraPassword} 
                           arrow
-                          placement="top" // Appare sopra per non coprire il testo digitato
+                          placement="top" 
                         >
                           <IconButton
                             aria-label="toggle password visibility"
                             onClick={handleClickShowPassword}
                             onMouseDown={handleMouseDownPassword}
                             edge="end"
-                            // 1. Spegne l'animazione "a onda" quando clicchi
                             disableRipple 
                             
-                            // 2. Forza lo sfondo trasparente sempre, anche al passaggio del mouse
                             sx={{ 
                               border: 'none !important',
                               backgroundColor: 'transparent !important',

@@ -18,7 +18,6 @@ interface AppThemeProps {
 export default function AppTheme(props: AppThemeProps) {
   const { children, disableCustomTheme, themeComponents } = props;
   
-  // ESTRAIAMO LA LINGUA PER APPLICARE LA MATEMATICA PERFETTA
   const { forceMobile, mode, language } = useSettings();
   const isRtl = language === 'ar';
 
@@ -117,7 +116,7 @@ export default function AppTheme(props: AppThemeProps) {
             ...themeComponents,
           },
         });
-  }, [disableCustomTheme, themeComponents, forceMobile, mode, isRtl]); // Ricalcola in tempo reale se cambi lingua
+  }, [disableCustomTheme, themeComponents, forceMobile, mode, isRtl]); 
 
   if (disableCustomTheme) {
     return <React.Fragment>{children}</React.Fragment>;

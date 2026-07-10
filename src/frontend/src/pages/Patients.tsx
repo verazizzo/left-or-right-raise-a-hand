@@ -8,8 +8,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { FormControl, InputLabel, Select, MenuItem, CircularProgress, Typography } from '@mui/material';
-import type {SelectChangeEvent} from '@mui/material';
-import Grid from '@mui/material/Grid';
 
 import Tooltip from '@mui/material/Tooltip';
 import CloseIcon from '@mui/icons-material/Close';
@@ -47,7 +45,6 @@ const xThemeComponents = {
 
 export default function Patients(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
-  // Stati
   const [selectedUser, setSelectedUser] = useState<string>('');
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -58,7 +55,6 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
   const t = translations[language];
 
   // Generiamo una lista di 30 utenti
-  // Usiamo useMemo per calcolare la lista solo quando cambia t.utenteElenco
   const usersList = React.useMemo(() => {
     return Array.from({ length: 30 }, (_, i) => ({
       id: `user_${i + 1}`,
@@ -77,12 +73,10 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
 
   }, [navigate]);
 
-  // Gestisce il cambio utente
   const handleChange = (newUserId: string) => {
   setSelectedUser(newUserId);
   };
 
-  // Carica il JSON
   useEffect(() => {
     if (!selectedUser) {
       setUserData(null);
@@ -205,7 +199,7 @@ export default function Patients(props: { disableCustomTheme?: boolean }) {
               </Typography>
             )}
 
-            {/* SEZIONE 3: GRAFICI (Mostrati solo se i dati ci sono) */}
+            {/* SEZIONE 3: GRAFICI */}
             {!loading && userData && (
                 <Metrics userData={userData} />
             )}

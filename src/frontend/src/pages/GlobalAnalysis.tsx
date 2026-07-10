@@ -5,16 +5,13 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-// Importiamo i componenti classici del layout
 import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
 
-// Importiamo il nuovo componente dei grafici unificato
 import Metrics from '../components/Metrics';
 
-// Importiamo il JSON globale di SHAP
 import shapGlobale from '../data/shap_GLOBALE.json';
 
 import { useSettings } from '../context/SettingsContext';
