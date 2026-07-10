@@ -305,7 +305,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                 {t.impostazionesistema}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Configura i parametri di sistema, le preferenze di accessibilità e l'interfaccia utente.
+                {t.descImpSis}
               </Typography>
 
               <Grid container spacing={4}>
@@ -419,7 +419,7 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                 {t.impostazioniProfilo}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Gestisci le tue informazioni anagrafiche, le credenziali di accesso e l'integrità dell'account.
+                {t.descImpProf}
               </Typography>
               
               <Grid container spacing={4}>

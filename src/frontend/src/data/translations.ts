@@ -175,6 +175,8 @@ export const translations = {
     // FRASI PROFILE.TSX
     impostazionesistema: "Impostazioni Sistema",
     impostazioniProfilo: "Impostazioni Profilo",
+    descImpSis: "Configura i parametri di sistema, le preferenze di accessibilità e l'interfaccia utente.",
+    descImpProf: "Gestisci le tue informazioni anagrafiche, le credenziali di accesso e l'integrità dell'account.",
     infoPersonali: "Informazioni Personali",
     modifica: "Modifica",
     salva: "Salva Modifiche",
@@ -409,6 +411,8 @@ export const translations = {
     // FRASI PROFILE.TSX
     impostazionesistema: "System Settings",
     impostazioniProfilo: "Profile Settings",
+    descImpSis: "Configure system parameters, accessibility preferences, and the user interface.",
+    descImpProf: "Manage your personal information, access credentials, and account integrity.",
     infoPersonali: "Personal Information",
     modifica: "Modify",
     salva: "Save Changes",
@@ -643,6 +647,8 @@ export const translations = {
     // FRASI PROFILE.TSX
     impostazionesistema: "Configuración del Sistema",
     impostazioniProfilo: "Perfil Configuración",
+    descImpSis: "Configurar parámetros del sistema, preferencias de accesibilidad, y la interfaz de usuario.",
+    descImpProf: "Gestiona tu información personal, credenciales de acceso e integridad de la cuenta.",
     infoPersonali: "Información Personal",
     modifica: "Editar",
     salva: "Guardar cambios",
@@ -889,6 +895,8 @@ export const translations = {
     // FRASI PROFILE.TSX
     impostazionesistema: "إعدادات النظام",
     impostazioniProfilo: "إعدادات الملف الشخصي",
+    descImpSis: "قم بتكوين معلمات النظام وتفضيلات إمكانية الوصول وواجهة المستخدم.",
+    descImpProf: "قم بإدارة معلوماتك الشخصية وبيانات اعتماد الوصول وسلامة الحساب.",
     infoPersonali: "المعلومات الشخصية",
     modifica: "تعديل",
     salva: "حفظ التغييرات",
