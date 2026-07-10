@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box'; // <-- Importa Box
+import Box from '@mui/material/Box';
 import Loader from './Loader';
 
 interface LoadingOverlayProps {

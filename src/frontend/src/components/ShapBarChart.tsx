@@ -36,8 +36,7 @@ export default function ShapBarChart({
   const t = translations[language];
   const isRtl = language === 'ar';
 
-  // 1. STATO PER IL SELETTORE DELLE FEATURE (-1 significa "Tutte")
-  // Di default impostiamo "Tutte", ma puoi cambiare il default a 5 o 10 se preferisci.
+  // 1. STATO PER IL SELETTORE DELLE FEATURE 
   const [featureLimit, setFeatureLimit] = React.useState<number>(10);
 
   // 2. TAGLIAMO GLI ARRAY IN BASE AL LIMITE SCELTO
@@ -47,7 +46,6 @@ export default function ShapBarChart({
     ? (featureLimit === -1 ? descriptions : descriptions.slice(0, featureLimit)) 
     : undefined;
 
-  // IL SENSORE DEL MOUSE (rimane invariato)
   const [isRightHalf, setIsRightHalf] = React.useState(false);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -57,38 +55,35 @@ export default function ShapBarChart({
     setIsRightHalf(percentage > 0.5);
   };
 
-  // 2. LE NUOVE PALETTE COLORBLIND-SAFE
   // 16 Colori per le Feature (Incrocio tra Okabe-Ito e Paul Tol Muted/Bright)
   const featurePalette = [
-    '#0072B2', // Blu scuro
-    '#D55E00', // Vermiglio (Rosso/Arancio scuro)
-    '#009E73', // Verde smeraldo
-    '#E69F00', // Arancione
-    '#CC79A7', // Rosa
-    '#56B4E9', // Azzurro
-    '#F0E442', // Giallo
-    '#332288', // Indaco
-    '#88CCEE', // Ciano
-    '#44AA99', // Verde acqua
-    '#117733', // Verde foresta scuro
-    '#999933', // Verde oliva
-    '#DDCC77', // Sabbia
-    '#CC6677', // Rosa antico/Vino
-    '#882255', // Prugna
-    '#AA4499', // Viola
+    '#0072B2', 
+    '#D55E00',
+    '#009E73',
+    '#E69F00', 
+    '#CC79A7',
+    '#56B4E9', 
+    '#F0E442',
+    '#332288',
+    '#88CCEE', 
+    '#44AA99',
+    '#117733', 
+    '#999933', 
+    '#DDCC77',
+    '#CC6677',
+    '#882255', 
+    '#AA4499', 
   ];
 
-  // 3 Colori completamente diversi per le Finestre Temporali (Paul Tol High-Contrast)
   const windowPalette = [
-    '#004488', // Blu notte
-    '#DDAA33', // Senape
-    '#BB5566', // Rosso scuro
+    '#004488', 
+    '#DDAA33', 
+    '#BB5566',
   ];
 
-  // 3. ASSEGNAZIONE DINAMICA DEI COLORI IN BASE ALLA PROP
   const chartColors = paletteType === 'windows'
-    ? windowPalette.slice(0, displayedLabels.length) // Se è la finestra temporale, usa i 3 colori
-    : displayedLabels.map((_, index) => featurePalette[index % featurePalette.length]); // Altrimenti ricicla i 16 colori
+    ? windowPalette.slice(0, displayedLabels.length) 
+    : displayedLabels.map((_, index) => featurePalette[index % featurePalette.length]); 
 
     
   return (
@@ -114,7 +109,6 @@ export default function ShapBarChart({
             )}
           </Box>
 
-          {/* NUOVO SELETTORE */}
           {/* 2. NASCONDI IL SELETTORE SE LA PROP È FALSE */}
           {showLimitSelector && (
             <FormControl size="small" sx={{ minWidth: 100 }}>
@@ -141,7 +135,6 @@ export default function ShapBarChart({
             yAxis={[
               {
                 scaleType: 'band',
-                // USIAMO GLI ARRAY TAGLIATI QUI:
                 data: displayedLabels,
                 categoryGapRatio: 0.3,
                 width: 90,
@@ -171,7 +164,6 @@ export default function ShapBarChart({
               {
                 id: 'shap-values',
                 label: '', 
-                // USIAMO GLI ARRAY TAGLIATI QUI:
                 data: displayedValues,
                 valueFormatter: (value, context) => {
                   if (value === null) return '';
@@ -183,7 +175,6 @@ export default function ShapBarChart({
                 },
               },
             ]}
-            // (Il resto del grafico rimane identico)
             height={350}
             margin={{ left: isRtl ? 10 : -10, right: isRtl ? -10: 10, top: 10, bottom: 20 }} 
             grid={{ vertical: true }} 

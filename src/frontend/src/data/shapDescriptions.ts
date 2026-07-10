@@ -1,6 +1,5 @@
 // src/data/shapDescriptions.ts
 
-// Actualizamos el tipo para soportar cuatro idiomas incluyendo el árabe
 type QuadLangString = { it: string; en: string; es: string; ar: string };
 
 export const descrizioniCanali: Record<string, QuadLangString> = {

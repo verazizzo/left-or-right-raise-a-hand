@@ -1,5 +1,5 @@
-import Box from '@mui/material/Box';                 // <-- Importa Box
-import Typography from '@mui/material/Typography'; // <-- Importa Typography
+import Box from '@mui/material/Box';              
+import Typography from '@mui/material/Typography'; 
 import brainGif from '../assets/brain_loader.gif';
 import brainDarkGif from '../assets/brain_loader_dark.gif'
 
@@ -32,7 +32,6 @@ export default function Loader({ message = "L'attore sta avviando il caso d'uso.
       
       <div style={{ position: 'relative', width: containerSize, height: containerSize }}>
         
-        {/* Sostituito div con Box per gestire i colori della rotellina */}
         <Box sx={(theme) => ({ 
           position: 'absolute', 
           top: 0, 
@@ -46,7 +45,6 @@ export default function Loader({ message = "L'attore sta avviando il caso d'uso.
           boxSizing: 'border-box',
           animation: 'spin-loader 1.2s linear infinite', 
           zIndex: 0,
-          // Variante DARK per la rotellina
           ...theme.applyStyles('dark', {
             border: '8px solid rgba(255, 255, 255, 0.1)', 
             borderTop: '8px solid #4fc3f7',     
@@ -72,7 +70,7 @@ export default function Loader({ message = "L'attore sta avviando il caso d'uso.
           })} 
         />
 
-        {/* 4. CERVELLO DARK (Compare SOLO in Dark Mode) */}
+        {/* 4. CERVELLO DARK */}
         <Box 
           component="img"
           src={brainDarkGif} 

@@ -24,7 +24,6 @@ export default function Methodology() {
   const { mode, systemMode } = useColorScheme();
   const resolvedMode = (systemMode || mode) as 'light' | 'dark';
   
-  // Decidi l'immagine in base al tema resolved
   const caschettoImage = resolvedMode === 'dark' ? CaschettoScuro : Caschetto;
 
 

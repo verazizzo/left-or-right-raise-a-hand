@@ -11,8 +11,8 @@ import Tooltip from '@mui/material/Tooltip';
 
 export type TopoplotProps = {
   userId: string;
-  isReal: boolean; // Serve per costruire il percorso del file (real vs imm)
-  targetClass: 'left' | 'right'; // Serve per distinguere tra Left e Right
+  isReal: boolean; 
+  targetClass: 'left' | 'right';
   channelsData: any[];
 };
 
@@ -22,7 +22,6 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
 
   const uniqueId = userId || Math.random().toString(36).substring(7);
 
-  // Se l'ID è 'global' (o 'globale' o 'GLOBALE'), lo forziamo alla stringa esatta del file
   const safeUserId = (userId && userId.toLowerCase() === 'global') ? 'GLOBALE' : userId;
 
   const datiSicuri = channelsData || [];
@@ -38,15 +37,11 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
     'C3':  { cx: 175, cy: 255 },  'Cz':  { cx: 250, cy: 255 },  'C4':  { cx: 315, cy: 255 },
   };
 
-  // Utilizziamo un import dinamico (import.meta.glob è perfetto per Vite)
-  // Questo carica tutte le immagini della cartella e le mette in un oggetto
   const images = import.meta.glob('./topoplot/*.png', { eager: true, import: 'default' });
 
   const taskPath = isReal ? 'real' : 'imm';
-  // Costruisci il nome del file come lo hai salvato
   const fileName = `./topoplot/topoplot_${safeUserId}_${targetClass === 'left' ? 'Left' : 'Right'}.png`;
 
-  // Recupera l'immagine dall'oggetto importato
   const imageSrc = images[fileName];
 
   console.log("1. File che il codice sta cercando:", fileName);
@@ -72,27 +67,24 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
           </Typography>
         </Stack>
 
-
-        {/* NUOVO CONTENITORE BIANCO CON BORDI ARROTONDATI */}
         <Box 
           sx={{ 
-            bgcolor: '#ffffff',     // Sfondo forzatamente bianco (ignora il tema dark)
-            borderRadius: '16px',   // Bordi ben arrotondati
-            p: 2,                   // Padding interno (spazio tra il bordo bianco e il cervello)
-            mx: 'auto',             // Centra il blocco orizzontalmente
+            bgcolor: '#ffffff',   
+            borderRadius: '16px', 
+            p: 2,                   
+            mx: 'auto',           
             width: '100%', 
-            maxWidth: 450,          // Leggermente più largo per includere il padding
-            boxShadow: 3            // (Opzionale) Aggiunge una leggera ombra per staccarlo dallo sfondo scuro
+            maxWidth: 450,         
+            boxShadow: 3         
           }}
         >
 
           <Box sx={{ 
-            position: 'relative', // FONDAMENTALE: definisce il sistema di coordinate
+            position: 'relative', 
             width: '100%', 
             maxWidth: 400, 
             aspectRatio: '1/1',
             margin: '0 auto',
-            // Se la lingua è araba, specchiamo l'intero contenitore
             transform: language === 'ar' ? 'scaleX(-1)' : 'none' 
           }}>
             
@@ -101,14 +93,14 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
               component="img"
               src={imageSrc as string}
               alt={`Topoplot ${targetClass}`}
-              onError={(e: any) => { e.target.src = '/placeholder-image.png'; }} // Opzionale: gestione errore caricamento
+              onError={(e: any) => { e.target.src = '/placeholder-image.png'; }}
               sx={{ 
                 position: 'absolute',
                 width: '100%', 
                 maxWidth: 400, 
                 height: 'auto',
                 display: 'block' ,
-                zIndex: 1 // Livello base
+                zIndex: 1 
               }}
             />
 
@@ -123,7 +115,6 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
                   const coords = coordinateCanali[ch.id];
                   if (!coords) return null;
                   
-                  // Mostriamo l'effettivo valore direzionale con il segno nel tooltip
                   const displayValue = targetClass === 'left' ? ch.shap_left : ch.shap_right;
 
                   return (
@@ -187,7 +178,6 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
                           x={coords.cx}
                           y={coords.cy - (forceMobile ? 14 : 14)} 
                           textAnchor="middle"
-                          // Se arabo, ri-specchiamo il testo per renderlo leggibile
                           transform={language === 'ar' ? `scale(-1, 1) translate(${-2 * coords.cx}, 0)` : 'none'}
                           fill="#000000" 
                           fontWeight="900"
@@ -215,9 +205,9 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
                 display: 'flex', 
                 justifyContent: 'space-between', 
                 width: '100%', 
-                maxWidth: 400, // Deve coincidere con il maxWidth dell'immagine
-                mt: 0.5,      // Regola questo valore per avvicinare/allontanare le scritte dalla barra
-                px: 1.5         // Padding per far rientrare le scritte rispetto ai bordi dell'immagine
+                maxWidth: 400,
+                mt: 0.5,      
+                px: 1.5         
               }}
             >
               <Typography variant="caption" sx={{ fontSize: '0.85rem', fontWeight: 700, color: 'rgb(33, 102, 172)' }}>
@@ -229,7 +219,7 @@ export default function Topoplot({ userId, isReal, targetClass, channelsData }: 
             </Box>
           </Box>
 
-        </Box> {/* FINE DEL CONTENITORE BIANCO */}
+        </Box>
 
 
       </CardContent>

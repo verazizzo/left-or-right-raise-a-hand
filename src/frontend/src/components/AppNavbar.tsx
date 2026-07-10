@@ -57,7 +57,7 @@ export default function AppNavbar() {
           }}
           slotProps={{
             transition: { 
-              timeout: 300 // Animazione rapida e pulita
+              timeout: 300 
             },
             popper: {
 

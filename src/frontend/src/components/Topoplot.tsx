@@ -57,14 +57,14 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
             variant="caption" 
             sx={{ color: 'text.secondary', fontSize: '0.85rem', display: 'block', lineHeight: 1.5 }}
           >
-            {/* 1. TITOLO PRINCIPALE IN GRASSETTO */}
+            {/* TITOLO PRINCIPALE IN GRASSETTO */}
             <strong>
               {targetClass === 'left' ? t.descrTopoplotLeft : t.descrTopoplotRight}
             </strong>
             
             <br />
             
-            {/* 2. DESCRIZIONE TECNICA PIÙ PICCOLA E GRIGIA */}
+            {/* DESCRIZIONE TECNICA PIÙ PICCOLA E GRIGIA */}
             <span style={{ fontSize: '0.9em', color: 'gray' }}>
               {targetClass === 'left' ? t.descrTopoplotLeft2 : t.descrTopoplotRight2}
             </span>
@@ -260,7 +260,7 @@ export default function Topoplot({ title, subtitle, channelsData, userId, target
             </Box>
           </Box>
 
-          {/* BARRA INFERIORE ORIZZONTALE (LEGENDA SHAP) */}
+          {/* LEGENDA SHAP */}
           <Box 
             sx={{ 
               display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 380, mt: 4 

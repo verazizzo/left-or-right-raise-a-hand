@@ -120,7 +120,7 @@ export default function SideMenu() {
         },
       }}
     >
-      {/* SEZIONE 1: HEADER (CON LOGO) */}
+      {/* SEZIONE 1: HEADER  */}
       <Box
         sx={{
           display: 'flex',
