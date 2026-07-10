@@ -68,17 +68,12 @@ colonne_da_cancellare = [col for col in df.columns if 'Delta' in col or 'Theta' 
 df = df.drop(columns=colonne_da_cancellare)
 print(f"Forma dopo la pulizia: {df.shape}")
 
-# df = df.sample(frac=1, random_state=42).reset_index(drop=True)
-# df = df.drop('User', axis=1)
-
 # Filtering only for classes 2 and 3 (left or right hand imagination). We assume 1 is rest
 df = df[df['Target_Label'].isin([2,3])].copy()
 
 features = df.columns
 
 df['User'] = df['User'].str.split('\\').str[-1].str.split('/').str[-1]
-
-# print(df.head())
 
 df['Session'] = df['Session'].str.replace(r'dataset_mi_emotive\\[a-zA-Z0-9_$]*\\imm', '0', regex=True)
 df['Session'] = df['Session'].str.replace(r'dataset_mi_emotive\\[a-zA-Z0-9_$]*\\real', '1', regex=True)
@@ -88,27 +83,5 @@ df_real = df[df['Session'] == 1]
 df_imm = df[df['Session'] == 0]
 unique_user = df_imm['User'].unique() 
 
-# print(df_imm.head(20))
-
-
 #results_real = train_SVM(df_real, True)
 results_imm = train_SVM(df_imm, False)
-
-"""comparison_df = pd.DataFrame({
-    'Task': ['Real Movement', 'Imagined Movement'],
-    'F1_Mean': [results_real['F1_Mean'], results_imm['F1_Mean']],
-    'F1_Std': [results_real['F1_Std'], results_imm['F1_Std']],
-    'AUC_Mean': [results_real['AUC_Mean'], results_imm['AUC_Mean']],
-    'AUC_Std': [results_real['AUC_Std'], results_imm['AUC_Std']]
-})
-
-print("\n CONFRONTO FINALE DELLE PERFORMANCE ")
-print(comparison_df.to_string(index=False))
-
-# Salvataggio su disco (formato CSV)
-results_dir = 'temp\results'
-os.makedirs(results_dir, exist_ok=True)
-csv_path = os.path.join(results_dir, 'svm_performance_comparison.csv')
-
-comparison_df.to_csv(csv_path, index=False)
-print(f"\nRisultati salvati con successo in: {csv_path}")"""
