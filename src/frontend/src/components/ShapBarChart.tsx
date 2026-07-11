@@ -35,6 +35,7 @@ export default function ShapBarChart({
   const { language, forceMobile } = useSettings();
   const t = translations[language];
   const isRtl = language === 'ar';
+  const [langOpen, setLangOpen] = React.useState(false);
 
   const [featureLimit, setFeatureLimit] = React.useState<number>(10);
 
@@ -52,6 +53,20 @@ export default function ShapBarChart({
     const percentage = x / rect.width;
     setIsRightHalf(percentage > 0.5);
   };
+
+  React.useEffect(() => {
+      const mainEl = document.querySelector('main');
+  
+      if (langOpen) {
+        document.body.style.setProperty('overflow', 'hidden', 'important');
+        document.body.style.setProperty('touch-action', 'none', 'important'); // Ferma lo swipe su mobile
+        if (mainEl) mainEl.style.setProperty('overflow', 'hidden', 'important');
+      } else {
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('touch-action');
+        if (mainEl) mainEl.style.removeProperty('overflow');
+      }
+    }, [langOpen]);
 
   const featurePalette = [
     '#0072B2', 
@@ -111,6 +126,10 @@ export default function ShapBarChart({
                 displayEmpty
                 inputProps={{ 'aria-label': 'Numero di feature' }}
                 sx={{ fontSize: '0.875rem' }}
+                open={langOpen}
+                onOpen={() => setLangOpen(true)}
+                onClose={() => setLangOpen(false)}
+                MenuProps={{ disableScrollLock: true }}
               >
                 <MenuItem value={3}>Top 3</MenuItem>
                 <MenuItem value={5}>Top 5</MenuItem>

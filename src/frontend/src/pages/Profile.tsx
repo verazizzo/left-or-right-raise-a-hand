@@ -76,7 +76,7 @@ function ThemeStatusText() {
 
 export default function ProfileAndSettings(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
-  
+  const [langOpen, setLangOpen] = React.useState(false);
   const { 
     language, setLanguage, 
     fontSize, setFontSize, 
@@ -126,6 +126,20 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
   const handleLanguageChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value as 'it' | 'en' | 'es' | 'ar');
   };
+
+  React.useEffect(() => {
+    const mainEl = document.querySelector('main');
+
+    if (langOpen) {
+      document.body.style.setProperty('overflow', 'hidden', 'important');
+      document.body.style.setProperty('touch-action', 'none', 'important'); // Ferma lo swipe su mobile
+      if (mainEl) mainEl.style.setProperty('overflow', 'hidden', 'important');
+    } else {
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('touch-action');
+      if (mainEl) mainEl.style.removeProperty('overflow');
+    }
+  }, [langOpen]);
 
   const handleEditClick = () => {
     setEditFirstName(firstName);
@@ -308,6 +322,9 @@ export default function ProfileAndSettings(props: { disableCustomTheme?: boolean
                           value={language}
                           onChange={handleLanguageChange}
                           size="small"
+                          open={langOpen}
+                          onOpen={() => setLangOpen(true)}
+                          onClose={() => setLangOpen(false)}
                           MenuProps={{ disableScrollLock: true }}
                         >
                           <MenuItem value="ar">ᴀʀ - العربية (Arabic)</MenuItem>

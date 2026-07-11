@@ -22,6 +22,20 @@ export default function FontSizeDropdown() {
     handleClose();
   };
 
+  React.useEffect(() => {
+    const mainEl = document.querySelector('main');
+    
+    if (open) {
+      document.body.style.setProperty('overflow', 'hidden', 'important');
+      document.body.style.setProperty('touch-action', 'none', 'important'); // Ferma lo swipe su mobile
+      if (mainEl) mainEl.style.setProperty('overflow', 'hidden', 'important');
+    } else {
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('touch-action');
+      if (mainEl) mainEl.style.removeProperty('overflow');
+    }
+  }, [open]);
+
   return (
     <>
       <IconButton onClick={handleClick} size="small" sx={{ border: '1px solid', borderColor: 'divider', width: '2.25rem', height: '2.25rem' }}>

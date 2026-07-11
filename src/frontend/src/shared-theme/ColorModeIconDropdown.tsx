@@ -23,6 +23,19 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  React.useEffect(() => {
+    const mainEl = document.querySelector('main');
+    
+    if (open) {
+      document.body.style.setProperty('overflow', 'hidden', 'important');
+      document.body.style.setProperty('touch-action', 'none', 'important'); // Ferma lo swipe su mobile
+      if (mainEl) mainEl.style.setProperty('overflow', 'hidden', 'important');
+    } else {
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('touch-action');
+      if (mainEl) mainEl.style.removeProperty('overflow');
+    }
+  }, [open]);
   const handleMode = (targetMode: 'system' | 'light' | 'dark') => () => {
     setMode(targetMode);
     handleClose();

@@ -49,7 +49,8 @@ export default function AppTheme(props: AppThemeProps) {
               body { background-color: #8d9498 !important;
               overflow-y: scroll !important; /* La barra non sparirà mai, niente salti! */
               margin: 0 !important;
-              padding: 0 !important;}
+              padding: 0 !important;
+              scrollbar-gutter: stable !important;}
 
               #root {
                 width: 100%;
@@ -59,6 +60,10 @@ export default function AppTheme(props: AppThemeProps) {
                 background-color: var(--template-palette-background-default, #ffffff);
                 box-shadow: 0px 0px 50px rgba(0,0,0,0.5); 
                 clip-path: inset(0) !important;
+                scrollbar-gutter: stable !important;
+              }
+
+              main {
                 scrollbar-gutter: stable !important;
               }
 
@@ -100,8 +105,20 @@ export default function AppTheme(props: AppThemeProps) {
                   right: auto !important;
                 }
               }
-            ` : ``, 
+            ` : `
+              /* 🔴 REGOLE PER IL DESKTOP 🔴 */
+              html, body {
+                /* Mantiene lo spazio fisico della barra di scorrimento sempre presente */
+                scrollbar-gutter: stable !important; 
+              }
+              
+              body, .MuiAppBar-root {
+                /* Vieta a Material-UI di iniettare i suoi 15px di padding che sballano la pagina */
+                padding-right: 0 !important; 
+              }
+            `, 
           },
+            
             ...inputsCustomizations,
             ...dataDisplayCustomizations,
             ...feedbackCustomizations,
