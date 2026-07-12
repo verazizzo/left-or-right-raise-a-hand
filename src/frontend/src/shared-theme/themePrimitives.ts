@@ -395,6 +395,7 @@ export const shape = {
   borderRadius: 8,
 };
 
+// @ts-ignore
 const defaultShadows: Shadows = [
   'none',
   'var(--template-palette-baseShadow)',
